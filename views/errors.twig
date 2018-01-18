@@ -1,0 +1,18 @@
+ {% block errors %}
+ {% if errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for input, messages in errors %}
+                    {% for message in messages %}
+                        <li>El campo <strong>{{ input }}</strong> : {{ message }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+         {% if mensaje %}
+        <div class="alert alert-danger">
+            <p>Error: <strong>{{ mensaje }}</strong></p>
+        </div>
+    {% endif %}
+{% endblock %}

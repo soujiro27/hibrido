@@ -1,0 +1,114 @@
+<html lang="es">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Sistema Integral de Auditoría</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+   <link rel="stylesheet" href="/SIA/jur/public/css/main.css"/>
+  </head>
+  <body>
+  <header>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
+          <div class="col-xs-12"></div>
+          <div class="col-xs-2"><a href="/SIA/"><img src="/SIA/juridico/public/img/logo-top.png"/></a></div>
+          <div class="col-xs-2">
+            <ul class="nav navbar-nav">
+              <li><a href="#!" id="CuentaPublica"><i class="fa fa-th-list"></i>
+                      {{ sesiones.sCuentaActual }}
+                </a></li>
+            </ul>
+          </div>
+          <div class="col-xs-3">
+              <h2 id="tipo">  <i class="fa fa-desktop" aria-hidden="true"></i> {{modulo }}</h2>
+          </div>
+          <div class="col-xs-2">
+            <ul class="nav navbar-nav">
+              <li>
+                <a href="/SIA/notificaciones">
+                  <i class="fa fa-envelope-o"></i> Tiene
+                  <span>
+                    {% if notifica>0 %}
+                      <input id="txtNoti" type="text" class="noti notificacion" value="{{ notifica }}"/>
+                    {% else %}
+                      <input id="txtNoti" type="text" class="noti" value="{{ notifica }}"/>
+                    {% endif %}
+                  </span> Mensaje(s).</a></li>
+            </ul>
+          </div>
+          <div class="col-xs-3">
+            <div class="logout-user-name" id="logout">
+              <i class="fa fa-user"></i>
+              <span id="usuario">{{sesiones.sUsuario}}</span>
+            </div>
+            <div class="logout-dropdown">
+              <ul class="logout-menu" id="logout-menu">
+                <li><a href="/SIA/perfil"> <i class="fa fa-user"></i> Perfil</a></li>
+                <li><a href="/SIA/cerrar"><i class="fa fa-sign-out"></i> Salir</a></li>
+              </ul>
+          </div>
+        </nav>
+      </div>
+    </nav>
+  </header>
+
+  <div class="sidebar">
+
+    <div class="sidebar-dropdown"><a href="/">Navigation</a></div>
+    <ul id="nav">
+      <li class="has_sub"><a href="/"><i class="fa fa-home"></i> Inicio</a></li>
+      <li class="has_sub" id="GESTION" style="display:none;"><a href=""><i class="fa fa-pencil-square-o"></i> Gestión<span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
+        <ul id="GESTION-UL"></ul>
+      </li>
+      <li class="has_sub" id="PROGRAMA" style="display:none;"><a href=""><i class="fa fa-bars"></i> Programas<span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
+        <ul id="PROGRAMA-UL"></ul>
+      </li>
+      <li class="has_sub" id="AUDITORIA" style="display:none;"><a href=""><i class="fa fa-search"></i> Auditorías<span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
+        <ul id="AUDITORIA-UL"></ul>
+      </li>
+      <li class="has_sub" id="OBSERVACIONES" style="display:none;"><a href=""><i class="fa fa-cogs"></i> Acciones<span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
+        <ul id="OBSERVACIONES-UL"></ul>
+      </li>
+      <li class="has_sub" id="CONFIGURACION" style="display:none;"><a href=""><i class="fa fa-pencil-square-o"></i> Catálogos<span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
+        <ul id="CONFIGURACION-UL"></ul>
+      </li>
+      <li class="has_sub" id="REPORTEADOR" style="display:none;"><a href=""><i class="fa fa-file-text-o"></i> Informes<span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
+        <ul id="REPORTEADOR-UL"></ul>
+      </li>
+      <li class="has_sub" id="NORMATIVIDAD" style="display:none;"><a href=""><i class="fa fa-pencil-square-o"></i> Normatividad<span class="pull-right"><i class="fa fa-chevron-right"></i></span></a>
+        <ul id="NORMATIVIDAD-UL"></ul>
+      </li>
+      <li class="has_sub"><a href="/cerrar"><i class="fa fa-sign-out"></i> Salir</a></li>
+    </ul>
+  </div>
+
+  <div class="row">
+    <div id="tableLarge" class="col-md-9 col-md-offset-2">
+      <div class="widget">
+        <div class="widget-head">
+          <div id="headerText" class="pull-left">
+              {% block title %}{% endblock %}
+            <div class="order"></div>
+            <div class="selectColumns"></div>
+          </div>
+          <div class="widget-icons pull-right">
+              {% block btnHeader %}{% endblock %}
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div id="main-content" class="widget-content">
+              {% block form %} {% endblock %}
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <script src="/SIA/jur/public/js/{{ filejs }}.js"></script>
+  <script src="/SIA/jur/public/js/menu.js"></script>
+</body>
+</html>
