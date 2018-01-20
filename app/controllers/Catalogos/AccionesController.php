@@ -1,10 +1,11 @@
 <?php 
 namespace App\Controllers\Catalogos;
 
-use App\Models\Catalogos\Acciones;
-use App\Controllers\Template;
 use Sirius\Validation\Validator;
 use Carbon\Carbon;
+use Sirius\Validation\ErrorMessage;
+use App\Models\Catalogos\Acciones;
+use App\Controllers\Template;
 
 class AccionesController extends Template{
 	
@@ -36,7 +37,7 @@ class AccionesController extends Template{
 	#guarda un nuevo registro
 	public function save(array $data, $app){
 		$data['estatus'] =  'ACTIVO';
-
+		$errors = [];
 		if($this->duplicate($data)){
 			if(empty($this->validate($data))){
 				$acciones = new Acciones([
@@ -49,10 +50,17 @@ class AccionesController extends Template{
 				$acciones->save();
 				$app->redirect('/SIA/juridico/Acciones');
 			}else{
-				$this->create($message = false,$this->validate($data));
+				
+				$test =$this->validate($data);
+				var_dump($test);
+				/*foreach ($test as $key => $value) {
+					foreach ($test[$key] as $k => $v) {
+						var_dump($v);
+					}
+				}*/
 			}
 		}else{
-			$this->create('Registro Duplicado',$errors = false);
+			//$error[0] = ('' => , );	
 		}
 	}
 
@@ -114,12 +122,12 @@ class AccionesController extends Template{
 		
 		$validator->add(
 			array(
-				'nombre' => 'required | Alpha | MaxLength(30)(Excede los caracteres permitidos)'
+				'nombre' => 'required | Alpha | MaxLength(3)(Excede los caracteres permitidos)'
 			)
 		);
 
 		if(!$validator->validate($data)){
-			$errors = $validator->getMessages();
+			$errors = $validator->getMessages('nombre');
 			return $errors;
 		}else{
 
