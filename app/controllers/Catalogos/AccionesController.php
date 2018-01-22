@@ -1,11 +1,13 @@
 <?php 
 namespace App\Controllers\Catalogos;
 
-use Sirius\Validation\Validator;
 use Carbon\Carbon;
-use Sirius\Validation\ErrorMessage;
+
 use App\Models\Catalogos\Acciones;
 use App\Controllers\Template;
+use App\Controllers\ValidateController;
+
+
 
 class AccionesController extends Template{
 	
@@ -36,6 +38,9 @@ class AccionesController extends Template{
 
 	#guarda un nuevo registro
 	public function save(array $data, $app){
+		
+		ValidateController::string($data['nombre']);
+		/*
 		$data['estatus'] =  'ACTIVO';
 		$errors = [];
 		if($this->duplicate($data)){
@@ -51,17 +56,16 @@ class AccionesController extends Template{
 				$app->redirect('/SIA/juridico/Acciones');
 			}else{
 				
-				$test =$this->validate($data);
-				var_dump($test);
-				/*foreach ($test as $key => $value) {
-					foreach ($test[$key] as $k => $v) {
-						var_dump($v);
-					}
-				}*/
+				BaseController::construct_array_errors($this->validate($data));
+				/*$test =$this->validate($data);
+				$let = $test[0];
+				var_dump($let->getTemplate());
+				
 			}
 		}else{
 			//$error[0] = ('' => , );	
 		}
+	*/
 	}
 
 	#crea el formulario del update
@@ -117,22 +121,8 @@ class AccionesController extends Template{
 
 	#valida el formulario 
 	public function validate(array $data){
-		$errors = [];
-		$validator = new \Sirius\Validation\Validator;
-		
-		$validator->add(
-			array(
-				'nombre' => 'required | Alpha | MaxLength(3)(Excede los caracteres permitidos)'
-			)
-		);
 
-		if(!$validator->validate($data)){
-			$errors = $validator->getMessages('nombre');
-			return $errors;
-		}else{
 
-			return $errors;
-		}
 	}
 
 }
