@@ -15,10 +15,6 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 		$controller->load_subDocumentos_volantes($app->request->get());
 	});
 
-	$app->get('/api/subDocumentos/diversos',function() use ($controller,$app){
-		$controller->load_subDocumentos_volantesDiversos($app->request->get());
-	});
-
 	$app->get('/api/auditoria',function() use($controller,$app){
 		$controller->load_datos_auditoria($app->request->get());
 	});

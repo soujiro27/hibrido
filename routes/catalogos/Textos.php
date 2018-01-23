@@ -20,7 +20,7 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 	$app->get('/DoctosTextos/create',function() use ($controller){
 		$message = false;
 		$errors = false;
-		$controller->create($message,$errors);
+		$controller->create();
 	});
 
 	$app->get('/DoctosTextos/:id',function($id) use ($controller,$app){

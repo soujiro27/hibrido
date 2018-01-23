@@ -26,25 +26,24 @@ class AccionesController extends Template{
 	}
 
 	#manda a traer el formulario de insercion
-	public function create($message,$errors){
+	public function create(){
 		echo $this->render('Catalogos/Acciones/form.twig',[
 			'sesiones' => $_SESSION,
 			'modulo' => $this->modulo,
 			'filejs' => $this->filejs,
-			'mensaje' => $message,
-			'errors' => $errors
 		]);
 	}
 
 	#guarda un nuevo registro
 	public function save(array $data, $app){
 		
-		ValidateController::string($data['nombre']);
-		/*
 		$data['estatus'] =  'ACTIVO';
-		$errors = [];
-		if($this->duplicate($data)){
-			if(empty($this->validate($data))){
+		$valida = $this->validate($data);
+		$duplicado = $this->duplicate($data);
+
+		if(empty($valida[0])){ 
+
+			if(empty($duplicado[0])){
 				$acciones = new Acciones([
 					'nombre' => $data['nombre'],
 					'usrAlta' => $_SESSION['idUsuario'],
@@ -53,23 +52,21 @@ class AccionesController extends Template{
 				]);
 
 				$acciones->save();
-				$app->redirect('/SIA/juridico/Acciones');
-			}else{
-				
-				BaseController::construct_array_errors($this->validate($data));
-				/*$test =$this->validate($data);
-				$let = $test[0];
-				var_dump($let->getTemplate());
-				
+				$sucess = $this->success();
+				echo json_encode($sucess);
+
+			} else {
+				echo json_encode($duplicado);
 			}
-		}else{
-			//$error[0] = ('' => , );	
+
+		} else{
+			echo json_encode($valida);
 		}
-	*/
+		
 	}
 
 	#crea el formulario del update
-	public function createUpdate($id,$app,$message,$errors){
+	public function createUpdate($id,$app){
 		$accion = Acciones::find($id);
 		if(empty($accion)){
 			$app->render('/jur/public/404.html');
@@ -78,8 +75,7 @@ class AccionesController extends Template{
 			'sesiones'   => $_SESSION,
 			'accion' => $accion,
 			'modulo' => $this->modulo,
-			'mensaje' => $message,
-			'errors' => $errors
+			'filejs' => $this->filejs
 		]);
 		}
 	}
@@ -87,42 +83,65 @@ class AccionesController extends Template{
 	#hace el update del registro
 	public function update(array $data, $app){
 		$id = $data['idAccion'];
-		if($this->duplicate($data)){
-			if(empty($this->validate($data))){
+		$valida = $this->validate($data);
+		$duplicado = $this->duplicate($data);
+
+		if(empty($valida[0])){ 
+
+			if(empty($duplicado[0])){
 				Acciones::find($id)->update([
             		'nombre' => $data['nombre'],
-              		'usrModificacion' => $_SESSION['idUsuario'],
-              		'fModificacion' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s'),
-              		'estatus' => $data['estatus']
+            		'usrModificacion' => $_SESSION['idUsuario'],
+            		'fModificacion' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s'),
+            		'estatus' => $data['estatus']
 				]);
-				$app->redirect('/SIA/juridico/Acciones');
-			}else{
-				$this->createUpdate($id,$app,false,$this->validate($data));
+				$sucess = $this->success();
+				echo json_encode($sucess);
+
+			} else {
+				echo json_encode($duplicado);
 			}
-		}else{
-			$this->createUpdate($id, $app, 'Registro Duplicado', $errors = false);
+
+		} else{
+			echo json_encode($valida);
 		}
 	}
 
 	
 	#valida que no haya registros duplicados
 	public function duplicate(array $data){
+		$errors  = array();
+		$res = [];
 		$nombre = $data['nombre'];
 		$estatus = $data['estatus'];
 		$caracter = Acciones::where('nombre',"$nombre")
 		->where('estatus',"$estatus")
 		->count();
-		if($caracter == 0){
-			return true;
-		}else{
-			return false;
+		if($caracter > 0){
+			$errors['campo'] = 'Duplicado';
+			$errors['message'] = 'No puede haber registros Duplicados';
 		}
+
+		$res[0] = $errors;
+		
+		return $res;
 	}
 
 	#valida el formulario 
 	public function validate(array $data){
+		$res= [];
+		$nombre = ValidateController::string($data['nombre'],'nombre',50);
+		$res[0] = $nombre;
+		return $res;
+	}
 
+	public function success(){
+		$sucess = [];
+		$sucess['campo'] = 'success';
+		$sucess['message'] = 'Registro Exitoso';
 
+		$res[0] = $sucess;
+		return $res;
 	}
 
 }

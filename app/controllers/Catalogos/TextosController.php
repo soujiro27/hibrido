@@ -10,27 +10,31 @@ use Carbon\Carbon;
 class TextosController extends Template {
 
 	private $modulo = 'Textos Juridico';
-
+	private $filejs = 'Catalogos';
+	
 	#Crea la tabla principal 
 	public function index(){
 		$textos = Textos::all();
 		echo $this->render('Catalogos/Textos/index.twig',[
 			'sesiones' => $_SESSION,
 			'modulo' => $this->modulo,
-			'doctosTextos' => $textos
+			'doctosTextos' => $textos,
+			'filejs' => $this->filejs
 		]);
 	}
 
 	#crea el formulario para un nuevo registro
-	public function create($message,$errors){
+	public function create(){
+
 		$tiposDocumento = TiposDocumentos::where('tipo','=','JURIDICO')->where('estatus','=','ACTIVO')->get();
+		$ckeditor = true;
 
 		echo $this->render('Catalogos/Textos/create.twig',[
 			'sesiones' => $_SESSION,
 			'modulo' => $this->modulo,
-			'mensaje' => $message,
-			'errors' => $errors,
-			'tiposDocumentos' => $tiposDocumento
+			'tiposDocumentos' => $tiposDocumento,
+			'filejs' => $this->filejs,
+			'ckeditor' => $ckeditor
 		]);
 	}
 

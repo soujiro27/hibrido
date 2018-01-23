@@ -20,10 +20,11 @@ class ApiController {
 
 	#trae los subdocumentos que concuerden con el documento (idTipoDocto) de la tabla de sia_catSubTiposDocumentos
 	public function load_subDocumentos_volantes(array $dato){
-		$tipo = $dato['dato'];
+		$tipo = $dato['tipo'];
+		$auditoria = $dato['audi'];
 		$res = SubTiposDocumentos::select('idSubTipoDocumento as valor','nombre')
 				->where('idTipoDocto',"$tipo")
-				->where('auditoria','SI')
+				->where('auditoria',"$auditoria")
 				->where('estatus','ACTIVO')
 				->get();
 		if($res->isEmpty()){
@@ -32,18 +33,6 @@ class ApiController {
 		echo json_encode($res);
 	}
 
-	public function load_subDocumentos_volantesDiversos(array $dato){
-		$tipo = $dato['dato'];
-		$res = SubTiposDocumentos::select('idSubTipoDocumento as valor','nombre')
-				->where('idTipoDocto',"$tipo")
-				->where('auditoria','NO')
-				->where('estatus','ACTIVO')
-				->get();
-		if($res->isEmpty()){
-			$res = array('error' => 'No hay ningun Sub-Documento Asignado', );
-		}
-		echo json_encode($res);
-	}
 
 	#trae los datos de la auditoria mediante el numero 
 	public function load_datos_auditoria(array $dato){
