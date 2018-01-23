@@ -1,0 +1,35 @@
+{% extends 'layoutTable.twig' %}
+{% block btnHeader %}
+    <a id="addRegister" href="/SIA/juridico/SubTiposDocumentos/create" class="btn btn-info btn-add" role="button">
+        Añadir Registro
+    </a>
+{% endblock %}
+{% block order %}Lista de Registros Documentos Juridico{% endblock %}
+
+
+
+{% block table %}
+    <table class="table table-hover" id="main-table-catalogos">
+        <thead>
+        <tr>
+            <th scope="col" class="hidden">Id</th>
+            <th scope="col">Documento</th>
+            <th scope="col">Sub Documento</th>
+            <th scope="col">Auditoria</th>
+            <th scope="col">Estatus</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for sub in subTipos %}
+            <tr data-ruta="SubTiposDocumentos">
+
+                <td class="hidden">{{ sub.idSubTipoDocumento }}</td>
+                <td>{{ sub.idTipoDocto }}</td>
+                <td>{{ sub.nombre }}</td>
+                <td>{{ sub.auditoria }}</td>
+                <td>{{ sub.estatus }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

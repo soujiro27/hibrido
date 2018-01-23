@@ -1,0 +1,39 @@
+{% extends 'layoutForm.twig' %}
+{% block title %}Añadir Registro{% endblock %}
+{% block form %}
+    <form id="SubTiposDocumentos" method="POST" data-ruta="SubTiposDocumentos">
+        <div class="form-group row">
+            <label for="idDocumento" class="form-control-label col-lg-2">Tipo de Documento</label>
+            <select class="form-control col-lg-2" id="idDocumento" name="documento" >
+                <option value="">Seleccione una Opcion</option>
+                {% for tipo in tiposDocumentos %}
+                    <option value="{{ tipo.idTipoDocto }}">{{ tipo.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group row">
+            <label for="nombre" class="form-control-label col-lg-2">Nombre</label>
+            <input class="form-control col-lg-2" id="nombre" type="text" placeholder="Nombre"  pattern="[A-Za-z].{1,49}" name="nombre" title="Nombre Incorrecto o Caracteres maximos"/>
+        </div>
+        <div class="form-group row">
+            <label for="auditoria" class="form-control-label col-lg-2">Datos Auditoria</label>
+            <select class="form-control col-lg-2" id="auditoria" name="auditoria"  aria-describedby="passwordHelpBlock">
+                <option value=""> Seleccione una Opción </option>
+                <option value="SI">SI</option>
+                <option value="NO">NO</option>
+            </select>
+           <div class="tooltip-container">
+               <i class="fa fa-info tooltip-icon" aria-hidden="true"></i>
+               <div class="tooltip-text-container">
+                    <p class="tooltip-text">Selecciona si el Documento va Asignado a una auditoria</p>
+               </div>
+           </div>
+        </div>
+
+        <div class="form-group send">
+            <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
+            <button class="btn btn-danger btn-sm" id="cancelar" data-ruta="SubTiposDocumentos">Cancelar</button>
+        </div>
+    </form>
+  {% include 'errors.twig' %}
+{% endblock %}

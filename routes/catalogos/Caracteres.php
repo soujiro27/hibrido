@@ -17,15 +17,13 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 	});
 
 	$app->get('/Caracteres/create',function() use ($controller){
-		$errors = false;
-		$message = false;
-		$controller->create($errors,$message);
+		$controller->create();
 	});
 
 	$app->get('/Caracteres/:id',function($id) use ($controller,$app){
 		$errors = false;
 		$message = false;
-		$controller->createUpdate($id, $app, $errors, $message);
+		$controller->createUpdate($id, $app);
 	})->conditions(array('id' => '[0-9]{1,2}'));
 
 	$app->post('/Caracteres/create',function() use ($app,$controller){

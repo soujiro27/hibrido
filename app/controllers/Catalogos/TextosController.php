@@ -1,17 +1,20 @@
 <?php 
 namespace App\Controllers\Catalogos;
 
+use Carbon\Carbon;
+
+use App\Controllers\Template;
+use App\Controllers\ValidateController;
+
 use App\Models\Catalogos\Textos;
 use App\Models\Catalogos\TiposDocumentos;
-use App\Controllers\Template;
-use Sirius\Validation\Validator;
-use Carbon\Carbon;
+use App\Models\Catalogos\SubTiposDocumentos;
 
 class TextosController extends Template {
 
 	private $modulo = 'Textos Juridico';
 	private $filejs = 'Catalogos';
-	
+	private $ckeditor = true;
 	#Crea la tabla principal 
 	public function index(){
 		$textos = Textos::all();
@@ -27,42 +30,52 @@ class TextosController extends Template {
 	public function create(){
 
 		$tiposDocumento = TiposDocumentos::where('tipo','=','JURIDICO')->where('estatus','=','ACTIVO')->get();
-		$ckeditor = true;
+		
 
 		echo $this->render('Catalogos/Textos/create.twig',[
 			'sesiones' => $_SESSION,
 			'modulo' => $this->modulo,
 			'tiposDocumentos' => $tiposDocumento,
 			'filejs' => $this->filejs,
-			'ckeditor' => $ckeditor
+			'ckeditor' => $this->ckeditor
 		]);
 	}
 
 	#hace insercion de un nuevo registro
 	public function save(array $data, $app){
-		$errors = $this->validate($data);
-		if(empty($errors)){
+		
+		$valida = $this->validate($data);
+		if(empty($valida)){ 
 			$texto = new Textos([
-				'idTipoDocto' => $data['idTipoDocto'],
+				'idTipoDocto' => $data['documento'],
 				'tipo' => 'JURIDICO',
-				'idSubTipoDocumento' => $data['idSubTipoDocumento'],
+				'idSubTipoDocumento' => $data['subDocumento'],
 				'nombre' => 'TEXTO-JURIDICO',
 				'texto' => $data['texto'],
 				'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s'),
 				'usrAlta' => $_SESSION['idUsuario']
 			]);
-				$acciones->save();
-				$app->redirect('/SIA/juridico/DoctosTextos');
-			}else{
-				$this->create(false,$errors);
+			$texto->save();
+			$sucess = $this->success();
+			echo json_encode($sucess);
+
+		} else{
+			echo json_encode($valida);
 		}
+		
+	
 	}
 
 	#crea el formulario para la actualizacion de un registro
-	public function createUpdate($id, $app, $message, $errors){
+	public function createUpdate($id, $app){
 		$texto = Textos::find($id);
+		
 		$tiposDocumento = TiposDocumentos::where('tipo','=','JURIDICO')->where('estatus','=','ACTIVO')->get();
-
+		
+		$subtipos = SubTiposDocumentos::where('tipo','=','JURIDICO')
+					->where('estatus','=','ACTIVO')
+					->where('auditoria','SI')
+					->get();
 		if(empty($texto)){
 			$app->render('/jur/public/404.html');
 		}else{
@@ -70,9 +83,10 @@ class TextosController extends Template {
 			'sesiones'   => $_SESSION,
 			'doctoTexto' => $texto,
 			'modulo' => $this->modulo,
-			'mensaje' => $message,
-			'errors' => $errors,
-			'documentos' => $tiposDocumento
+			'documentos' => $tiposDocumento,
+			'subtipos' => $subtipos,
+			'filejs' => $this->filejs,
+			'ckeditor' => $this->ckeditor
 		]);
 		}
 	}
@@ -80,43 +94,49 @@ class TextosController extends Template {
 	#hace el update de un registro
 	public function update(array $data, $app){
 		$id = $data['idDocumentoTexto'];
-		$errors = $this->validate($data);
-		if(empty($errors)){
+		$valida = $this->validate($data);
+		if(empty($valida)){ 
 			Textos::find($id)->update([
-				'idTipoDocto' => $data['idTipoDocto'],
-				'idSubTipoDocumento' => $data['idSubTipoDocumento'],
+				'idTipoDocto' => $data['documento'],
+				'idSubTipoDocumento' => $data['subDocumento'],
 				'texto' => $data['texto'],
 				'usrModificacion' => $_SESSION['idUsuario'],
               	'fModificacion' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s'),
               	'estatus' => $data['estatus']
 			]);
-			$app->redirect('/SIA/juridico/DoctosTextos');
-		}else{
-			$this->createUpdate($id,$app,false,$errors);
+			$sucess = $this->success();
+			echo json_encode($sucess);
+
+		} else{
+			echo json_encode($valida);
 		}
+		
 	}
 
-	#valida los campos para insercion y actualizacion
+#valida el formulario 
 	public function validate(array $data){
-		$errors = [];
-		$validator = new \Sirius\Validation\Validator;
-		
-		$validator->add(
-			array(
-				'idTipoDocto' => 'required | Alpha | MaxLength(30)(Excede los caracteres permitidos)',
-				'idSubTipoDocumento' => 'required | number ',
-				'texto' => 'required'
-			)
-		);
+		$final = [];
+		$res[0] = ValidateController::string($data['documento'],'documento',20);
+		$res[1] = ValidateController::number($data['subDocumento'],'subDocumento');
+		$res[2] = ValidateController::alphaNumeric($data['texto'],'texto',350);
 
-		if(!$validator->validate($data)){
-			$errors = $validator->getMessages();
-			return $errors;
-		}else{
-
-			return $errors;
+		foreach ($res as $key => $value) {
+			if(!empty($value)){
+				array_push($final,$value);
+			}
 		}
+		
+		return $final;
 
+	}
+
+	public function success(){
+		$sucess = [];
+		$sucess['campo'] = 'success';
+		$sucess['message'] = 'Registro Exitoso';
+
+		$res[0] = $sucess;
+		return $res;
 	}
 }
 

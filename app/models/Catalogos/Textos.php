@@ -6,7 +6,18 @@ class Textos extends Model {
 	 protected $primaryKey = 'idDocumentoTexto';
      public $timestamps = false;
      protected $table = 'sia_CatDoctosTextos';
-     protected $fillable = ['idTipoDocto', 'tipo', 'idSubTipoDocumento','nombre','texto', 'usrAlta','fAlta'];
+     protected $fillable = [
+     	'idTipoDocto', 
+     	'tipo', 
+     	'idSubTipoDocumento',
+     	'nombre',
+     	'texto', 
+     	'usrAlta',
+     	'fAlta',
+     	'usrModificacion',
+     	'fModificacion',
+     	'estatus'
+     ];
 
 
 }

@@ -17,15 +17,11 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 	});
 
 	$app->get('/SubTiposDocumentos/create',function() use ($controller){
-		$errors = false;
-		$message = false;
-		$controller->create($message, $errors);
+		$controller->create();
 	});
 
 	$app->get('/SubTiposDocumentos/:id',function($id) use ($controller,$app){
-		$errors = false;
-		$message = false;
-		$controller->createUpdate($id, $app, $message, $errors);
+		$controller->createUpdate($id, $app);
 	})->conditions(array('id' => '[0-9]{1,2}'));
 
 	$app->post('/SubTiposDocumentos/create',function() use ($app,$controller){

@@ -1,0 +1,34 @@
+{% extends 'layoutTable.twig' %}
+
+{% block btnHeader %}
+    <a id="addRegister" href=" /SIA/juridico/Caracteres/create" class="btn btn-info btn-add" role="button">
+        Añadir Registro
+    </a>
+{% endblock %}
+
+{% block order %}
+Lista de Registros
+{% endblock %}
+
+{% block table %}
+ <table class="table table-hover table-md" id="main-table-catalogos">
+    <thead>
+        <tr>
+            <th scope="col" class="hidden">Id</th>
+            <th scope="col">Siglas</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Estatus</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for caracter in caracteres %}
+            <tr data-ruta="Caracteres">
+                <td class="hidden">{{ caracter.idCaracter }}</td>
+                <td>{{ caracter.siglas }}</td>
+                <td>{{ caracter.nombre }}</td>
+                <td>{{ caracter.estatus }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

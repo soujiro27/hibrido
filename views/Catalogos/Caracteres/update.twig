@@ -1,0 +1,33 @@
+{% extends 'layoutForm.twig' %}
+{% block title %}Añadir Registro{% endblock %}
+{% block form %}
+<form id="Caracteres-update" method="POST"  data-ruta="Caracteres" action="./update">
+    <div class="form-group row">
+        <label class="form-control-label col-lg-1" for="siglas">Siglas</label>
+        <div class="col-lg-2">
+            <input class="form-control" id="siglas" type="text" placeholder="Siglas"  required name="siglas" title="Inserta una Sigla" value="{{ caracter.siglas | trim }}"/>
+        </div>
+            <input type="hidden" name="idCaracter" value="{{ caracter.idCaracter }}">
+    </div>
+    <div class="form-group row nombre">
+        <label class="form-control-label col-lg-1" for="nombre">Nombre</label>
+        <div class="col-lg-2">
+            <input class="form-control" id="nombre" type="text" placeholder="Nombre" required name="nombre" title="Nombre Incorrecto o Caracteres maximos" value="{{ caracter.nombre }}" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="form-control-label col-lg-1" for="estatus">Estatus</label>
+        <div class="col-lg-2">
+            <select class="form-control" name="estatus">
+                <option value="ACTIVO" {% if caracter.estatus == 'ACTIVO' %} selected {% endif %}>ACTIVO</option>
+                <option value="INACTIVO" {% if caracter.estatus == 'INACTIVO' %} selected {% endif %}>INACTIVO</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group send">
+        <input class="btn btn-info" type="submit" value="Guardar"/>
+        <button class="btn btn-danger" id="cancelar" data-ruta="Caracteres">Cancelar</button>
+    </div>
+</form>
+    {% include 'errors.twig' %}
+{% endblock %}
