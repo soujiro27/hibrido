@@ -1,0 +1,79 @@
+{% extends 'layoutTable.twig' %}
+{% block btnHeader %}
+    <a id="addRegister" href="/SIA/juridico/Volantes/create" class="btn btn-info btn-add" role="button">
+        Añadir Registro
+    </a>
+{% endblock %}
+
+{% block order %}
+    <div class="order">
+        <button class="btn btn-warning" id="btn-order">Ordernar Registros</button>
+        <form action="/SIA/juridico/Volantes" class="form-order form-inline" id="form-order">
+
+            <select name="campo" id="campo" required class="form-control">
+                <option value="">Campo</option>
+                <option value="folio">Folio</option>
+                <option value="numDocumento">Documento</option>
+                <option value="idRemitente">Remitente</option>
+                <option value="idTurnado">Turnado</option>
+                <option value="fRecepcion">Fecha</option>
+                <option value="extemporaneo">Desfazado</option>
+                <option value="nombre">Oficio</option>
+                <option value="estadoProceso">Estado</option>
+            </select>
+            <select name="tipo" id="tipo" required class="form-control">
+                <option value="">Tipo</option>
+                <option value="asc">Ascendente</option>
+                <option value="desc">Descendente</option>
+            </select>
+            <select name="year" id="year">
+                <option value="">Año</option>
+                <option value="2017">2017</option>
+                <option value="2018">2018</option>
+            </select>
+            <input type="submit" value="Ordenar" class="btn btn-info">
+        </form>
+    </div>
+{% endblock %}
+
+
+
+
+
+{% block table %}
+    <table class="table table-hover" id="main-table" data-ruta="Volantes">
+        <tr>
+            <th class="hidden">id</th>
+            <th scope="col">Folio</th>
+            <th scope="col">Documento</th>
+            <th scope="col">Remitente</th>
+            <th scope="col">Turnado</th>
+            <th scope="col">Fecha Recepcion</th>
+            <th scope="col">Desfazado</th>
+            <th scope="col">Auditoria</th>
+            <th scope="col">Oficio</th>
+            <th scope="col">Estado</th>
+        </tr>
+        {% for volante in volantes %}
+            <tr data-ruta="Volantes">
+
+                <td class="hidden">{{ volante.idVolante }}</td>
+                <td>{{ volante.folio }} - {{ volante.subFolio }}</td>
+                <td>{{ volante.numDocumento }}</td>
+                <td>{{ volante.idRemitente }}</td>
+                <td>{{ volante.idTurnado }}</td>
+                <td>{{ volante.fRecepcion }}</td>
+                <td>{{ volante.extemporaneo }}</td>
+                <td>{{ volante.clave }}</td>
+                <td>{{ volante.nombre }}</td>
+                {% if volante.estadoProceso == 'CERRADO' %}
+                    <td class="cerrado">{{ volante.estadoProceso }}</td>
+                {% else %}
+                    <td>{{ volante.estadoProceso }}</td>
+                {% endif %}
+
+
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

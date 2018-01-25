@@ -36,11 +36,13 @@ class ApiController {
 
 	#trae los datos de la auditoria mediante el numero 
 	public function load_datos_auditoria(array $dato){
+				
+		$cuenta = substr($dato['cuenta'], -2);
 
 		if(empty($dato['clave'])){
 			$datosAuditoria = array('error' => 'La Auditoria NO existe', );
 		}else{
-			$cveAuditoria = 'ASCM/'.$dato['clave'].'/'.$dato['cuenta'];
+			$cveAuditoria = 'ASCM/'.$dato['clave'].'/'.$cuenta;
 			
 			$datos = Auditorias::select('idAuditoria', 'tipoAuditoria','rubros','idArea')
 			->where('clave',"$cveAuditoria")
@@ -85,12 +87,15 @@ class ApiController {
 	#trae los datos de aquien fue turnado el ifa, el irac y la confronta por numero de auditoria 
 	public function load_turnado_auditoria(array $dato) {
 
+
+		$cuenta = substr($dato['cuenta'], -2);
+
 		if(empty($dato['clave']))
 		{
 			$turnos  = array('error' => 'No Hay Datos', );
 		}else{
 
-			$clave = 'ASCM/'.$dato['clave'].'/'.$dato['cuenta'];
+			$clave = 'ASCM/'.$dato['clave'].'/'.$cuenta;
 
 			$datos = Auditorias::select('idAuditoria', 'tipoAuditoria','rubros')
 			->where('clave',"$clave")
