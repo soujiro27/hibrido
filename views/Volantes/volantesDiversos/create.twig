@@ -2,12 +2,12 @@
 {% block title %}Añadir Registro{% endblock %}
 {% block form %}
 
-    <form class="form-inline"  method="POST" data-ruta="Volantes" id="Volantes">
+    <form class="form-inline volantes" id="Volantes" method="POST" data-ruta="VolantesDiversos" >
         <div class="headerVolante">
             <div class="form-group idDocumento">
                 <label for="idDocumento">Tipo de Documento</label>
-                <select class="form-control" id="idDocumento" name="documento" required="required">
-                    <option value="">Escoga una Opcion</option>
+                <select class="form-control" id="volantesDiversos" name="idTipoDocto" required="required">
+                    <option value="">Seleccione Un Documento</option>
                     {% for documento in documentos %}
                         <option value="{{ documento.idTipoDocto }}">{{ documento.nombre }}</option>
                     {% endfor %}
@@ -15,43 +15,20 @@
             </div>
             <div class="form-group subDocumento">
                 <label for="subDocumento">Tipo de SubDocumento</label>
-                <select class="form-control" id="subDocumento" name="subDocumento" required="required">
-                    <option value="">Escoga una Opcion</option>
+                <select class="form-control" id="subDocumento" name="idSubTipoDocumento" required="required">
+                    <option value="">Seleccione un Documento Primero</option>
                 </select>
-                <input id="notaConfronta" type="hidden" value="NO" name="notaConfronta"/>
             </div>
 
-            <div class="form-group Promocion">
-                <label for="subDocumento">Promocion de Accion</label>
-                <select class="form-control" id="promocion" name="promocion" required="required">
-                    <option value="">Escoga una Opcion</option>
-                    <option value="SI"> SI</option>
-                    <option value="NO"> NO </option>
-                </select>
-            </div>
             <div class="form-group extemporaneo">
                 <label for="extemporaneo">Extemporáneo</label>
                 <select class="form-control" id="extemporaneo" name="extemporaneo" required="required">
-                    <option value="">Escoga una Opcion</option>
+                    <option value=""> Seleccione una Opción </option>
                     <option value="SI"> SI</option>
                     <option value="NO"> NO </option>
                 </select>
             </div>
-
-            	 <div class="form-group cveAuditoria">
-                <label for="cveAuditoria">Auditoria</label>
-                <div class="addAuditoriaContainer">
-                    <button class="btn btn-info" id="modalAuditoria"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                    <span id="auditoria">No. Auditoria</span>
-                    <input id="cveAuditoria" type="hidden" name="cveAuditoria" value="" />
-                    <input type="hidden" id="cta-publica" value="{{ cuenta }}" data-cuenta="{{ cuenta }}" >
-                </div>
-            </div>
-           
         </div>
-
-
-
         <div class="contentVolante">
             <div class="bloque1">
                 <div class="form-group Folio">
@@ -88,7 +65,22 @@
             <div class="bloque3">
                 <div class="form-group idRemitente">
                     <label for="idRemitente">Remitente</label>
-                    <input class="form-control" id="idRemitente" type="text" name="idRemitente" readonly />
+                    <input class="form-control" id="idRemitente" type="hidden" name="idRemitente"    />
+                    <input class="form-control" id="idRemitenteJuridico" type="hidden" name="idRemitenteJuridico" />
+                   <select class="form-control" id="tipoRemitente"> 
+                        <option value="">Seleccion una opcion</option>
+                        <option value="I">INTERNO</option>
+                        <option value="E">EXTERNO</option>
+                   </select>
+                </div>
+                <div class="form-group nombre">
+                    <label for="idRemitente">Nombre</label>
+                    <input class="form-control"  type="text" id="nombreRemitente"   readonly />
+                </div>
+                <div class="form-group puesto">
+                    <label for="idRemitente">Puesto</label>
+                    <input class="form-control" id="puestoRemitente" type="text"   readonly />
+
                 </div>
                
             </div>
@@ -131,7 +123,9 @@
         </div>
         <div class="form-group send">
             <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
-            <button class="btn btn-danger btn-sm" id="cancelar" data-ruta="Volantes" >Cancelar</button>
+            <button class="btn btn-danger btn-sm" id="cancelar">Cancelar</button>
         </div>
     </form>
+    {% include 'errors.twig' %}
+
 {% endblock %}

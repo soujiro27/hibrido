@@ -117,7 +117,7 @@ class TextosController extends Template {
 	public function validate(array $data){
 		$final = [];
 		$res[0] = ValidateController::string($data['documento'],'documento',20);
-		$res[1] = ValidateController::number($data['subDocumento'],'subDocumento');
+		$res[1] = ValidateController::number($data['subDocumento'],'subDocumento',true);
 		$res[2] = ValidateController::alphaNumeric($data['texto'],'texto',350);
 
 		foreach ($res as $key => $value) {

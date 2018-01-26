@@ -17,15 +17,14 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 	});
 
 	$app->get('/Volantes/create',function() use ($controller){
-		$message = false;
-		$errors = false;
-		$controller->create($message,$errors);
+		
+		$controller->create();
 	});
 
 	$app->get('/Volantes/:id',function($id) use ($controller,$app){
 		$message = false;
 		$errors = false;
-		$controller->createUpdate($id, $app, $message, $errors);
+		$controller->createUpdate($id, $app);
 	})->conditions(array('id' => '[0-9]{1,4}'));
 
 	$app->post('/Volantes/create',function() use ($app,$controller){

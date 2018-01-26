@@ -26,7 +26,7 @@ class ValidateController {
 	}
 
 
-	public function number($numero,$campo){
+	public function number($numero,$campo,$emptyField){
 		$errors  = array();
 		$res = v::numeric()->validate($numero);
 		if(!$res){
@@ -34,6 +34,13 @@ class ValidateController {
 			$errors['campo'] = $campo;
 			$errors['message'] = 'El Campo no puede estar vacio y/o solo acepta Numeros';
 			
+		} else if($emptyField) {
+
+			if($numero == 0) {
+				
+				$errors['campo'] = $campo;
+				$errors['message'] = 'El Campo no puede estar vacio y/o solo acepta Numeros';	
+			}
 		}
 
 		return $errors; 
@@ -50,6 +57,7 @@ class ValidateController {
 
 		return $errors;
 	}
+
 }
 
 ?>

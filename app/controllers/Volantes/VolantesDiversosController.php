@@ -16,6 +16,8 @@ use App\Models\Volantes\Notificaciones;
 class volantesDiversosController extends Template { 
 
     private $modulo = 'Volantes-Diversos';
+    private $filejs = 'Volantes';
+
 
 	#crea la tabla con los registros
 	public function index() {
@@ -33,6 +35,7 @@ class volantesDiversosController extends Template {
 			'sesiones'   => $_SESSION,
 			'modulo'	 => $this->modulo,
 			'volantes' => $volantes,
+
 		]);
     }
 
@@ -52,7 +55,8 @@ class volantesDiversosController extends Template {
             'direccionGral' => $turnadoDireccion,
             'modulo' => $this->modulo,
             'mensaje' => $message,
-            'errors' => $errors
+            'errors' => $errors,
+            'filejs' => $this->filejs
         ]);
     }
 

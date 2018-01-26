@@ -1,7 +1,6 @@
 <?php
 namespace App\Models\Volantes;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Volantes\Volantes;
 
 class VolantesDocumentos extends Model {
     public $timestamps = false;
@@ -17,9 +16,5 @@ class VolantesDocumentos extends Model {
         'fAlta',
         'estatus'
     ];
-
-    public function Volantes(){
-        return $this->hasOne('App\Models\Volantes\Volantes','idVolante');
-    }
 
 }
