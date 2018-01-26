@@ -35,6 +35,11 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 		$controller->load_documentos_turnados($app->request->get());
 	});
 
+
+	$app->get('/api/areas',function() use ($controller,$app){
+		$controller->load_areas();
+	});
+
 	$app->post('/api/upload',function() use ($controller,$app){
 		$controller->upload_files($app->request->post(),$_FILES,$app);
 	});

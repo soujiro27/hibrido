@@ -36,9 +36,7 @@ class BaseController {
 
 	}
 
-	public function notificaciones_varios($id,$mensaje){
 
-	}
 
 
 	public function get_users_notifica($rpe){

@@ -2,7 +2,7 @@
 {% block title %}Añadir Registro{% endblock %}
 {% block form %}
 
-    <form class="form-inline volantes" id="Volantes" method="POST" data-ruta="VolantesDiversos" >
+    <form class="form-inline volantes" id="diversos" method="POST" data-ruta="VolantesDiversos" >
         <div class="headerVolante">
             <div class="form-group idDocumento">
                 <label for="idDocumento">Tipo de Documento</label>
@@ -100,16 +100,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="form-group idTurnado">
-                    <label for="idTurnado">Turnado a:</label>
-                    <select class="form-control" id="idTurnado" name="idTurnado" required="required">
-                        <option value="">Seleccione una Opcion</option>
-                        {% for turnado in turnados %}
-                            <option value="{{ turnado.idArea }}">{{ turnado.nombre }}</option>
-                        {% endfor %}
-                        <option value="{{ direccionGral.idArea }}">{{ direccionGral.nombre }} </option>
-                    </select>
-                </div>
+                
                 <div class="form-group idAccion">
                     <label for="idAccion">Instruccion</label>
                     <select class="form-control" id="idAccion" name="idAccion" required="required">
@@ -119,13 +110,17 @@
                         {% endfor %}
                     </select>
                 </div>
+                <div class="form-group idTurnado">
+                    <label for="idTurnado">Turnado a:</label>
+                    <input type="hidden" name="idTurnado" id="idTurnado">
+                    <button class="btn-sm btn-primary btn" id="btn-turnar">Turnar</button>
+                </div>
             </div>
         </div>
         <div class="form-group send">
             <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
-            <button class="btn btn-danger btn-sm" id="cancelar">Cancelar</button>
+            <button class="btn btn-danger btn-sm" id="cancelar" data-ruta="VolantesDiversos">Cancelar</button>
         </div>
     </form>
-    {% include 'errors.twig' %}
 
 {% endblock %}

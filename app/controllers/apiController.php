@@ -12,6 +12,7 @@ use App\Models\Volantes\Volantes;
 use App\Models\Volantes\VolantesDocumentos;
 use App\Models\Volantes\Usuarios;
 use App\Models\Volantes\Notificaciones;
+use App\Models\Volantes\Areas;
 
 use Sirius\Validation\Validator;
 use Carbon\Carbon;
@@ -134,6 +135,21 @@ class ApiController {
 									->get();
 		echo json_encode($personal);
 	}
+
+	public function load_areas() {
+
+		$res = [];
+		$turnados  = Areas::where('idAreaSuperior','DGAJ')->where('estatus','ACTIVO')->get();
+		$turnadoDireccion = array ('idArea'=>'DGAJ','nombre' => 'DIRECCIÓN GENERAL DE ASUNTOS JURIDICOS');
+		
+		foreach ($turnados as $key => $value) {
+			$res[$key] = $turnados[$key];
+		}
+		array_push($res,$turnadoDireccion);
+
+		echo json_encode($res);
+	}
+
 
 	public function upload_files($idVolante,$idTurnadoJuridico,$file) {
 		$directory ='jur/files/documentos/'.$idVolante;

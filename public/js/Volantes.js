@@ -26,6 +26,8 @@ volante.form_update();
 
 diverso.load_subdocumentos();
 diverso.load_remitentes();
+diverso.turnar();
+diverso.form_submit();
 
 },{"./js/base":2,"./js/diversos":3,"./js/volantes":5,"babelify-es6-polyfill":164,"jquery":169}],2:[function(require,module,exports){
 'use strict';
@@ -268,12 +270,111 @@ module.exports = function () {
 				diverso.remitentes(tipoRemitente);
 			});
 		}
+	}, {
+		key: 'turnar',
+		value: function turnar() {
+			var self = this;
+			$('button#btn-turnar').click(function (e) {
+				e.preventDefault();
+				self.load_areas_turnados();
+			});
+		}
+	}, {
+		key: 'load_areas_turnados',
+		value: async function load_areas_turnados() {
+
+			var datos = await this.load_areas_turnar();
+			var table = this.construc_table_areas(datos);
+			var html = require('./../templates/areas_turnar.html');
+			var tabla = html.replace(':body:', table);
+			diverso.turnar(tabla);
+		}
+	}, {
+		key: 'construc_table_areas',
+		value: function construc_table_areas(data) {
+
+			var tr = '';
+			$.each(data, function (index, val) {
+				tr += '<tr>\n\t\t\t\t\t<td><input type="checkbox" id="area" value="' + data[index].idArea + '"></td>\n\t\t\t\t\t<td>' + data[index].nombre + '</td>\n\t\t\t\t\t</tr>';
+			});
+
+			return tr;
+		}
+	}, {
+		key: 'load_areas_turnar',
+		value: function load_areas_turnar() {
+
+			var datos = new Promise(function (resolve) {
+				$.get({
+					url: '/SIA/juridico/api/areas',
+					success: function success(json) {
+						resolve(JSON.parse(json));
+					}
+				});
+			});
+			return datos;
+		}
+	}, {
+		key: 'form_submit',
+		value: function form_submit() {
+			var self = this;
+			$('form#diversos').submit(function (e) {
+				e.preventDefault();
+				var datos = $(this).serializeArray();
+
+				var valida_string = self.validate_fields_string(datos);
+				var valida_numbers = self.valida_numbers(datos);
+				var valida_areas = self.valida_areas(datos);
+				/*
+    			if(valida_string.length > 0 ){
+    				let tabla = base.construct_table_errors(valida_string)
+    				modal.errors(tabla)
+    			
+    			} else if (valida_numbers.length > 0) {
+    
+    				let tabla = base.construct_table_errors(valida_numbers)
+    				modal.errors(tabla)
+    			
+    			} else if(valida_areas.length > 0 ){
+    
+    				let tabla = base.construct_table_errors(valida_areas)
+    				modal.errors(tabla)
+    
+    			} else {
+    				base.new_insert(datos,'VolantesDiversos')
+    			}
+    */
+				base.new_insert(datos, 'VolantesDiversos');
+			});
+		}
+	}, {
+		key: 'validate_fields_string',
+		value: function validate_fields_string(datos) {
+
+			var campos = base.create_fields_validate(datos, ['idTipoDocto', 'idRemitente', 'extemporaneo']);
+			var validacion = base.valida_string(campos, [20, 20, 2, 50]);
+			return validacion;
+		}
+	}, {
+		key: 'valida_numbers',
+		value: function valida_numbers(datos) {
+			var campos = base.create_fields_validate(datos, ['folio', 'subFolio', 'idCaracter', 'idAccion', 'idSubTipoDocumento', 'anexos']);
+			var validacion = base.valida_number(campos);
+			return validacion;
+		}
+	}, {
+		key: 'valida_areas',
+		value: function valida_areas(datos) {
+			var campos = base.create_fields_validate(datos, ['idTurnado']);
+			var validacion = base.valida_empty(campos);
+			return validacion;
+		}
 	}]);
 
 	return Diversos;
 }();
 
-},{"./../modals/diversos":6,"./base":2,"./modals":4,"./volantes":5,"jquery":169,"validator":172}],4:[function(require,module,exports){
+},{"./../modals/diversos":6,"./../templates/areas_turnar.html":243,"./base":2,"./modals":4,"./volantes":5,"jquery":169,"validator":172}],4:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -632,12 +733,38 @@ module.exports = function () {
 			});
 			return datos;
 		}
+	}, {
+		key: 'turnar',
+		value: function turnar(html) {
+			$.confirm({
+				title: 'Seleccione Areas a Turnar',
+				content: html,
+				icon: 'fa fa-address-book',
+				type: 'blue',
+				columnClass: 'col-md-11 col-md-offset-1',
+				draggable: false,
+				buttons: {
+					confirm: {
+						text: 'Aceptar',
+						btnClass: 'btn-primary',
+						action: function action() {
+							var areas = [];
+							$("input:checkbox:checked").each(function () {
+								areas.push($(this).val());
+							});
+							$('input#idTurnado').val(areas);
+						}
+					}
+				}
+
+			});
+		}
 	}]);
 
 	return ModalDiversos;
 }();
 
-},{"./../templates/remitentes.html":245,"jquery":169,"jquery-confirm":166,"jquery-ui-browserify":168,"validator":172}],7:[function(require,module,exports){
+},{"./../templates/remitentes.html":246,"jquery":169,"jquery-confirm":166,"jquery-ui-browserify":168,"validator":172}],7:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -820,7 +947,7 @@ module.exports = function () {
 	return ModalVolantes;
 }();
 
-},{"./../templates/cuenta_publica.html":243,"./../templates/numero_auditoria.html":244,"jquery":169,"jquery-confirm":166,"jquery-ui-browserify":168,"validator":172}],8:[function(require,module,exports){
+},{"./../templates/cuenta_publica.html":244,"./../templates/numero_auditoria.html":245,"jquery":169,"jquery-confirm":166,"jquery-ui-browserify":168,"validator":172}],8:[function(require,module,exports){
 module.exports = function(it){
   if(typeof it != 'function')throw TypeError(it + ' is not a function!');
   return it;
@@ -33006,9 +33133,11 @@ function whitelist(str, chars) {
 }
 module.exports = exports['default'];
 },{"./util/assertString":239}],243:[function(require,module,exports){
-module.exports = '<h4>Seleccione la Cuenta Publica</h4>\n<select class="form-control" id="cuenta">\n	<option value="">Escoga una opcion</option>\n	<option value="CTA-2015">2015</option>\n	<option value="CTA-2016">2016</option>\n</select>';
+module.exports = '\n<div class="table-areas-turnar">\n	<table class="table">\n		<thead>\n			<th>Seleccionar</th>\n			<th>Area</th>\n		</thead>\n		<tbody id="body-areas">\n			:body:\n		</tbody>\n	</table>\n</div>';
 },{}],244:[function(require,module,exports){
-module.exports = '<div class="inputAuditoria">\n<p>Cuenta Publica</p> <span id="numero-auditoria"></span>\n<input type="number" id="numero-auditoria" class="form-control">	\n</div>\n\n<div class="table-datos-auditoria">\n	<table id="datos-auditoria" class="table">\n		<thead>\n			<th>Sujeto</th>\n			<th>Rubro</th>\n			<th>Tipo</th>\n		</thead>\n		<tbody></tbody>\n	</table>\n</div>\n<div class="turnado-datos-auditoria">\n	<table id="turnados-auditoria" class="table">\n		<thead>\n			<th>Documento</th>\n			<th>Turnado</th>\n		</thead>\n		<tbody></tbody>\n	</table>\n</div>\n<div id="errors-auditoria"></div>\n';
+module.exports = '<h4>Seleccione la Cuenta Publica</h4>\n<select class="form-control" id="cuenta">\n	<option value="">Escoga una opcion</option>\n	<option value="CTA-2015">2015</option>\n	<option value="CTA-2016">2016</option>\n</select>';
 },{}],245:[function(require,module,exports){
+module.exports = '<div class="inputAuditoria">\n<p>Cuenta Publica</p> <span id="numero-auditoria"></span>\n<input type="number" id="numero-auditoria" class="form-control">	\n</div>\n\n<div class="table-datos-auditoria">\n	<table id="datos-auditoria" class="table">\n		<thead>\n			<th>Sujeto</th>\n			<th>Rubro</th>\n			<th>Tipo</th>\n		</thead>\n		<tbody></tbody>\n	</table>\n</div>\n<div class="turnado-datos-auditoria">\n	<table id="turnados-auditoria" class="table">\n		<thead>\n			<th>Documento</th>\n			<th>Turnado</th>\n		</thead>\n		<tbody></tbody>\n	</table>\n</div>\n<div id="errors-auditoria"></div>\n';
+},{}],246:[function(require,module,exports){
 module.exports = '<div class="input">\n	<input type="text" id="remitente"  class="form-control" placeholder="Busqueda por siglas del Area">\n</div>\n<div class="table-remitentes">\n	<table class="table">\n		<thead>\n			<th>Seleccionar</th>\n			<th>Nombre</th>\n			<th>Puesto</th>\n		</thead>\n		<tbody id="body-remitentes"></tbody>\n	</table>\n</div>';
 },{}]},{},[1]);
