@@ -27,7 +27,9 @@ volante.form_update();
 diverso.load_subdocumentos();
 diverso.load_remitentes();
 diverso.turnar();
+diverso.turnar_update();
 diverso.form_submit();
+diverso.form_update();
 
 },{"./js/base":2,"./js/diversos":3,"./js/volantes":5,"babelify-es6-polyfill":164,"jquery":169}],2:[function(require,module,exports){
 'use strict';
@@ -280,6 +282,27 @@ module.exports = function () {
 			});
 		}
 	}, {
+		key: 'turnar_update',
+		value: function turnar_update() {
+			var self = this;
+			$('button#btn-turnar-update').click(function (e) {
+				e.preventDefault();
+				self.load_areas_update();
+			});
+		}
+	}, {
+		key: 'load_areas_update',
+		value: async function load_areas_update() {
+
+			var idVolante = $('input#idVolante').val();
+			var check = await this.load_areas_turnar_update(idVolante);
+			var datos = await this.load_areas_turnar();
+			var table = this.construct_table_update_turnos(check, datos);
+			var html = require('./../templates/areas_turnar.html');
+			var tabla = html.replace(':body:', table);
+			diverso.turnar(tabla);
+		}
+	}, {
 		key: 'load_areas_turnados',
 		value: async function load_areas_turnados() {
 
@@ -288,6 +311,29 @@ module.exports = function () {
 			var html = require('./../templates/areas_turnar.html');
 			var tabla = html.replace(':body:', table);
 			diverso.turnar(tabla);
+		}
+	}, {
+		key: 'construct_table_update_turnos',
+		value: function construct_table_update_turnos(check, data) {
+
+			var tr = '';
+
+			for (var x in data) {
+
+				tr += '<tr>\n\t\t\t\t\t<td><input type="checkbox" id="area" value="' + data[x].idArea + '" ';
+
+				for (var y in check) {
+
+					if (check[y].receptor == data[x].idArea) {
+
+						tr += ' disabled';
+					}
+				}
+
+				tr += ' ></td><td>' + data[x].nombre + '</td></tr>';
+			}
+
+			return tr;
 		}
 	}, {
 		key: 'construc_table_areas',
@@ -315,6 +361,23 @@ module.exports = function () {
 			return datos;
 		}
 	}, {
+		key: 'load_areas_turnar_update',
+		value: function load_areas_turnar_update(idVolante) {
+
+			var datos = new Promise(function (resolve) {
+				$.get({
+					url: '/SIA/juridico/api/areas/update',
+					data: {
+						idVolante: idVolante
+					},
+					success: function success(json) {
+						resolve(JSON.parse(json));
+					}
+				});
+			});
+			return datos;
+		}
+	}, {
 		key: 'form_submit',
 		value: function form_submit() {
 			var self = this;
@@ -325,26 +388,31 @@ module.exports = function () {
 				var valida_string = self.validate_fields_string(datos);
 				var valida_numbers = self.valida_numbers(datos);
 				var valida_areas = self.valida_areas(datos);
-				/*
-    			if(valida_string.length > 0 ){
-    				let tabla = base.construct_table_errors(valida_string)
-    				modal.errors(tabla)
-    			
-    			} else if (valida_numbers.length > 0) {
-    
-    				let tabla = base.construct_table_errors(valida_numbers)
-    				modal.errors(tabla)
-    			
-    			} else if(valida_areas.length > 0 ){
-    
-    				let tabla = base.construct_table_errors(valida_areas)
-    				modal.errors(tabla)
-    
-    			} else {
-    				base.new_insert(datos,'VolantesDiversos')
-    			}
-    */
-				base.new_insert(datos, 'VolantesDiversos');
+
+				if (valida_string.length > 0) {
+					var tabla = base.construct_table_errors(valida_string);
+					modal.errors(tabla);
+				} else if (valida_numbers.length > 0) {
+
+					var _tabla = base.construct_table_errors(valida_numbers);
+					modal.errors(_tabla);
+				} else if (valida_areas.length > 0) {
+
+					var _tabla2 = base.construct_table_errors(valida_areas);
+					modal.errors(_tabla2);
+				} else {
+					base.new_insert(datos, 'VolantesDiversos');
+				}
+			});
+		}
+	}, {
+		key: 'form_update',
+		value: function form_update() {
+
+			$('form#diversos-udpate').submit(function (e) {
+				e.preventDefault();
+				var datos = $(this).serializeArray();
+				base.new_update(datos, 'VolantesDiversos');
 			});
 		}
 	}, {

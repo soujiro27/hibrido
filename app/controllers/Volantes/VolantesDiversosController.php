@@ -135,13 +135,12 @@ class volantesDiversosController extends Template {
 
 
     public function createUpdate($id, $app){
-            $volantes = Volantes::find($id);
+        $volantes = Volantes::find($id);
         $turnados  = Areas::where('idAreaSuperior','DGAJ')->where('estatus','ACTIVO')->get();
         $turnadoDireccion = array ('idArea'=>'DGAJ','nombre' => 'DIRECCIÓN GENERAL DE ASUNTOS JURIDICOS');
         $acciones = Acciones::where('estatus','ACTIVO')->get();
         $caracteres = Caracteres::where('estatus','ACTIVO')->get();
-
-        $err = false;
+      
 
         echo $this->render('Volantes/volantesDiversos/update.twig',[
             'sesiones'=> $_SESSION,
@@ -151,30 +150,76 @@ class volantesDiversosController extends Template {
             'turnados' => $turnados,
             'direccionGral' => $turnadoDireccion,
             'close' => true,
-            'modulo' => 'Volantes',
+            'modulo' => $this->modulo,
             'filejs' => $this->filejs
+
         ]);
     }
 
     public function update(array $data, $app) {
         $id = $data['idVolante'];
+        
+        $valida = $this->validate_update($data);
+        $areas = $this->create_turnados($data['idTurnado']);
+        
+        $subDocumento = VolantesDocumentos::select('idSubTipoDocumento')->where('idVolante',"$id")->get();
+        $data['idSubTipoDocumento'] = $subDocumento[0]['idSubTipoDocumento'];
 
-        Volantes::find($id)->update([
-            'numDocumento' => $data['numDocumento'],
-            'anexos' => $data['anexos'],
-            'fDocumento' => $data['fDocumento'],
-            'fRecepcion' => $data['fRecepcion'],
-            'hRecepcion' => $data['hRecepcion'],
-            'asunto' => $data['asunto'],
-            'idCaracter' => $data['idCaracter'],
-            'idTurnado' => $data['idTurnado'],
-            'idAccion' => $data['idAccion'],
-            'usrModificacion' => $_SESSION['idUsuario'],
-            'fModificacion' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s'),
-            'estatus' => $data['estatus']
-        ]);
-        $this->notificaciones( $data['idTurnado']);
-        $app->redirect('/SIA/juridico/VolantesDiversos');
+        $folio = Volantes::find($id);
+        $data['folio'] = $folio[0]['folio'];
+       
+        if(empty($valida[0])){
+
+             Volantes::find($id)->update([
+                'numDocumento' => $data['numDocumento'],
+                'anexos' => $data['anexos'],
+                'fDocumento' => $data['fDocumento'],
+                'fRecepcion' => $data['fRecepcion'],
+                'hRecepcion' => $data['hRecepcion'],
+                'asunto' => $data['asunto'],
+                'idCaracter' => $data['idCaracter'],
+                'idAccion' => $data['idAccion'],
+                'usrModificacion' => $_SESSION['idUsuario'],
+                'fModificacion' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s'),
+                'estatus' => $data['estatus']
+            ]);
+
+            
+            if(!empty($data['idTurnado'])){
+
+                foreach ($areas as $key => $value) {
+                    
+                    $turno = new TurnosJuridico([
+                        'idVolante' => $id,
+                        'emisor' => 'DGAJ',
+                        'receptor' => $areas[$key],
+                        'estadoProceso' => 'PENDIENTE',
+                        'usrAlta' => $_SESSION['idUsuario'],
+                        'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s')
+                    ]);
+
+                    $turno->save();
+
+                }
+            }
+
+            $areas = TurnosJuridico::select('receptor')->where('idVolante',"$id")->get();
+            $res = [];
+            foreach ($areas as $key => $value) {
+                array_push($res,$areas[$key]['receptor']);
+            }
+
+            $this->notificaciones($res,$data);
+            //$this->notificaciones_varios($areas,$data);
+            $success = BaseController::success();
+            echo json_encode($success);
+        
+
+        } else {
+
+            echo json_encode($valida);
+        }
+
     }
 
     public function validate(array $data){
@@ -210,6 +255,31 @@ class volantesDiversosController extends Template {
 
         return $final;
         
+    }
+
+    public function validate_update(array $data){
+
+        $res = [];
+        $final = [];
+
+        $res[1] = ValidateController::alphaNumeric($data['numDocumento'],'numDocumento',20);
+        $res[2] = ValidateController::alphaNumeric($data['fDocumento'],'fDocumento',10);
+        $res[3] = ValidateController::alphaNumeric($data['fRecepcion'],'fRecepcion',10);
+        $res[4] = ValidateController::alphaNumeric($data['hRecepcion'],'hRecepcion',5);
+        $res[5] = ValidateController::string($data['estatus'],'estatus',10);
+
+        $res[6] = ValidateController::number($data['anexos'],'anexos',false);
+        $res[7] = ValidateController::number($data['idCaracter'],'idCaracter',true);
+        $res[8] = ValidateController::number($data['idAccion'],'idAccion',true);
+
+        foreach ($res as $key => $value) {
+            if(!empty($value)){
+                array_push($final,$value);
+            }
+        }
+
+
+        return $final;
     }
 
     public function duplicate(array $data) {
@@ -269,8 +339,12 @@ class volantesDiversosController extends Template {
             ->where('titular','SI')
             ->get();
         
-        $jefe_area_rpe = $puestos[0]['rpe'];
+        if($puestos->isEmpty()){
+            $jefe_area_rpe =     [];
+        } else{
 
+            $jefe_area_rpe = $puestos[0]['rpe'];
+        }
         
         return $jefe_area_rpe;
 
@@ -285,14 +359,17 @@ class volantesDiversosController extends Template {
         foreach ($areas as $key => $value) {
         
             $rpe = $this->get_usrid_boss_area($areas[$key]);
+
+            if(!empty($rpe)){
+
+                $datos_boss = BaseController::get_usrId($rpe);
             
-            $datos_boss = BaseController::get_usrId($rpe);
-        
-            $mensaje = 'Mensaje enviado a: '.$datos_boss['nombre'].
-                "\nHas recibido un ".$nombre.
-                "\nCon el folio: ".$data['folio'];
-                
-            BaseController::notificaciones($datos_boss['idUsuario'],$mensaje);
+                $mensaje = 'Mensaje enviado a: '.$datos_boss['nombre'].
+                    "\nHas recibido un ".$nombre.
+                    "\nCon el folio: ".$data['folio'];
+                    
+                BaseController::notificaciones($datos_boss['idUsuario'],$mensaje);
+            }
         }
     }
 
@@ -309,7 +386,7 @@ class volantesDiversosController extends Template {
             $users = BaseController::get_users_notifica($rpe);
             
             $mensaje = 'Mensaje enviado a: '.$datos_boss['nombre'].
-                    "\nHas recibido un ".$nombre.
+                    "\nHas recibido un un ".$nombre.
                     "\nCon el folio: ".$data['folio'];
 
             foreach ($users as $index => $el) {
@@ -318,6 +395,5 @@ class volantesDiversosController extends Template {
         }
     }
 
-    
-
+   
 }

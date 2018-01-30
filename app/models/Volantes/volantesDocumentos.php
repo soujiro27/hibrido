@@ -4,8 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class VolantesDocumentos extends Model {
     public $timestamps = false;
+     protected $primaryKey = 'idVolanteDocumento';
     protected $table = 'sia_VolantesDocumentos';
-    protected $primaryKey = 'idVolanteDocumento';
     protected $fillable = [
         'idVolante',
         'promocion',

@@ -40,6 +40,10 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 		$controller->load_areas();
 	});
 
+	$app->get('/api/areas/update',function() use ($controller,$app){
+		$controller->load_areas_update($app->request->get());
+	});
+
 	$app->post('/api/upload',function() use ($controller,$app){
 		$controller->upload_files($app->request->post(),$_FILES,$app);
 	});

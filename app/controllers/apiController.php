@@ -13,6 +13,7 @@ use App\Models\Volantes\VolantesDocumentos;
 use App\Models\Volantes\Usuarios;
 use App\Models\Volantes\Notificaciones;
 use App\Models\Volantes\Areas;
+use App\Models\Volantes\TurnosJuridico;
 
 use Sirius\Validation\Validator;
 use Carbon\Carbon;
@@ -149,6 +150,16 @@ class ApiController {
 
 		echo json_encode($res);
 	}
+
+
+	public function load_areas_update($data) {
+		
+		$idVolante = $data['idVolante']; 
+		$datos = TurnosJuridico::where('idVolante',"$idVolante")->get();
+		echo json_encode($datos);
+
+	}
+
 
 
 	public function upload_files($idVolante,$idTurnadoJuridico,$file) {

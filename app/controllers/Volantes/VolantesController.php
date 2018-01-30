@@ -155,7 +155,7 @@ class volantesController extends Template{
 
 		$id = $data['idVolante'];
 		$subDocumento = VolantesDocumentos::select('idSubTipoDocumento')->where('idVolante',"$id")->get();
-		$data['subDocumento'] = $subDocumento[0]['idSubTipoDocumento'];
+		$data['idSubTipoDocumento'] = $subDocumento[0]['idSubTipoDocumento'];
 		
 		$folio = Volantes::find($id);
 		$data['folio'] = $folio[0]['folio'];

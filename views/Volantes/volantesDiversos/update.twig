@@ -14,17 +14,16 @@
 {% endblock %}
 {% block form %}
 
-
-    <form class="form-inline volantes" id="volantes" method="POST" action="/SIA/juridico/VolantesDiversos/update" data-ruta="VolantesDiversos">
+    <form class="form-inline volantes" id="diversos-udpate" method="POST" data-ruta="VolantesDiversos">
         <div class="contentVolante">
             <div class="bloque1">
                 <div class="form-group Folio">
                     <label for="Folio">Folio</label>
-                    <input class="form-control" id="Folio" type="number" name="folio" required="" readonly value="{{ volantes.folio }}" />
+                    <input class="form-control" id="Folio" type="number"  required readonly value="{{ volantes.folio }}" />
                 </div>
                 <div class="form-group subFolio">
                     <label for="subFolio">subFolio</label>
-                    <input class="form-control" id="subFolio" type="number" name="subFolio" required="" value="0" readonly value="{{ volantes.subFolio }}" />
+                    <input class="form-control" id="subFolio" type="number"  required value="0" readonly value="{{ volantes.subFolio }}" />
                 </div>
                 <div class="form-group numDocumento">
                     <label for="numDocumento">Numero de Documento</label>
@@ -72,21 +71,8 @@
                 </div>
                 <div class="form-group idTurnado">
                     <label for="idTurnado">Turnado a:</label>
-                    <select class="form-control" id="idTurnado" name="idTurnado" required="required">
-                        <option value="">Seleccione una Opcion</option>
-                        {% for turnado in turnados %}
-                            {% if turnado.idArea == volantes.idTurnado %}
-                                <option value="{{ turnado.idArea }}" selected>{{ turnado.nombre }}</option>
-                            {% else %}
-                                <option value="{{ turnado.idArea }}">{{ turnado.nombre }}</option>
-                            {% endif %}
-                        {% endfor %}
-                        {% if direccionGral.idArea == volantes.idTurnado %}
-                            <option value="{{ direccionGral.idArea }}" selected>{{ direccionGral.nombre }} </option>
-                        {% else %}
-                            <option value="{{ direccionGral.idArea }}">{{ direccionGral.nombre }} </option>
-                        {% endif %}
-                    </select>
+                    <input type="hidden" name="idTurnado" id="idTurnado">
+                    <button class="btn-sm btn-primary btn" id="btn-turnar-update">Turnar</button>
                 </div>
                 <div class="form-group idAccion">
                     <label for="idAccion">Instruccion</label>
@@ -114,14 +100,15 @@
                         <option value="INACTIVO" selected>INACTIVO</option>
                     {% endif %}
                 </select>
-                <input type="hidden" name="idVolante" value="{{ volantes.idVolante }}" />
+                <input type="hidden" name="idVolante" value="{{ volantes.idVolante }}"  id="idVolante" />
+                <input type="hidden" name="idSubTipoDocumento" value="{{ sub.idSubTipoDocumento }}"   />
             </div>
         </div>
         <div class="form-group send">
             {% if close %}
                 <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
             {% endif %}
-            <button class="btn btn-danger btn-sm" id="cancelar">Cancelar</button>
+            <button class="btn btn-danger btn-sm" id="cancelar" data-ruta="VolantesDiversos">Cancelar</button>
         </div>
     </form>
 {% endblock %}
