@@ -147,16 +147,16 @@ class IracController extends Template {
 
     public function Area($id){
         
-        $volante = Volantes::where('idVolante',"$id")->get();
+        $volante = TurnadosJuridico::where('idVolante',"$id")->get();
 
-        return $volante[0]['idTurnado'];
+        return $volante[0]['idAreaRecepcion'];
 
     }
 
     public function load_personal($id){
 
-        $turnado_volantes = Volantes::select('idTurnado')->where('idVolante',"$id")->get();
-        $idTurnado = $turnado_volantes[0]['idTurnado'];
+        $turnado_volantes = TurnadosJuridico::select('idAreaRecepcion')->where('idVolante',"$id")->get();
+        $idTurnado = $turnado_volantes[0]['idAreaRecepcion'];
 
         $puestos = PuestosJuridico::where('idArea',"$idTurnado")->get();
         return $puestos;
