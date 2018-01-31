@@ -1,0 +1,47 @@
+{% extends 'layoutTable.twig' %}
+{% block order %}
+    Lista de Registro Iracs
+{% endblock %}
+
+
+{% block table %}
+    <table class="table table-hover " id="main-table" data-ruta="Irac">
+        <thead>
+        <th class="hidden">id</th>
+        <th>Folio</th>
+        <th>Documento</th>
+        <th>Remitente</th>
+        <th>Fecha Recepcion</th>
+        <th>Asunto</th>
+        <th>Caracter</th>
+        <th>Accion</th>
+        <th>Auditoria</th>
+        <th>Desfazado</th>
+        <th>Estado</th>
+
+        </thead>
+        {% for irac in iracs %}
+            <tr data-ruta="Irac">
+
+                <td class="hidden">{{ irac.idVolante }}</td>
+                <td>{{ irac.folio }}</td>
+                <td>{{ irac.numDocumento }}</td>
+                <td>{{ irac.idRemitente }}</td>
+                <td>{{ irac.fRecepcion }}</td>
+                <td>{{ irac.asunto }}</td>
+                <td>{{ irac.caracter }}</td>
+                <td>{{ irac.accion }}</td>
+                <td>{{ irac.clave }}</td>
+                <td>{{ irac.extemporaneo }}</td>
+                {% if irac.idEstadoTurnado == 'CERRADO' %}
+                    <td class="cerrado">{{ irac.idEstadoTurnado }}</td>
+                {% else %}
+                    <td>{{ irac.idEstadoTurnado }}</td>
+                {% endif %}
+
+
+
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

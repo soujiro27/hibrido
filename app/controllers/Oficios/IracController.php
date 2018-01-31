@@ -1,5 +1,5 @@
 <?php 
-namespace App\Controllers\Documentos;
+namespace App\Controllers\Oficios;
 
 use App\Controllers\Template;
 use Sirius\Validation\Validator;
@@ -22,18 +22,18 @@ class IracController extends Template {
 
          $iracs = Volantes::select('sia_Volantes.idVolante','sia_Volantes.folio',
             'sia_Volantes.numDocumento','sia_Volantes.idRemitente','sia_Volantes.fRecepcion','sia_Volantes.asunto'
-        ,'c.nombre as caracter','a.nombre as accion','audi.clave','sia_Volantes.extemporaneo','t.estadoProceso')
+        ,'c.nombre as caracter','a.nombre as accion','audi.clave','sia_Volantes.extemporaneo','t.idEstadoTurnado')
             ->join('sia_catCaracteres as c','c.idCaracter','=','sia_Volantes.idCaracter')
             ->join('sia_CatAcciones as a','a.idAccion','=','sia_Volantes.idAccion')
             ->join('sia_VolantesDocumentos as vd','vd.idVolante','=','sia_Volantes.idVolante')
             ->join('sia_auditorias as audi','audi.idAuditoria','=','vd.cveAuditoria')
             ->join( 'sia_catSubTiposDocumentos as sub','sub.idSubTipoDocumento','=','vd.idSubTipoDocumento')
-            ->join('sia_turnosJuridico as t','t.idVolante','=','sia_Volantes.idVolante')
+            ->join('sia_TurnadosJuridico as t','t.idVolante','=','sia_Volantes.idVolante')
             ->where('sub.nombre','=','IRAC')
-            ->where('sia_volantes.idTurnado','=',"$area")
+            ->where('t.idAreaRecepcion','=',"$area")
             ->get();
 
-        	echo $this->render('/documentos/Irac/index.twig',[
+        	echo $this->render('/Oficios/Irac/index.twig',[
             'iracs' => $iracs,
             'sesiones'=> $_SESSION,
             'modulo' => 'Irac',
@@ -44,7 +44,7 @@ class IracController extends Template {
 	public function create($id,$message, $errors) {
 		
         $personas = $this->load_personal($id);
-        echo $this->render('documentos/irac/create.twig',[
+        echo $this->render('Oficios/Irac/create.twig',[
 			'sesiones' => $_SESSION,
 			'modulo' => $this->modulo,
 			'mensaje' => $message,
@@ -112,7 +112,7 @@ class IracController extends Template {
         $turnados = $this->load_personal($id);
 
 
-         echo $this->render('documentos/Irac/documentos.twig',[
+         echo $this->render('Oficios/Irac/documentos.twig',[
             'sesiones' => $_SESSION,
             'modulo' => $this->modulo,
             'mensaje' => $message,

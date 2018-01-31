@@ -72,13 +72,94 @@ class DireccionController extends Template {
             ]);
 
             move_uploaded_file($files['archivo']['tmp_name'],$directory.'/'.$nombre_final);
+
+            $turnos = TurnadosJuridico::select('idAreaRecepcion')->where('idVolante',"$id")->get();
+            
+            $areas = [];
+
+            foreach ($turnos as $key => $value) {
+                array_push($areas,$turnos[$key]['idAreaRecepcion']);
+            }
+
+            $datos = Volantes::select('sia_volantes.*','sub.*')
+                    ->join('sia_VolantesDocumentos as sub','sub.idVolante','=','sia_volantes.idVolante')
+                    ->get();
+
+            $data['folio'] = $datos[0]['folio'];
+            $data['idSubTipoDocumento'] = $datos[0]['idSubTipoDocumento'];
+
+            $this->notificaciones($areas,$data);
+            $this->notificaciones_varios($areas,$data);
             
         }
 
         $app->redirect('/SIA/juridico/DocumentosGral');
     }
 
+    public function notificaciones($areas, $data) {
+        var_dump($areas);
+        var_dump($data);
+        
+        $nombre = BaseController::get_nombre_subDocumento($data['idSubTipoDocumento']);
 
+        foreach ($areas as $key => $value) {
+        
+            $rpe = $this->get_usrid_boss_area($areas[$key]);
+
+            if(!empty($rpe)){
+
+                $datos_boss = BaseController::get_usrId($rpe);
+            
+                $mensaje = 'Mensaje enviado a: '.$datos_boss['nombre'].
+                    "\nHas recibido un Documento Digitalizado correspondiente a un: ".$nombre.
+                    "\nCon el folio: ".$data['folio'];
+                    
+                BaseController::notificaciones($datos_boss['idUsuario'],$mensaje);
+            }
+        }
+    }
+
+     public function get_usrid_boss_area($turnado){
+        
+        $puestos = PuestosJuridico::select('rpe')
+            ->where('idArea',"$turnado")
+            ->where('titular','SI')
+            ->get();
+        
+        if($puestos->isEmpty()){
+            $jefe_area_rpe =     [];
+        } else{
+
+            $jefe_area_rpe = $puestos[0]['rpe'];
+        }
+        
+        return $jefe_area_rpe;
+
+
+    }
+
+     public function notificaciones_varios($areas,$data){
+
+            $nombre = BaseController::get_nombre_subDocumento($data['idSubTipoDocumento']);
+            
+        foreach ($areas as $key => $value) {
+            
+            $rpe = $this->get_usrid_boss_area($areas[$key]);
+
+            $datos_boss = BaseController::get_usrId($rpe);
+
+            $users = BaseController::get_users_notifica($rpe);
+            
+            $mensaje = 'Mensaje enviado a: '.$datos_boss['nombre'].
+                    "\nHas recibido un Documento Digitalizado correspondiente a un: ".$nombre.
+                    "\nCon el folio: ".$data['folio'];
+
+            foreach ($users as $index => $el) {
+                BaseController::notificaciones($users[$index]['idUsuario'],$mensaje);
+            }
+        }
+         
+    }
     
 
 

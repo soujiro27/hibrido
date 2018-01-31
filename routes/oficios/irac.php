@@ -1,6 +1,6 @@
 <?php 
 namespace Routes\Documentos;
-use App\Controllers\Documentos\IracController;
+use App\Controllers\Oficios\IracController;
 
 $controller = new IracController;
 
