@@ -10,11 +10,9 @@
     },
     "require": {
         "twig/twig": "~1.0",
-        "illuminate/database": "^5.4",
-        "nesbot/carbon": "^1.22",
-        "siriusphp/validation": "^2.2",
-        "phpoffice/phpword": "v0.13.*",
-        "webmozart/assert": "^1.2",
-        "respect/validation": "^1.1"
+        "illuminate/database": "5.4",
+        "nesbot/carbon": "1.22",
+        "webmozart/assert": "1.2",
+        "respect/validation": "1.1"
     }
 }

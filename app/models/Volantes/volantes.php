@@ -24,6 +24,9 @@ class Volantes extends Model {
         'idTurnado',
         'idAccion',
         'usrAlta',
+        'anexoDoc',
+        'usrModificacion',
+        'fModificacion',
         'fAlta',
         'estatus'
     ];
