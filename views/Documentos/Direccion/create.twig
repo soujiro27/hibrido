@@ -1,0 +1,32 @@
+{% extends 'layoutForm.twig' %}
+{% block title %}Subir Archivo{% endblock %}
+{% block form %}
+    <form id="documentosJur" class="form" enctype="multipart/form-data" method="POST" data-ruta="DocumentosGral">
+
+        <div class="form-group row">
+            <label class="form-control-label col-lg-2" for="documento">Arhivos Asignados</label>
+            {% if nombre == NULL %}
+                <a href="#!" class="col-lg-3"><strong>No hay Documento Asignado</strong></a>
+            {% else %}
+                <a href="/SIA/juridico/public/files/{{ nombre }}" class="col-lg-8" target="_blank">{{ nombre }}</a>
+            {% endif %}
+            <input type="hidden" name="idTurnadoJuridico" value="{{ id }}">
+        </div>
+
+        <div class="form-group file row">
+            <label class="form-control-label col-lg-2" for="documento">Archivo</label>
+            <input type="file" class="col-lg-5" name="archivo" id="imagen" required="required"/>
+        </div>
+
+        <div class="form-group file row">
+            <label class="form-control-label col-lg-2" for="documento">Comentario</label>
+            <textarea class="col-lg-7 form-control" name="comentario" placeholder="Comentarios"></textarea>
+        </div>
+
+
+        <div class="form-group send">
+            <input class="btn btn-primary" type="submit" value="Guardar"/>
+            <button class="btn btn-danger btn-sm" id="cancelar" data-ruta="DocumentosGral">Cancelar</button>
+        </div>
+    </form>
+{% endblock %}

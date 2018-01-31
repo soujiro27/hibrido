@@ -89,6 +89,21 @@ class BaseController {
 		return $nombre;
 
 	}
+
+	public function get_data_area($area){
+
+		$datos = PuestosJuridico::select('sia_PuestosJuridico.*','u.idUsuario')
+				->join('sia_usuarios as u','u.idEmpleado','=','sia_PuestosJuridico.rpe')
+				->where('sia_PuestosJuridico.titular','SI')
+				->where('sia_PuestosJuridico.idArea',"$area")
+				->get();
+
+		return $datos;
+	}
+
+
+	
+
 	
 }
 

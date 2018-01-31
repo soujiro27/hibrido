@@ -13,6 +13,8 @@ use App\Controllers\BaseController;
 use App\Models\Volantes\Areas;
 use App\Models\Volantes\Usuarios;
 use App\Models\Volantes\Notificaciones;
+use App\Models\Documentos\TurnadosJuridico; 
+
 
 use App\Models\Catalogos\Caracteres;
 use App\Models\Catalogos\Acciones;
@@ -26,9 +28,9 @@ class volantesController extends Template{
 	#crea la tabla con los registros
 	public function index(){
 
-		$volantes = Volantes::select('sia_Volantes.*','vd.cveAuditoria','a.clave','sub.nombre','t.estadoProceso')
+		$volantes = Volantes::select('sia_Volantes.*','vd.cveAuditoria','a.clave','sub.nombre','t.idEstadoTurnado','t.idAreaRecepcion')
 		->join('sia_VolantesDocumentos as vd','vd.idVolante','=','sia_volantes.idVolante')
-		->join('sia_turnosJuridico as t','t.idVolante','=','sia_Volantes.idVolante'  )
+		->join('sia_TurnadosJuridico as t','t.idVolante','=','sia_Volantes.idVolante'  )
 		->join('sia_auditorias as a','a.idAuditoria','=','vd.cveAuditoria')
 		->join('sia_catSubTiposDocumentos as sub','sub.idSubTipoDocumento','=','vd.idSubTipoDocumento')
 		->where('sub.auditoria','SI')
@@ -70,71 +72,81 @@ class volantesController extends Template{
 	public function save(array $data, $app) {
 		
 		$data['estatus'] =  'ACTIVO';
-		$valida = $this->validate($data);
-		$duplicate = $this->duplicate($data);
+		
+		$valida = $this->validate_process($data);
+		
+		
+		$datos_director_area = BaseController::get_data_area($data['idTurnado']);
 
-		if(empty($valida[0])){
+		if(empty($valida)){
+			$volantes = new Volantes([
+				'idTipoDocto' =>$data['documento'],
+				'subFolio' => $data['subFolio'],
+				'extemporaneo' => $data['extemporaneo'],
+				'folio' => $data['folio'],
+				'numDocumento' => $data['numDocumento'],
+				'anexos' => $data['anexos'],
+				'fDocumento' => $data['fDocumento'],
+				'fRecepcion' => $data['fRecepcion'],
+				'hRecepcion' => $data['hRecepcion'],
+				'hRecepcion' => $data['hRecepcion'],
+				'idRemitente' => $data['idRemitente'],
+				'destinatario' => 'DR. IVAN OLMOS CANSIANO',
+				'asunto' => $data['asunto'],
+				'idCaracter' => $data['idCaracter'],
+				'idAccion' => $data['idAccion'],
+				'usrAlta' => $_SESSION['idUsuario'],
+				'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s')
+			]);
 
-			if(empty($duplicate[0])){
-			
-				$volantes = new Volantes([
-					'idTipoDocto' =>$data['documento'],
-					'subFolio' => $data['subFolio'],
-					'extemporaneo' => $data['extemporaneo'],
-					'folio' => $data['folio'],
-					'numDocumento' => $data['numDocumento'],
-					'anexos' => $data['anexos'],
-					'fDocumento' => $data['fDocumento'],
-					'fRecepcion' => $data['fRecepcion'],
-					'hRecepcion' => $data['hRecepcion'],
-					'hRecepcion' => $data['hRecepcion'],
-					'idRemitente' => $data['idRemitente'],
-					'destinatario' => 'DR. IVAN OLMOS CANSIANO',
-					'asunto' => $data['asunto'],
-					'idCaracter' => $data['idCaracter'],
-					'idTurnado' => $data['idTurnado'],
-					'idAccion' => $data['idAccion'],
-					'usrAlta' => $_SESSION['idUsuario'],
-					'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s')
-				]);
+			$volantes->save();
+			$max = Volantes::all()->max('idVolante');
+					
+			$volantesDocumentos = new VolantesDocumentos([
+				'idVolante' => $max,
+				'promocion' => $data['promocion'],
+				'cveAuditoria' => $data['cveAuditoria'],
+				'idSubTipoDocumento' => $data['subDocumento'],
+				'notaConfronta' => $data['notaConfronta'],
+				'usrAlta' => $_SESSION['idUsuario'],
+				'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s')
+			]);
 
-				$volantes->save();
-				$max = Volantes::all()->max('idVolante');
-				
-				$volantesDocumentos = new VolantesDocumentos([
-					'idVolante' => $max,
-					'promocion' => $data['promocion'],
-					'cveAuditoria' => $data['cveAuditoria'],
-					'idSubTipoDocumento' => $data['subDocumento'],
-					'notaConfronta' => $data['notaConfronta'],
-					'usrAlta' => $_SESSION['idUsuario'],
-					'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s')
-				]);
+			$volantesDocumentos->save();
 
-				$volantesDocumentos->save();
+			$turno = new TurnadosJuridico([
+	            'idVolante' => $max,
+	            'idAreaRemitente' => 'DGAJ',
+	            'idAreaRecepcion' => $data['idTurnado'],
+	            'idUsrReceptor' => $datos_director_area[0]['idUsuario'],
+	            'idEstadoTurnado' => 'EN ATENCION',
+	            'idTipoTurnado' => 'NUEVO',
+	            'idTipoPrioridad' => $data['idCaracter'],
+	            'comentario' => 'SIN COMENTARIOS',
+	            'usrAlta' => $_SESSION['idUsuario'],
+	            'estatus' => 'ACTIVO',
+	            'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s')
+        	]);
 
-				$this->send_notificaciones($data);
-				$this->send_notificaciones_varios($data);
-				$success = BaseController::success();
-				echo json_encode($success);
+        	$turno->save();
 
-
-			} else {
-				echo json_encode($duplicate);
-			}
-
+			$this->send_notificaciones($data);
+			$this->send_notificaciones_varios($data);
+			$success = BaseController::success();
+			echo json_encode($success);
 		} else {
 			echo json_encode($valida);
 		}
 	}
 
 	public function createUpdate($id, $app){
+		
 		$volantes = Volantes::find($id);
 		$turnados  = Areas::where('idAreaSuperior','DGAJ')->where('estatus','ACTIVO')->get();
-		$turnadoDireccion = array ('idArea'=>'DGAJ','nombre' => 'DIRECCIÓN GENERAL DE ASUNTOS JURIDICOS');
 		$acciones = Acciones::where('estatus','ACTIVO')->get();
 		$caracteres = Caracteres::where('estatus','ACTIVO')->get();
-
+		$turnadosJuridico = TurnadosJuridico::where('idVolante',"$id")->get();
+		$opcion = $turnadosJuridico[0]['idAreaRecepcion'];
 
 		echo $this->render('Volantes/volantes/update.twig',[
             'sesiones'=> $_SESSION,
@@ -142,7 +154,7 @@ class volantesController extends Template{
             'caracteres' => $caracteres,
             'acciones' => $acciones,
             'turnados' => $turnados,
-            'direccionGral' => $turnadoDireccion,
+            'chose' => $opcion,
 			'close' => true,
             'modulo' => 'Volantes',
             'filejs' => $this->filejs
@@ -155,11 +167,7 @@ class volantesController extends Template{
 
 		$id = $data['idVolante'];
 		$subDocumento = VolantesDocumentos::select('idSubTipoDocumento')->where('idVolante',"$id")->get();
-		$data['idSubTipoDocumento'] = $subDocumento[0]['idSubTipoDocumento'];
-		
-		$folio = Volantes::find($id);
-		$data['folio'] = $folio[0]['folio'];
-
+		$data['subDocumento'] = $subDocumento[0]['idSubTipoDocumento'];
 		$valida = $this->validate_update($data);
 
 
@@ -173,13 +181,18 @@ class volantesController extends Template{
 				'hRecepcion' => $data['hRecepcion'],
 				'asunto' => $data['asunto'],
 				'idCaracter' => $data['idCaracter'],
-				'idTurnado' => $data['idTurnado'],
 				'idAccion' => $data['idAccion'],
 				'usrModificacion' => $_SESSION['idUsuario'],
 				'fModificacion' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s'),
 				'estatus' => $data['estatus']
 			]);
 
+			TurnadosJuridico::where('idVolante',"$id")->update([
+				'idAreaRecepcion' => $data['idTurnado'],
+				'idTipoPrioridad' => $data['idCaracter']
+
+
+			]);
 
 			$this->send_notificaciones($data);
 			$this->send_notificaciones_varios($data);
@@ -284,6 +297,34 @@ class volantesController extends Template{
 
 	}
 	
+
+	public function validate_process($data){
+
+		$valida = $this->validate($data);
+		$duplicate = $this->duplicate($data);
+		$datos_director_area = BaseController::get_data_area($data['idTurnado']);
+
+		$final = [];
+
+		if(!empty($valida[0])){
+			return $valida;
+		
+		} elseif (!empty($duplicate[0])) {
+			return $duplicate;
+		
+		} elseif($datos_director_area->isEmpty()){
+
+			$errors['campo'] = 'Puestos Juridico';
+			$errors['message'] = 'EL Director de Area No Ha sido dado de alta en el Sistema';
+		
+			$final[0] = $errors;
+			return $final;
+		} else {
+
+			return $final;
+		}
+		
+	}
 
 	public function get_usrid_boss_area($turnado){
 		

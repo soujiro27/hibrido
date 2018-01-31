@@ -75,19 +75,15 @@
             <div class="form-group idTurnado">
                 <label for="idTurnado">Turnado a:</label>
                 <select class="form-control" id="idTurnado" name="idTurnado" required="required">
+
                     <option value="">Seleccione una Opcion</option>
                     {% for turnado in turnados %}
-                        {% if turnado.idArea == volantes.idTurnado %}
+                        {% if turnado.idArea == chose %}
                             <option value="{{ turnado.idArea }}" selected>{{ turnado.nombre }}</option>
                         {% else %}
                             <option value="{{ turnado.idArea }}">{{ turnado.nombre }}</option>
                         {% endif %}
                     {% endfor %}
-                    {% if direccionGral.idArea == volantes.idTurnado %}
-                        <option value="{{ direccionGral.idArea }}" selected>{{ direccionGral.nombre }} </option>
-                    {% else %}
-                        <option value="{{ direccionGral.idArea }}">{{ direccionGral.nombre }} </option>
-                    {% endif %}
                 </select>
             </div>
             <div class="form-group idAccion">
@@ -116,7 +112,7 @@
                     <option value="INACTIVO" selected>INACTIVO</option>
                 {% endif %}
             </select>
-            
+            <input type="hidden" name="folio" value="{{ volantes.folio }}">
             <input type="hidden" name="idVolante" value="{{ volantes.idVolante }}" />
         </div>
     </div>

@@ -22,8 +22,7 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 	});
 
 	$app->get('/Volantes/:id',function($id) use ($controller,$app){
-		$message = false;
-		$errors = false;
+
 		$controller->createUpdate($id, $app);
 	})->conditions(array('id' => '[0-9]{1,4}'));
 

@@ -13,16 +13,23 @@ include_once '/../routes/volantes/volantes.php';
 include_once '/../routes/volantes/volantesDiversos.php';
 
 
+/*----------oficios------------------------*/
+//include_once '/../routes/oficios/irac.php';
+//include_once '/../routes/oficios/Confrontas.php';
+//include_once '/../routes/oficios/ifa.php';
+
+/*----------Documentos---------------------*/
+
+include_once '/../routes/documentos/direccion.php';
 
 
 
-/*----------Documentos------------------------*/
-include_once '/../routes/documentos/irac.php';
-include_once '/../routes/documentos/Confrontas.php';
-include_once '/../routes/documentos/ifa.php';
+
+
+
 
 /*-------Turnados----------------------------*/
-include_once '/../routes/documentos/Turnados.php';
+include_once '/../routes/oficios/Turnados.php';
 
 /*------------ Api --------------------------*/
 include_once '/../routes/api/api.php';

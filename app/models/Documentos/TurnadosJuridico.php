@@ -4,7 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 
 
 class TurnadosJuridico extends Model {
-     protected $primaryKey = 'idTurnadoJuridico';
      protected $table = 'sia_TurnadosJuridico';
      protected $fillable = [
      'idVolante',

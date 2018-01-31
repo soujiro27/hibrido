@@ -324,7 +324,7 @@ module.exports = function () {
 
 				for (var y in check) {
 
-					if (check[y].receptor == data[x].idArea) {
+					if (check[y].idAreaRecepcion == data[x].idArea) {
 
 						tr += ' disabled';
 					}

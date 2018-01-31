@@ -1,0 +1,72 @@
+{% extends 'layoutTable.twig' %}
+
+
+{% block order %}
+    <div class="order">
+        <button class="btn btn-warning" id="btn-order">Ordernar Registros</button>
+        <form action="/SIA/juridico/DocumentosGral" class="form-order form-inline" id="form-order">
+
+            <select name="campo" id="campo" required class="form-control">
+                <option value="">Campo</option>
+                <option value="folio">Folio</option>
+                <option value="nombre">Tipo</option>
+                <option value="idRemitente">Remitente</option>
+                <option value="estadoProceso">Estado</option>
+            </select>
+            <select name="tipo" id="tipo" required class="form-control">
+                <option value="">Tipo</option>
+                <option value="asc">Ascendente</option>
+                <option value="desc">Descendente</option>
+            </select>
+
+            <select name="auditoria" id="auditoria" required class="form-control">
+                <option value="">Auditoria</option>
+                <option value="SI">SI</option>
+                <option value="NO">NO</option>
+            </select>
+            
+            <input type="submit" value="Ordenar" class="btn btn-info">
+        </form>
+    </div>
+{% endblock %}
+
+{% block table %}
+    <table class="table table-hover" id="main-table-files" data-ruta="DocumentosGral">
+        <tr>
+            <th class="hidden">id</th>
+            <th scope="col">Folio</th>
+            <th scope="col">Sub Folio</th>
+            <th scope="col">Documento</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Remitente</th>
+            <th scope="col">Archivo</th>
+            <th scope="col">Estado</th>
+
+        </tr>
+        {% for documento in documentos %}
+            <tr data-ruta="DocumentosGral">
+
+                <td class="hidden">{{ documento.idTurnadoJuridico }}</td>
+                <td>{{ documento.folio }}</td>
+                <td>{{ documento.subFolio }}</td>
+                <td>{{ documento.numDocumento }}</td>
+                <td>{{ documento.nombre }}</td>
+                <td>{{ documento.idAreaRecepcion }}</td>
+                {% if documento.anexoDoc | length < 1 %}
+                    <td class="sa">Sin Asignar</td>
+                {% else %}
+                    <td>{{ documento.anexoDoc }}</td>
+                {% endif %}
+
+                {% if documento.idEstadoTurnado == 'CERRADO' %}
+                    <td class="cerrado">{{ documento.idEstadoTurnado }}</td>
+                {% else %}
+                    <td>{{ documento.idEstadoTurnado }}</td>
+                {% endif %}
+
+
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

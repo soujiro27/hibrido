@@ -61,15 +61,15 @@
                 <td>{{ volante.folio }} - {{ volante.subFolio }}</td>
                 <td>{{ volante.numDocumento }}</td>
                 <td>{{ volante.idRemitente }}</td>
-                <td>{{ volante.idTurnado }}</td>
+                <td>{{ volante.idAreaRecepcion }}</td>
                 <td>{{ volante.fRecepcion }}</td>
                 <td>{{ volante.extemporaneo }}</td>
                 <td>{{ volante.clave }}</td>
                 <td>{{ volante.nombre }}</td>
-                {% if volante.estadoProceso == 'CERRADO' %}
-                    <td class="cerrado">{{ volante.estadoProceso }}</td>
+                {% if volante.idEstadoTurnado == 'CERRADO' %}
+                    <td class="cerrado">{{ volante.idEstadoTurnado }}</td>
                 {% else %}
-                    <td>{{ volante.estadoProceso }}</td>
+                    <td>{{ volante.idEstadoTurnado }}</td>
                 {% endif %}
 
 

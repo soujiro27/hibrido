@@ -5,7 +5,7 @@ use App\Models\Volantes\Volantes;
 use App\Models\Volantes\Areas;
 use App\Models\Volantes\Usuarios;
 use App\Models\Volantes\Notificaciones;
-use App\Models\Volantes\TurnosJuridico;
+use App\Models\Documentos\TurnadosJuridico; 
 
 use App\Models\Catalogos\TiposDocumentos;
 use App\Models\Catalogos\Caracteres;
@@ -28,10 +28,11 @@ class volantesDiversosController extends Template {
 
 	#crea la tabla con los registros
 	public function index() {
-        $volantes = VolantesDocumentos::select('v.idVolante','v.folio','v.subfolio','v.numDocumento','v.idRemitente'
-        ,'t.receptor','v.fRecepcion','v.extemporaneo','sub.nombre','t.estadoProceso','v.estatus')
+        $volantes = VolantesDocumentos::select('v.idVolante','v.folio','v.subfolio','v.numDocumento',
+            'v.idRemitente','t.idAreaRecepcion','v.fRecepcion','v.extemporaneo','sub.nombre',
+            't.idEstadoTurnado','t.idAreaRecepcion','v.estatus')
         ->join('sia_Volantes as v','v.idVolante','=','sia_volantesDocumentos.idVolante')
-        ->join('sia_turnosJuridico as t','t.idVolante','=','v.idVolante'  )
+        ->join('sia_TurnadosJuridico as t','t.idVolante','=','v.idVolante'  )
         ->join('sia_catSubTiposDocumentos as sub','sub.idSubTipoDocumento','=','sia_volantesDocumentos.idSubTipoDocumento')
         ->where('sub.auditoria','NO')
         ->orderBy('fRecepcion', 'desc')
@@ -76,7 +77,6 @@ class volantesDiversosController extends Template {
 
             if(empty($duplicate[0])){
 
-                $areas = $this->create_turnados($data['idTurnado']);
                 
                 $volantes = new Volantes([
                     'idTipoDocto' =>$data['idTipoDocto'],
@@ -94,7 +94,6 @@ class volantesDiversosController extends Template {
                     'destinatario' => 'DR. IVÁN DE JESÚS OLMOS CANSINO',
                     'asunto' => $data['asunto'],
                     'idCaracter' => $data['idCaracter'],
-                    'idTurnado' => $areas[0],
                     'idAccion' => $data['idAccion'],
                     'usrAlta' => $_SESSION['idUsuario'],
                     'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s')
@@ -114,7 +113,29 @@ class volantesDiversosController extends Template {
 
                 $volantesDocumentos->save();
             
-                $this->save_turnos_juridico($max,$areas);
+                $areas = $this->create_turnados($data['idTurnado']);
+
+                foreach ($areas as $key => $value) {
+                    
+                    $datos_director_area = BaseController::get_data_area($value);
+                
+                    $turno = new TurnadosJuridico([
+                        'idVolante' => $max,
+                        'idAreaRemitente' => 'DGAJ',
+                        'idAreaRecepcion' => $value,
+                        'idUsrReceptor' => $datos_director_area[0]['idUsuario'],
+                        'idEstadoTurnado' => 'EN ATENCION',
+                        'idTipoTurnado' => 'NUEVO',
+                        'idTipoPrioridad' => $data['idCaracter'],
+                        'comentario' => 'SIN COMENTARIOS',
+                        'usrAlta' => $_SESSION['idUsuario'],
+                        'estatus' => 'ACTIVO',
+                        'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s')
+                    ]);
+
+                    $turno->save();
+                }
+
                 $this->notificaciones($areas,$data);
                 $this->notificaciones_varios($areas,$data);
                 $success = BaseController::success();
@@ -203,14 +224,16 @@ class volantesDiversosController extends Template {
                 }
             }
 
-            $areas = TurnosJuridico::select('receptor')->where('idVolante',"$id")->get();
+            $areas = TurnadosJuridico::select('idAreaRecepcion')->where('idVolante',"$id")->get();
             $res = [];
             foreach ($areas as $key => $value) {
-                array_push($res,$areas[$key]['receptor']);
+                array_push($res,$areas[$key]['idAreaRecepcion']);
             }
 
+
+
             $this->notificaciones($res,$data);
-            //$this->notificaciones_varios($areas,$data);
+            $this->notificaciones_varios($res,$data);
             $success = BaseController::success();
             echo json_encode($success);
         
@@ -311,25 +334,7 @@ class volantesDiversosController extends Template {
         return $res;
     }
 
-    public function save_turnos_juridico($idVolante,$areas) {
-
-        $elementos = count($areas);
-        if($elementos > 1){
-            for ($i=1; $i < $elementos  ; $i++) { 
-                
-                $turno = new TurnosJuridico([
-                    'idVolante' => $idVolante,
-                    'emisor' => 'DGAJ',
-                    'receptor' => $areas[$i],
-                    'estadoProceso' => 'PENDIENTE',
-                    'usrAlta' => $_SESSION['idUsuario'],
-                    'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s')
-                ]);
-
-                $turno->save();
-            }
-        }
-    }
+   
 
 
     public function get_usrid_boss_area($turnado){
@@ -353,7 +358,7 @@ class volantesDiversosController extends Template {
 
 
     public function notificaciones($areas, $data) {
-
+        
         $nombre = BaseController::get_nombre_subDocumento($data['idSubTipoDocumento']);
 
         foreach ($areas as $key => $value) {
@@ -377,7 +382,7 @@ class volantesDiversosController extends Template {
 
             $nombre = BaseController::get_nombre_subDocumento($data['idSubTipoDocumento']);
             
-            foreach ($areas as $key => $value) {
+        foreach ($areas as $key => $value) {
             
             $rpe = $this->get_usrid_boss_area($areas[$key]);
 
@@ -393,6 +398,7 @@ class volantesDiversosController extends Template {
                 BaseController::notificaciones($users[$index]['idUsuario'],$mensaje);
             }
         }
+         
     }
 
    
