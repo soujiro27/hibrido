@@ -14,6 +14,7 @@ use App\Controllers\ApiController;
 class IracController extends Template {
 
 	private $modulo = 'Irac';
+    private $filejs = 'Oficios';
 
 	public function index() {
 		$id = $_SESSION['idEmpleado'];
@@ -37,6 +38,7 @@ class IracController extends Template {
             'iracs' => $iracs,
             'sesiones'=> $_SESSION,
             'modulo' => 'Irac',
+            'filejs' => $this->filejs
             ]);
 
 	}
