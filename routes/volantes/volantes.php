@@ -27,7 +27,7 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 	})->conditions(array('id' => '[0-9]{1,4}'));
 
 	$app->post('/Volantes/create',function() use ($app,$controller){
-		$controller->save($app->request->post(), $app);
+		$controller->save($app->request->post(),$_FILES,$app);
 	});
 
 	$app->post('/Volantes/update',function() use($app,$controller) {

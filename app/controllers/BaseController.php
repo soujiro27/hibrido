@@ -12,6 +12,27 @@ use App\Models\Catalogos\PuestosJuridico;
 
 class BaseController {
 
+	public function upload_file_areas($file,$idVolante){
+
+		$nombre_file = $file['file']['name'];
+
+		$directory ='hibrido/files/'.$idVolante.'/Areas';
+    
+        $extension = explode('.',$nombre_file);
+
+        if(!file_exists($directory)){
+                    
+            mkdir($directory,0777,true);
+        } 
+
+        $nombre_final = $idVolante.'.'.$extension[1];
+
+        move_uploaded_file($file['file']['tmp_name'],$directory.'/'.$nombre_final);
+
+        return $nombre_final;
+
+	}
+
 	public function notificaciones($id,$mensaje){
 
 		$notifica = new Notificaciones([

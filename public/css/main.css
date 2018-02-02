@@ -2915,16 +2915,36 @@ body[class*=jconfirm-no-scroll-] {
           transform: scale(1);
 }
 
+' img,
+vino=#65140F img,
+azul=#26bce0 img,
+row = #f1f2f2 img,
+blanco = #fff img,
 header img {
   width: 80%;
 }
+' div.logout,
+vino=#65140F div.logout,
+azul=#26bce0 div.logout,
+row = #f1f2f2 div.logout,
+blanco = #fff div.logout,
 header div.logout {
   position: relative;
 }
+' div.logout-user-name,
+vino=#65140F div.logout-user-name,
+azul=#26bce0 div.logout-user-name,
+row = #f1f2f2 div.logout-user-name,
+blanco = #fff div.logout-user-name,
 header div.logout-user-name {
   margin-top: 15px;
   cursor: pointer;
 }
+' ul.logout-menu,
+vino=#65140F ul.logout-menu,
+azul=#26bce0 ul.logout-menu,
+row = #f1f2f2 ul.logout-menu,
+blanco = #fff ul.logout-menu,
 header ul.logout-menu {
   display: none;
   position: absolute;
@@ -2937,19 +2957,44 @@ header ul.logout-menu {
   border: 1px solid #808080;
   box-shadow: 1px 1px 2px #808080;
 }
+' ul.logout-menu li,
+vino=#65140F ul.logout-menu li,
+azul=#26bce0 ul.logout-menu li,
+row = #f1f2f2 ul.logout-menu li,
+blanco = #fff ul.logout-menu li,
 header ul.logout-menu li {
   padding: 5px;
 }
+' ul.logout-menu li:hover,
+vino=#65140F ul.logout-menu li:hover,
+azul=#26bce0 ul.logout-menu li:hover,
+row = #f1f2f2 ul.logout-menu li:hover,
+blanco = #fff ul.logout-menu li:hover,
 header ul.logout-menu li:hover {
-  background-color: #65140f;
+  background-color: vino;
   color: #fff;
 }
+' ul.logout-menu a,
+vino=#65140F ul.logout-menu a,
+azul=#26bce0 ul.logout-menu a,
+row = #f1f2f2 ul.logout-menu a,
+blanco = #fff ul.logout-menu a,
 header ul.logout-menu a {
   display: block;
 }
+' ul.logout-menu a:hover,
+vino=#65140F ul.logout-menu a:hover,
+azul=#26bce0 ul.logout-menu a:hover,
+row = #f1f2f2 ul.logout-menu a:hover,
+blanco = #fff ul.logout-menu a:hover,
 header ul.logout-menu a:hover {
   color: #fff;
 }
+' input.notificacion,
+vino=#65140F input.notificacion,
+azul=#26bce0 input.notificacion,
+row = #f1f2f2 input.notificacion,
+blanco = #fff input.notificacion,
 header input.notificacion {
   background-color: #f93;
   box-shadow: 1px 1px 1px #808080;
@@ -2963,155 +3008,30 @@ form {
 table tr {
   cursor: pointer;
 }
-form.volantes div.send {
-  width: 50%;
-  display: block !important;
-  margin: 20px 0px;
-}
-form.volantes div.destinatario {
-  display: block;
-  width: 350px !important;
-  margin-top: 20px !important;
-}
-form.volantes div.destinatario input.destinatario {
-  width: 100%;
-}
-form.volantes div.content-auditoria {
-  display: block !important;
-  width: 100%;
-}
-form.volantes div.nombre,
-form.volantes div.puesto {
-  width: 350px;
-}
-form.volantes div.nombre label,
-form.volantes div.puesto label {
-  width: 100% !important;
-}
-form.volantes div.nombre input,
-form.volantes div.puesto input {
-  width: 100% !important;
-}
-form.volantes div.Asunto {
-  width: 100%;
-}
-form.volantes div.Asunto textarea {
-  width: 100%;
-}
-form.volantes div.headerVolante,
-form.volantes div.bloque1,
-form.volantes div.bloque2,
-form.volantes div.bloque3,
-form.volantes div.bloque4,
-form.volantes div.bloque5 {
-  margin-bottom: 20px;
-}
-div#cke_ckeditor {
-  width: 96%;
-  margin-left: 10px !important;
-}
-select {
+select,
+input[type=file] {
+  padding: 5px !important;
   height: 30px !important;
 }
-input[type="radio"] {
+.sidebar #nav {
+  width: 95% !important;
+}
+label.is-invalid {
+  color: #f00;
+}
+/*------------particulares----------*/
+div.row-form {
+  margin-bottom: 10px !important;
+}
+div.btn-save {
+  margin: 15px 5px 0 0px;
+}
+div.btn-save button {
+  margin-left: 15px !important;
+}
+input[type=radio],
+input[type=checkbox] {
   width: 20px;
   height: 20px;
-}
-.sa {
-  color: #f00 !important;
-}
-div.order {
-  position: relative !important;
-}
-div.order form {
-  display: none;
-  width: 200px;
-  position: absolute;
-  top: 30px;
-  left: 0px;
-  background-color: #fff;
-  border: 1px solid #afafaf;
-  box-shadow: 2px 2px 2px #808080;
-}
-div.order form select {
-  width: 90% !important;
-  margin-bottom: 15px !important;
-}
-td.cerrado {
-  color: #f00;
-  text-shadow: -1px -1px 3px #808080;
-}
-div.sidebar {
-  width: 210px !important;
-}
-div.sidebar ul#nav {
-  border: 1px solid #ccc;
-  margin-top: 9px !important;
-}
-h3.autentification {
-  text-shadow: 1px 1px 2px #afafaf;
-}
-div.tooltip-container {
-  width: 40%;
-  margin: 0 10px;
-  position: relative;
-}
-div.tooltip-container i.tooltip-icon {
-  width: 30px;
-  height: 30px;
-  background-color: #2c3e50;
-  color: #fff;
-  text-align: center;
-  padding: 10px 5px;
-  border-radius: 50%;
-}
-div.tooltip-container i.tooltip-icon:hover + div {
-  display: block;
-}
-div.tooltip-container i.tooltip-icon:hover {
-  background-color: #fff;
-  border: 1px solid #2c3e50;
-  color: #2c3e50;
-  box-shadow: 2px 2px 2px #afafaf;
-}
-div.tooltip-container div.tooltip-text-container {
-  display: none;
-  background-color: #2c3e50;
-  color: #fff;
-  padding: 3px !important;
-  border-radius: 0 10px 10px 0;
-  position: absolute;
-  top: 0;
-  left: 60px;
-  box-shadow: 2px 4px 2px #afafaf;
-}
-div.tooltip-container div.tooltip-text-container:before {
-  position: absolute;
-  top: -1px;
-  left: -45px;
-  content: '';
-  border-right: 25px solid #2c3e50 !important;
-  border-left: 20px solid transparent !important;
-  border-top: 20px solid transparent !important;
-  border-bottom: 15px solid transparent !important;
-}
-div#error-frontend,
-table#datos-auditoria,
-table#turnados-auditoria {
-  display: none;
-}
-div#errors {
-  display: none;
-}
-div.header-irac {
-  display: flex;
-}
-div.header-irac a {
   padding: 5px;
-  margin: 0px 10px 0px 0px !important;
-  cursor: pointer;
-}
-div.header-irac .active {
-  border-bottom: 2px solid #808080;
-  box-shadow: 2px 2px solid #000;
 }

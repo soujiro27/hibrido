@@ -2,121 +2,132 @@
 {% block title %}Añadir Registro{% endblock %}
 {% block form %}
 
-    <form class="form-inline volantes" id="diversos" method="POST" data-ruta="VolantesDiversos" >
-        <div class="headerVolante">
-            <div class="form-group idDocumento">
+    <form class="form volantes" id="diversos" method="POST" data-ruta="VolantesDiversos" >
+        <div class="row row-form">
+            <div class="col-lg-3">
                 <label for="idDocumento">Tipo de Documento</label>
-                <select class="form-control" id="volantesDiversos" name="idTipoDocto" required="required">
+                <select class="form-control" id="documento" name="idTipoDocto" data-auditoria='NO'>
                     <option value="">Seleccione Un Documento</option>
                     {% for documento in documentos %}
                         <option value="{{ documento.idTipoDocto }}">{{ documento.nombre }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="form-group subDocumento">
+            <div class="col-lg-5">
                 <label for="subDocumento">Tipo de SubDocumento</label>
-                <select class="form-control" id="subDocumento" name="idSubTipoDocumento" required="required">
+                <select class="form-control" id="subDocumento" name="idSubTipoDocumento" >
                     <option value="">Seleccione un Documento Primero</option>
                 </select>
             </div>
 
-            <div class="form-group extemporaneo">
+            <div class="col-lg-3">
                 <label for="extemporaneo">Extemporáneo</label>
-                <select class="form-control" id="extemporaneo" name="extemporaneo" required="required">
+                <select class="form-control" id="extemporaneo" name="extemporaneo" >
                     <option value=""> Seleccione una Opción </option>
                     <option value="SI"> SI</option>
                     <option value="NO"> NO </option>
                 </select>
             </div>
         </div>
-        <div class="contentVolante">
-            <div class="bloque1">
-                <div class="form-group Folio">
-                    <label for="Folio">Folio</label>
-                    <input class="form-control" id="Folio" type="number" name="folio" required=""/>
-                </div>
-                <div class="form-group subFolio">
-                    <label for="subFolio">subFolio</label>
-                    <input class="form-control" id="subFolio" type="number" name="subFolio" required="" value="0"/>
-                </div>
-                <div class="form-group numDocumento">
-                    <label for="numDocumento">Numero de Documento</label>
-                    <input class="form-control" id="numDocumento" type="text" name="numDocumento" required=""/>
-                </div>
-                <div class="form-group anexos">
-                    <label for="anexos">Numero de Anexos</label>
-                    <input class="form-control" id="anexos" type="number" name="anexos" required="" pattern="[0-9]{1,16}"/>
-                </div>
-            </div>
-            <div class="bloque2">
-                <div class="form-group fDocumento">
-                    <label for="fDocumento">Fecha de Documento</label>
-                    <input class="form-control fechaInput" id="fDocumento" type="text" name="fDocumento" required="" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))"/>
-                </div>
-                <div class="form-group fRecepcion">
-                    <label for="fRecepcion">Fecha de Recepcion</label>
-                    <input class="form-control fechaInput" id="fRecepcion" type="text" name="fRecepcion" required="" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))"/>
-                </div>
-                <div class="form-group hRecepcion">
-                    <label for="hRecepcion">Hora de Recepcion</label>
-                    <input class="form-control" id="hRecepcion" type="time" name="hRecepcion" required="" pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}" placeholder="00:00" title="Formato de 24 horas 00:00"/>
-                </div>
-            </div>
-            <div class="bloque3">
-                <div class="form-group idRemitente">
-                    <label for="idRemitente">Remitente</label>
-                    <input class="form-control" id="idRemitente" type="hidden" name="idRemitente"    />
-                    <input class="form-control" id="idRemitenteJuridico" type="hidden" name="idRemitenteJuridico" />
-                   <select class="form-control" id="tipoRemitente"> 
-                        <option value="">Seleccion una opcion</option>
-                        <option value="I">INTERNO</option>
-                        <option value="E">EXTERNO</option>
-                   </select>
-                </div>
-                <div class="form-group nombre">
-                    <label for="idRemitente">Nombre</label>
-                    <input class="form-control"  type="text" id="nombreRemitente"   readonly />
-                </div>
-                <div class="form-group puesto">
-                    <label for="idRemitente">Puesto</label>
-                    <input class="form-control" id="puestoRemitente" type="text"   readonly />
 
-                </div>
-               
+        <div class="row row-form">
+            <div class="col-lg-2">
+                <label for="Folio">Folio</label>
+                <input class="form-control" id="Folio" type="number" name="folio" required />
             </div>
-            <div class="bloque4">
-                <div class="form-group Asunto">
-                    <label for="Asunto">Asunto</label>
-                    <textarea class="form-control" rows="3" name="asunto" required="" placeholder="Asunto"></textarea>
-                </div>
+            <div class="col-lg-2">
+                <label for="subFolio">subFolio</label>
+                <input class="form-control" id="subFolio" type="number" name="subFolio" required value="0"/>
             </div>
-            <div class="bloque5">
-                <div class="form-group idCaracter">
-                    <label for="idCaracter">Caracter</label>
-                    <select class="form-control" id="idCaracter" name="idCaracter" required="required">
-                        <option value="">Seleccione una Opcion</option>
-                        {% for caracter in caracteres %}
-                            <option value="{{ caracter.idCaracter }}">{{ caracter.nombre }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div class="form-group idAccion">
-                    <label for="idAccion">Instruccion</label>
-                    <select class="form-control" id="idAccion" name="idAccion" required="required">
-                        <option value="">Seleccione una Opcion</option>
-                        {% for accion in acciones %}
-                            <option value="{{ accion.idAccion }}">{{ accion.nombre }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group idTurnado">
-                    <label for="idTurnado">Turnado a:</label>
-                    <input type="hidden" name="idTurnado" id="idTurnado">
-                    <button class="btn-sm btn-primary btn" id="btn-turnar">Turnar</button>
-                </div>
+            <div class="col-lg-4">
+                <label for="numDocumento">Numero de Documento</label>
+                <input class="form-control" id="numDocumento" type="text" name="numDocumento" required />
+            </div>
+            <div class="col-lg-2">
+                <label for="anexos">Numero de Anexos</label>
+                <input class="form-control" id="anexos" type="number" name="anexos" required />
             </div>
         </div>
+
+        <div class="row row-form">
+            <div class="col-lg-3">
+                <label for="fDocumento">Fecha de Documento</label>
+                <input class="form-control fechaInput" id="fDocumento" type="text" name="fDocumento" required pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))"/>
+            </div>
+            <div class="col-lg-3">
+                <label for="fRecepcion">Fecha de Recepcion</label>
+                <input class="form-control fechaInput" id="fRecepcion" type="text" name="fRecepcion" required pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))"/>
+            </div>
+            <div class="col-lg-3">
+                <label for="hRecepcion">Hora de Recepcion</label>
+                <input class="form-control" id="hRecepcion" type="time" name="hRecepcion" required pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}" placeholder="00:00" title="Formato de 24 horas 00:00"/>
+            </div>
+        </div>
+
+        <div class="row row-form">
+            <div class="col-lg-2">
+                <label for="idRemitente">Remitente</label>
+                <input class="form-control" id="idRemitente" type="hidden" name="idRemitente"    />
+                <input class="form-control" id="idRemitenteJuridico" type="hidden" name="idRemitenteJuridico" />
+               <select class="form-control" id="tipoRemitente"> 
+                    <option value="">Seleccion una opcion</option>
+                    <option value="I">INTERNO</option>
+                    <option value="E">EXTERNO</option>
+               </select>
+            </div>
+            <div class="col-lg-4">
+                <label for="idRemitente">Nombre</label>
+                <input class="form-control"  type="text" id="nombreRemitente"  name="nombreRemitente" readonly />
+            </div>
+            <div class="col-lg-4">
+                <label for="idRemitente">Puesto</label>
+                <input class="form-control" id="puestoRemitente" type="text"  name="puestoRemitente"  readonly />
+
+            </div>
+           
+        </div>
+
+        <div class="row row-form">
+            <div class="col-lg-10">
+                <label for="Asunto">Asunto</label>
+                <textarea class="form-control" rows="3" name="asunto"  placeholder="Asunto"></textarea>
+            </div>
+        </div>
+
+        <div class="row row-form">
+            <div class="col-lg-8">
+                <label for="idRemitente">Deseas Anexar un Archivo</label>
+                <input class="form-control" id="file" type="file" name="file"  />
+            </div>
+        </div>
+
+        <div class="row row-form">
+            <div class="col-lg-3">
+                <label for="idCaracter">Caracter</label>
+                <select class="form-control" id="idCaracter" name="idCaracter" required="required">
+                    <option value="">Seleccione una Opcion</option>
+                    {% for caracter in caracteres %}
+                        <option value="{{ caracter.idCaracter }}">{{ caracter.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-lg-3">
+                <label for="idAccion">Instruccion</label>
+                <select class="form-control" id="idAccion" name="idAccion" required="required">
+                    <option value="">Seleccione una Opcion</option>
+                    {% for accion in acciones %}
+                        <option value="{{ accion.idAccion }}">{{ accion.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-1">
+                <label for="idTurnado">Turnado a:</label>
+                <input type="hidden" name="idTurnado" id="idTurnado">
+                <button class="btn-sm btn-primary btn form-control" id="btn-turnar">Turnar</button>
+            </div>
+        </div>
+
         <div class="form-group send">
             <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
             <button class="btn btn-danger btn-sm" id="cancelar" data-ruta="VolantesDiversos">Cancelar</button>

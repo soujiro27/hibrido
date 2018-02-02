@@ -104,10 +104,12 @@ class ApiController {
 			
 			$idAuditoria = $datos[0]['idAuditoria'];		
 
-			$turnos = VolantesDocumentos::select('sub.nombre','v.idTurnado')
+			$turnos = VolantesDocumentos::select('sub.nombre','t.idAreaRecepcion')
 			->join('sia_volantes as v','v.idVolante','sia_volantesDocumentos.idVolante')
 			->join('sia_catSubTiposDocumentos as sub','sub.idSubTipoDocumento','sia_volantesDocumentos.idSubTipoDocumento')
+			->join('sia_TurnadosJuridico as t','t.idVolante','sia_volantesDocumentos.idVolante')
 			->where('sia_volantesDocumentos.cveAuditoria',"$idAuditoria")
+			->where('t.idTipoTurnado','E')
 			->get();
 		}
 		echo json_encode($turnos);

@@ -69,12 +69,13 @@ class volantesController extends Template{
 
 
 	#guarda un nuevo registro
-	public function save(array $data, $app) {
+	public function save(array $data,$file, $app) {
 		
 		$data['estatus'] =  'ACTIVO';
 		
 		$valida = $this->validate_process($data);
 		
+		$nombre_file = $file['file']['name'];
 		
 		$datos_director_area = BaseController::get_data_area($data['idTurnado']);
 
@@ -120,7 +121,7 @@ class volantesController extends Template{
 	            'idAreaRecepcion' => $data['idTurnado'],
 	            'idUsrReceptor' => $datos_director_area[0]['idUsuario'],
 	            'idEstadoTurnado' => 'EN ATENCION',
-	            'idTipoTurnado' => 'NUEVO',
+	            'idTipoTurnado' => 'E',
 	            'idTipoPrioridad' => $data['idCaracter'],
 	            'comentario' => 'SIN COMENTARIOS',
 	            'usrAlta' => $_SESSION['idUsuario'],
@@ -130,10 +131,23 @@ class volantesController extends Template{
 
         	$turno->save();
 
+			if(!empty($nombre_file)){
+	
+				$nombre_final = BaseController::upload_file_areas($file,$max);
+
+	        	Volantes::find($max)->update([
+	                'anexoDoc' => $nombre_final,
+	                'usrModificacion' => $_SESSION['idUsuario'],
+					'fModificacion' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s') 
+	            ]);
+
+			}
+
 			$this->send_notificaciones($data);
 			$this->send_notificaciones_varios($data);
 			$success = BaseController::success();
 			echo json_encode($success);
+
 		} else {
 			echo json_encode($valida);
 		}
