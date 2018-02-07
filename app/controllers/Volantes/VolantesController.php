@@ -26,7 +26,18 @@ class volantesController extends Template{
 	private $filejs = 'Volantes	';
 
 	#crea la tabla con los registros
-	public function index(){
+	public function index(array $data) {
+
+
+		$now = Carbon::now('America/Mexico_City')->format('Y');
+		$campo = 'Folio';
+		$tipo = 'desc';
+
+		if(!empty($data)){
+			$now = $data['year'];
+			$campo = $data['campo'];
+			$tipo = $data['tipo'];
+		}
 
 		$volantes = Volantes::select('sia_Volantes.*','vd.cveAuditoria','a.clave','sub.nombre','t.idEstadoTurnado','t.idAreaRecepcion')
 		->join('sia_VolantesDocumentos as vd','vd.idVolante','=','sia_volantes.idVolante')
@@ -34,7 +45,8 @@ class volantesController extends Template{
 		->join('sia_auditorias as a','a.idAuditoria','=','vd.cveAuditoria')
 		->join('sia_catSubTiposDocumentos as sub','sub.idSubTipoDocumento','=','vd.idSubTipoDocumento')
 		->where('sub.auditoria','SI')
-		->orderBy('fRecepcion', 'desc')
+		->whereYear('sia_Volantes.fRecepcion','=',"$now")
+		->orderBy("$campo","$tipo")
 		->get();
 		
 		echo $this->render('Volantes/volantes/index.twig',[

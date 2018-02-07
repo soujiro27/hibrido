@@ -17,12 +17,24 @@ class DireccionController extends Template {
     private $modulo = 'Documentos';
     private $filejs = 'Documentos';
 
-    public function index($app) {
+    public function index(array $data) {
+
+        $now = Carbon::now('America/Mexico_City')->format('Y');
+        $campo = 'Folio';
+        $tipo = 'desc';
+
+        if(!empty($data)){
+            $now = $data['year'];
+            $campo = $data['campo'];
+            $tipo = $data['tipo'];
+        }
 
         $documentos = Volantes::select('sia_volantes.*','sub.nombre','t.idEstadoTurnado','t.idTurnadoJuridico','t.idAreaRecepcion')
             ->join('sia_VolantesDocumentos as vd','vd.idVolante','=','sia_volantes.idVolante')
             ->join('sia_catSubTiposDocumentos as sub','sub.idSubTipoDocumento','=','vd.idSubTipoDocumento')
             ->join('sia_TurnadosJuridico as t','t.idVolante','=','sia_volantes.idVolante')
+            ->whereYear('sia_Volantes.fRecepcion','=',"$now")
+            ->orderBy("$campo","$tipo")
             ->get();
 
         echo $this->render('/documentos/Direccion/index.twig',[
@@ -50,28 +62,17 @@ class DireccionController extends Template {
         
         $id = $data['idVolante'];
         $volantes = Volantes::where('idVolante',"$id")->get();
-        $nombre_file = $files['archivo']['name'];
+        $nombre_file = $files['file']['name'];
         
         if(!($volantes->isEmpty()) && !(empty($nombre_file))){
             
-            $directory ='hibrido/files/'.$id;
-    
-            $extension = explode('.',$nombre_file);
-
-            if(!file_exists($directory)){
-                    
-                mkdir($directory,0777,true);
-            } 
-
-            $nombre_final = $id.'.'.$extension[1];
+            $nombre_final = BaseController::upload_file_areas($files,$id);
 
             Volantes::find($id)->update([
                 'anexoDoc' => $nombre_final,
                 'usrModificacion' => $_SESSION['idUsuario'],
 				'fModificacion' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s') 
             ]);
-
-            move_uploaded_file($files['archivo']['tmp_name'],$directory.'/'.$nombre_final);
 
             $turnos = TurnadosJuridico::select('idAreaRecepcion')->where('idVolante',"$id")->get();
             

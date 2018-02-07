@@ -8,14 +8,14 @@
             {% if volantes.anexoDoc == NULL %}
                 <a href="#!" class="col-lg-3"><strong>No hay Documento Asignado</strong></a>
             {% else %}
-                <a href="/SIA/hibrido/files/{{ volantes.idVolante }}/{{ volantes.anexoDoc }}" class="col-lg-8" target="_blank">{{  volantes.anexoDoc }}</a>
+                <a href="/SIA/hibrido/files/{{ volantes.idVolante }}/Areas/{{ volantes.anexoDoc }}" class="col-lg-8" target="_blank">{{  volantes.anexoDoc }}</a>
             {% endif %}
             <input type="hidden" name="idVolante" value="{{ id }}">
         </div>
 
         <div class="form-group file row">
             <label class="form-control-label col-lg-2" for="documento">Archivo</label>
-            <input type="file" class="col-lg-5" name="archivo" id="imagen" required="required"/>
+            <input type="file" class="col-lg-5 form-control" name="file" id="imagen" required="required"/>
         </div>
 
         <div class="form-group send">

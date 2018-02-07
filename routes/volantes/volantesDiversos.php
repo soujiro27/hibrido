@@ -12,8 +12,8 @@ $auth = function(){
 
 $app->group('/juridico',$auth,function() use($app,$controller){
 
-	$app->get('/VolantesDiversos',function() use ($controller){
-		$controller->index();
+	$app->get('/VolantesDiversos',function() use ($controller,$app){
+		$controller->index($app->request->get());
 	});
 
 	$app->get('/VolantesDiversos/create',function() use ($controller){
@@ -25,7 +25,7 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 	})->conditions(array('id' => '[0-9]{1,4}'));
 
 	$app->post('/VolantesDiversos/create',function() use ($app,$controller){
-		$controller->save($app->request->post(), $app);
+		$controller->save($app->request->post(),$_FILES,$app);
 	});
 
 	$app->post('/VolantesDiversos/update',function() use($app,$controller) {

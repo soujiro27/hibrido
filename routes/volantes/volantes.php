@@ -12,8 +12,8 @@ $auth = function(){
 
 $app->group('/juridico',$auth,function() use($app,$controller){
 
-	$app->get('/Volantes',function() use ($controller){
-		$controller->index();
+	$app->get('/Volantes',function() use ($app,$controller){
+		$controller->index($app->request->get());
 	});
 
 	$app->get('/Volantes/create',function() use ($controller){

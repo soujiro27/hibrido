@@ -6,27 +6,10 @@
 {% endblock %}
 
 {% block order %}
-    <div class="order">
-           <button class="btn btn-warning" id="btn-order">Ordernar Registros</button>
-        <form action="/SIA/juridico/VolantesDiversos" class="form-order form-inline" id="form-order">
-
-            <select name="campo" id="campo" required class="form-control">
-                <option value="">Campo</option>
-                <option value="folio">Folio</option>
-                <option value="numDocumento">Documento</option>
-                <option value="idRemitente">Remitente</option>
-                <option value="idTurnado">Turnado</option>
-                <option value="fRecepcion">Fecha</option>
-                <option value="extemporaneo">Desfazado</option>
-                <option value="estadoProceso">Estado</option>
-            </select>
-            <select name="tipo" id="tipo" required class="form-control">
-                <option value="">Tipo</option>
-                <option value="asc">Ascendente</option>
-                <option value="desc">Descendente</option>
-            </select>
-            <input type="submit" value="Ordenar" class="btn btn-info">
-        </form>
+  <div class="row">
+        <button class="btn btn-info col-lg-12" id="btn-order" data-ruta="VolantesDiversos">
+            <i class="fa fa-signal"></i> Ordernar
+        </button>
     </div>
 {% endblock %}
 

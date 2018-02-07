@@ -1,38 +1,15 @@
 {% extends 'layoutTable.twig' %}
 {% block btnHeader %}
-    <a id="addRegister" href="/SIA/juridico/Volantes/create" class="btn btn-info btn-add" role="button">
+    <a id="addRegister" href="/SIA/juridico/Volantes/create" class="btn btn-primary btn-add" role="button">
         Añadir Registro
     </a>
 {% endblock %}
 
 {% block order %}
-    <div class="order">
-        <button class="btn btn-warning" id="btn-order">Ordernar Registros</button>
-        <form action="/SIA/juridico/Volantes" class="form-order form-inline" id="form-order">
-
-            <select name="campo" id="campo" required class="form-control">
-                <option value="">Campo</option>
-                <option value="folio">Folio</option>
-                <option value="numDocumento">Documento</option>
-                <option value="idRemitente">Remitente</option>
-                <option value="idTurnado">Turnado</option>
-                <option value="fRecepcion">Fecha</option>
-                <option value="extemporaneo">Desfazado</option>
-                <option value="nombre">Oficio</option>
-                <option value="estadoProceso">Estado</option>
-            </select>
-            <select name="tipo" id="tipo" required class="form-control">
-                <option value="">Tipo</option>
-                <option value="asc">Ascendente</option>
-                <option value="desc">Descendente</option>
-            </select>
-            <select name="year" id="year">
-                <option value="">Año</option>
-                <option value="2017">2017</option>
-                <option value="2018">2018</option>
-            </select>
-            <input type="submit" value="Ordenar" class="btn btn-info">
-        </form>
+    <div class="row">
+        <button class="btn btn-info col-lg-12" id="btn-order" data-ruta="Volantes">
+            <i class="fa fa-signal"></i> Ordernar
+        </button>
     </div>
 {% endblock %}
 

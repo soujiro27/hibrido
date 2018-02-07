@@ -14,7 +14,7 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 
 
 	$app->get('/DocumentosGral',function() use($app,$controller){
-		$controller->index($app);
+		$controller->index($app->request->get());
 	});
 
 	$app->get('/DocumentosGral/:id',function($id) use($app,$controller) {

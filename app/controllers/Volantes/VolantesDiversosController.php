@@ -27,7 +27,19 @@ class volantesDiversosController extends Template {
 
 
 	#crea la tabla con los registros
-	public function index() {
+	public function index(array $data) {
+
+        $now = Carbon::now('America/Mexico_City')->format('Y');
+        $campo = 'Folio';
+        $tipo = 'desc';
+
+        if(!empty($data)){
+            $now = $data['year'];
+            $campo = $data['campo'];
+            $tipo = $data['tipo'];
+        }
+
+
         $volantes = VolantesDocumentos::select('v.idVolante','v.folio','v.subfolio','v.numDocumento',
             'v.idRemitente','t.idAreaRecepcion','v.fRecepcion','v.extemporaneo','sub.nombre',
             't.idEstadoTurnado','t.idAreaRecepcion','v.estatus')
@@ -35,7 +47,8 @@ class volantesDiversosController extends Template {
         ->join('sia_TurnadosJuridico as t','t.idVolante','=','v.idVolante'  )
         ->join('sia_catSubTiposDocumentos as sub','sub.idSubTipoDocumento','=','sia_volantesDocumentos.idSubTipoDocumento')
         ->where('sub.auditoria','NO')
-        ->orderBy('fRecepcion', 'desc')
+        ->whereYear('v.fRecepcion','=',"$now")
+        ->orderBy("$campo","$tipo")
         ->get();
 
       
@@ -67,11 +80,12 @@ class volantesDiversosController extends Template {
         ]);
     }
 
-    public function save(array $data, $app){
+    public function save(array $data,$file,$app){
         
         $data['estatus'] =  'ACTIVO';
         $valida = $this->validate($data);
         $duplicate = $this->duplicate($data);
+        $nombre_file = $file['file']['name'];
 
         if(empty($valida[0])){
 
@@ -125,7 +139,7 @@ class volantesDiversosController extends Template {
                         'idAreaRecepcion' => $value,
                         'idUsrReceptor' => $datos_director_area[0]['idUsuario'],
                         'idEstadoTurnado' => 'EN ATENCION',
-                        'idTipoTurnado' => 'NUEVO',
+                        'idTipoTurnado' => 'E',
                         'idTipoPrioridad' => $data['idCaracter'],
                         'comentario' => 'SIN COMENTARIOS',
                         'usrAlta' => $_SESSION['idUsuario'],
@@ -135,6 +149,19 @@ class volantesDiversosController extends Template {
 
                     $turno->save();
                 }
+
+                if(!empty($nombre_file)){
+    
+                $nombre_final = BaseController::upload_file_areas($file,$max);
+
+                    Volantes::find($max)->update([
+                        'anexoDoc' => $nombre_final,
+                        'usrModificacion' => $_SESSION['idUsuario'],
+                        'fModificacion' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s') 
+                    ]);
+
+                }
+
 
                 $this->notificaciones($areas,$data);
                 $this->notificaciones_varios($areas,$data);
@@ -152,6 +179,7 @@ class volantesDiversosController extends Template {
             echo json_encode($valida);
         }
         
+       
     }
 
 
