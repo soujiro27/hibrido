@@ -23,7 +23,7 @@ use App\Models\Catalogos\PuestosJuridico;
 class volantesController extends Template{
 	
 	private $modulo = 'Volantes';
-	private $filejs = 'Volantes	';
+	private $filejs = 'Volantes';
 
 	#crea la tabla con los registros
 	public function index(array $data) {
@@ -45,6 +45,7 @@ class volantesController extends Template{
 		->join('sia_auditorias as a','a.idAuditoria','=','vd.cveAuditoria')
 		->join('sia_catSubTiposDocumentos as sub','sub.idSubTipoDocumento','=','vd.idSubTipoDocumento')
 		->where('sub.auditoria','SI')
+		->where('t.idTipoTurnado','E')
 		->whereYear('sia_Volantes.fRecepcion','=',"$now")
 		->orderBy("$campo","$tipo")
 		->get();

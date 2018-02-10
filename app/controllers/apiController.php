@@ -162,83 +162,6 @@ class ApiController {
 	}
 
 
-
-	public function upload_files($idVolante,$idTurnadoJuridico,$file) {
-		$directory ='jur/files/documentos/'.$idVolante;
-		
-		if(!empty($file['archivo']['name'])){
-
-			$nombre = $file['archivo']['name'];
-			$extension = explode('.',$nombre);
-			$final = ApiController::create_name_file($extension[1]);
-
-
-			if(!file_exists($directory)){
-				mkdir($directory,0777,true);
-			} 
-
-
-			$anexo = new AnexosJuridico([
-				'idTurnadoJuridico' => $idTurnadoJuridico,
-				'archivoOriginal' => $nombre,
-				'archivoFinal' => $final,
-				'idTipoArchivo' => $extension[1],
-	            'usrAlta' => $_SESSION['idUsuario'],
-	            'estatus' => 'ACTIVO',
-	            'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s')
-			]);
-
-			if($anexo->save()){
-					move_uploaded_file($file['archivo']['tmp_name'],$directory.'/'.$final);
-					return true;
-				
-			}else{
-				return false;
-			}
-		} else {
-			return true;
-		}
-			
-	
-	}
-
-	
-	public function validate_file($name,$size) {
-		$errors = [];
-
-		if(strlen($name) > 50) {
-			$errors['Anexar']['message'] = 'El nombre es demasiado Grande';
-		}
-
-		if($size > 8388608) {
-			$errors['Anexar']['message'] = 'El tamaño del documento no debe de ser mayor a 10MB';
-		}
-
-		return $errors;
-
-	}
-
-	public function create_name_file($extension){
-		$hora = Carbon::now('America/Mexico_City')->format('H:i:s');
-		$fecha = Carbon::now('America/Mexico_City')->format('Y-d-m');
-		$array_hora  = explode(':',$hora);
-		$array_fecha = explode('-',$fecha);
-
-		$final ='';
-		foreach($array_fecha as $valor) { 
-			$final = $final . $valor . '_';
-		}
-
-	foreach($array_hora as $valor) { 
-			$final = $final . $valor . '_';
-		}		
-
-		$final = $final . '.'.$extension;
-		
-		return $final;
-		
-	}
-
 	public function load_documentos_turnados(array $data) {
 		$idUsuario = $_SESSION['idUsuario'];
 		$idVolante = $data['idVolante'];
@@ -255,12 +178,14 @@ class ApiController {
 							->where('idVolante',"$idVolante")
 							->where('usrAlta',"$idUsuario")
 							->where('idUsrReceptor',"$idUsuario_envio")
+							->where('idTipoTurnado','I')
 							->get();
 	
 		$turnados_recibidos = TurnadosJuridico::select('idTurnadoJuridico')
 							->where('idVolante',"$idVolante")
 							->where('usrAlta',"$idUsuario_envio")
 							->where('idUsrReceptor',"$idUsuario")
+							->where('idTipoTurnado','I')
 							->get();
 
 		$propios = $this->array_turnados($turnados_propios);
@@ -269,8 +194,9 @@ class ApiController {
 		$res = array_merge($propios,$recibidos);
 
 
-		$turnados = TurnadosJuridico::select('sia_TurnadosJuridico.*','a.archivoFinal')
+		$turnados = TurnadosJuridico::select('sia_TurnadosJuridico.*','a.archivoFinal','u.saludo','u.nombre','u.paterno','u.materno')
 					->leftJoin('sia_AnexosJuridico as a ','a.idTurnadoJuridico','=','sia_TurnadosJuridico.idTurnadoJuridico')
+					->join('sia_usuarios as u','u.idUsuario','=','sia_TurnadosJuridico.usrAlta')
 					->whereIn('sia_TurnadosJuridico.idTurnadoJuridico',$res)
 					->orderBy('sia_TurnadosJuridico.fAlta','DESC')
 					->get();
@@ -286,72 +212,7 @@ class ApiController {
 		return $id;
 	}
 
-	public function notificaciones($idUsuario,$idVolante) {
-		$usuario[0] = $idUsuario;
-		$rpe = ApiController::get_rpe($idUsuario);
-		$reciben = ApiController::get_users_notificaciones($rpe);
-		
-		$all = array_merge($usuario,$reciben);
-
-		$mensaje = ApiController::mensaje($idVolante);
-		
-		foreach ($all as $key => $value) {
-			$notifica = new Notificaciones([
-				'idNotificacion' => '1',
-				'idUsuario' => $value,
-				'mensaje' => $mensaje,
-				'idPrioridad' => 'ALTA',
-				'idImpacto' => 'MEDIO',
-				'fLectura' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s'),
-				'usrAlta' => $_SESSION['idUsuario'],
-				'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s'),
-				'estatus' => 'ACTIVO',
-				'situacion' => 'NUEVO',
-				'identificador' => '1',
-				'idCuenta' => 'CTA-2016',
-				'idAuditoria' => '1',
-				'idModulo' => 'Volantes',
-				'referencia' => 'idVolante'
-	 
-			]);
-			$notifica->save();
-		}	
-	}
-
-	public function get_users_notificaciones($rpe){
-		 $usuarios = PuestosJuridico::select('u.idUsuario')
-		 			->join('sia_usuarios as u','u.idEmpleado','=','sia_PuestosJuridico.rpe')
-            		->where('usrAsisteA',"$rpe")
-            		->get();
-        if($usuarios->isEmpty()){
-        	$res = [];
-        }else{
-
-        	$cont = 0;
-            foreach ($usuarios as $key => $value) {
-                $res[$cont] = $usuarios[$key]['idUsuario'];
-                $cont++;
-            }
-
-        }
-        return $res;
-	}
-
-	public function get_rpe($idUsuario) {
-		$usuarios = Usuarios::select('idEmpleado')->where('idUsuario',"$idUsuario")->get();
-		$rpe = $usuarios[0]['idEmpleado'];
-		return $rpe;
-	}
-
-	public function mensaje($idVolante) {
-		$datos = Volantes::select('sia_Volantes.folio','sub.nombre')
-				->join('sia_volantesDocumentos as vd','vd.idVolante','=','sia_Volantes.idVolante')
-				->join('sia_catSubTiposDocumentos as sub','sub.idSubTipoDocumento','=','vd.idSubTipoDocumento')
-				->where('sia_Volantes.idVolante',"$idVolante")
-				->get();
-
-		$mensaje = 'Tienes un nuevo turnado de un: '.$datos[0]['nombre'].' con el folio: '.$datos[0]['folio'];
-		return $mensaje;
-	}
 	
+
+
 }

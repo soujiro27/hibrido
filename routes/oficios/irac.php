@@ -1,5 +1,5 @@
 <?php 
-namespace Routes\Documentos;
+namespace Routes\Oficios;
 use App\Controllers\Oficios\IracController;
 
 $controller = new IracController;
@@ -30,7 +30,7 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 	})->conditions(array('id' => '[0-9]{1,4}'));
 
 	
-	$app->post('/Irac/:id',function($id) use ($controller,$app){
+	$app->post('/Irac/create',function() use ($controller,$app){
 		$controller->save_turnado($app->request->post(),$_FILES,$app);
 	});
 

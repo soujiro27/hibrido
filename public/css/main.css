@@ -2937,7 +2937,7 @@ header ul.logout-menu {
   left: 8px;
   list-style: none;
   background: #fff;
-  width: 250px;
+  width: 25%;
   padding: 6px 5px;
   border: 1px solid #808080;
   box-shadow: 1px 1px 2px #808080;
@@ -2998,4 +2998,92 @@ input[type=checkbox] {
 select.select-order {
   width: 100% !important;
   margin-bottom: 20px;
+}
+a.active {
+  padding: 5px;
+  margin: 0 5px;
+  border-radius: 5px 5px 0px 0px;
+  text-decoration: none;
+  background-color: #65140f;
+  color: #fff;
+  font-weight: normal;
+  box-shadow: 3px 3px 3px #000;
+}
+a.no-active {
+  padding: 5px;
+  margin: 0 5px;
+}
+td.send {
+  color: #26bce0;
+}
+td.request {
+  color: #f00;
+}
+div.personal {
+  padding: 10px;
+  margin: 0px;
+  height: 70px;
+}
+div.NORMAL,
+div.URGENTE {
+  display: flex;
+  padding: 6px;
+  margin: 15px 5px;
+  font-size: 15px;
+  cursor: pointer;
+}
+div.NORMAL:hover,
+div.URGENTE:hover {
+  box-shadow: 3px 3px 3px #808080;
+  border-radius: 5px;
+  border: 1px solid #808080;
+}
+div.NORMAL div.user,
+div.URGENTE div.user {
+  width: 3%;
+  margin-right: 10px;
+}
+div.NORMAL div.user i,
+div.URGENTE div.user i {
+  font-size: 30px;
+}
+div.NORMAL div.user i.blue,
+div.URGENTE div.user i.blue {
+  color: #26bce0;
+}
+div.NORMAL div.user i.red,
+div.URGENTE div.user i.red {
+  color: #f00;
+}
+div.NORMAL div.nombre,
+div.URGENTE div.nombre {
+  width: 30%;
+  margin-right: 10px;
+}
+div.NORMAL div.fecha,
+div.URGENTE div.fecha {
+  width: 10%;
+  margin-right: 10px;
+}
+div.NORMAL div.hora,
+div.URGENTE div.hora {
+  width: 5%;
+  margin-right: 10px;
+}
+div.NORMAL div.comentario,
+div.URGENTE div.comentario {
+  width: 47%;
+  margin-right: 10px;
+}
+div.NORMAL div.file,
+div.URGENTE div.file {
+  width: 5%;
+}
+div.NORMAL div.file i,
+div.URGENTE div.file i {
+  font-size: 30px;
+}
+div.NORMAL div.file a,
+div.URGENTE div.file a {
+  text-decoration: none;
 }

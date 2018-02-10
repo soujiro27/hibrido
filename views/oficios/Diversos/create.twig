@@ -2,13 +2,13 @@
 {% block title %}
   <div class="header-irac">
     <a  href="#!" class="active">Nueva Asignacion</a>
-    <a href="/SIA/juridico/Irac/historial/{{ id }}" class="no-active">Respuestas</a>
+    <a href="/SIA/juridico/DocumentosDiversos/historial/{{ id }}" class="no-active">Respuestas</a>
   </div>
 {% endblock %}
 
 {% block form %}
 
-    <form id="asignacion"   data-ruta="Irac" method="POST" enctype="multipart/form-data">
+    <form id="asignacion"   data-ruta="DocumentosDiversos" method="POST" enctype="multipart/form-data">
       <input type="hidden" value="{{ id }}" id="idVolante" name="idVolante">
       <input type="hidden" name="idEstadoTurnado" value='NUEVO'>
       <div class="row row-form">
@@ -51,7 +51,7 @@
       </div>
        <div class="form-group send">
             <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
-            <button class="btn btn-danger btn-sm" id="cancelar" data-ruta="Irac">Cancelar</button>
+            <button class="btn btn-danger btn-sm" id="cancelar" data-ruta="DocumentosDiversos">Cancelar</button>
       </div>
 
     </form>

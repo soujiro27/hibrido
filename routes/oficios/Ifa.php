@@ -1,6 +1,6 @@
 <?php 
-namespace Routes\Documentos;
-use App\Controllers\Documentos\IfaController;
+namespace Routes\Oficios;
+use App\Controllers\Oficios\IfaController;
 
 $controller = new IfaController;
 

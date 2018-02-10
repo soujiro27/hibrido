@@ -1,0 +1,44 @@
+{% extends 'layoutTable.twig' %}
+{% block order %}
+    Lista de Documentos Turnados
+{% endblock %}
+
+
+{% block table %}
+    <table class="table table-hover " id="main-table-oficios" data-ruta="turnos">
+         <thead>
+        <th class="hidden">id</th>
+        <th>Folio</th>
+        <th>Documento</th>
+        
+        <th>Asunto</th>
+      
+        <th>Auditoria</th>
+        <th>Desfazado</th>
+        <th>Estado</th>
+
+        </thead>
+       {% for irac in iracs %}
+            <tr data-ruta="turnos">
+
+                <td class="hidden">{{ irac.idVolante }}</td>
+                <td>{{ irac.folio }}</td>
+                <td>{{ irac.numDocumento }}</td>
+               
+               
+                <td>{{ irac.asunto }}</td>
+               
+                <td>{{ irac.clave }}</td>
+                <td>{{ irac.extemporaneo }}</td>
+                {% if irac.estadoProceso == 'CERRADO' %}
+                    <td class="cerrado">{{ irac.estadoProceso }}</td>
+                {% else %}
+                    <td>{{ irac.estadoProceso }}</td>
+                {% endif %}
+
+
+
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

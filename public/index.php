@@ -15,8 +15,9 @@ include_once '/../routes/volantes/volantesDiversos.php';
 
 /*----------oficios------------------------*/
 include_once '/../routes/oficios/irac.php';
-//include_once '/../routes/oficios/Confrontas.php';
-//include_once '/../routes/oficios/ifa.php';
+include_once '/../routes/oficios/Confrontas.php';
+include_once '/../routes/oficios/ifa.php';
+include_once '/../routes/oficios/diversos.php';
 
 /*----------Documentos---------------------*/
 

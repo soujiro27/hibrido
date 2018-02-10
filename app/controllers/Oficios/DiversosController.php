@@ -1,6 +1,5 @@
 <?php 
-namespace App\Controllers\Turnados;
-
+namespace App\Controllers\Oficios;
 
 use Carbon\Carbon;
 
@@ -14,69 +13,58 @@ use App\Models\Documentos\TurnadosJuridico;
 
 use App\Controllers\ApiController;
 
+class DiversosController extends Template {
 
-class TurnadosController extends Template {
-
-	private $modulo = 'Documentos Turnados';
+	private $modulo = 'Irac';
     private $filejs = 'Oficios';
 
 	public function index() {
-        
-		$idUsuario = $_SESSION['idUsuario'];
-       
 
-        $turnados_propios = TurnadosJuridico::select('idVolante')
-        ->where('idUsrReceptor',"$idUsuario")
-        ->get();
-        
+		$id = $_SESSION['idEmpleado'];
+        $areas = PuestosJuridico::where('rpe','=',"$id")->get();
+        $area = $areas[0]['idArea'];
 
-        
-        $volantes_repetidos = $this->array_turnados($turnados_propios);
-        $volantes = array_unique($volantes_repetidos);
 
-        
 
-        $turnos = Volantes::select('sia_Volantes.idVolante','sia_Volantes.folio',
+         $iracs = Volantes::select('sia_Volantes.idVolante','sia_Volantes.folio',
             'sia_Volantes.numDocumento','sia_Volantes.idRemitente','sia_Volantes.fRecepcion','sia_Volantes.asunto'
-        ,'c.nombre as caracter','a.nombre as accion','audi.clave','sia_Volantes.extemporaneo','t.idEstadoTurnado')
+        ,'c.nombre as caracter','a.nombre as accion','sia_Volantes.extemporaneo')
             ->join('sia_catCaracteres as c','c.idCaracter','=','sia_Volantes.idCaracter')
             ->join('sia_CatAcciones as a','a.idAccion','=','sia_Volantes.idAccion')
             ->join('sia_VolantesDocumentos as vd','vd.idVolante','=','sia_Volantes.idVolante')
-            ->join('sia_auditorias as audi','audi.idAuditoria','=','vd.cveAuditoria')
             ->join( 'sia_catSubTiposDocumentos as sub','sub.idSubTipoDocumento','=','vd.idSubTipoDocumento')
             ->join('sia_TurnadosJuridico as t','t.idVolante','=','sia_Volantes.idVolante')
-            ->where('t.idTipoTurnado','=','I')
-            ->where('t.idUsrReceptor',"$idUsuario")
-            ->whereIn('sia_volantes.idVolante',$volantes)
+            ->where('sub.auditoria','NO')
+            ->where('t.idAreaRecepcion','=',"$area")
+            ->where('t.idTipoTurnado','E')
             ->get();
 
-
-        	echo $this->render('/Oficios/turnos/index.twig',[
-            'iracs' => $turnos,
+    	echo $this->render('/Oficios/Diversos/index.twig',[
+            'iracs' => $iracs,
             'sesiones'=> $_SESSION,
-            'modulo' => $this->modulo,
-             'filejs' => $this->filejs
+            'modulo' => 'Irac',
+            'filejs' => $this->filejs
             ]);
 
-            //var_dump($turnos);
 
-        }
+	}
 
 	public function create($id,$message, $errors) {
-        
+		
         $personas = $this->load_personal($id);
-        echo $this->render('Oficios/turnos/create.twig',[
-            'sesiones' => $_SESSION,
-            'modulo' => $this->modulo,
-            'mensaje' => $message,
-            'errors' => $errors,
-            'id' => $id,
+        echo $this->render('Oficios/Diversos/create.twig',[
+			'sesiones' => $_SESSION,
+			'modulo' => $this->modulo,
+			'mensaje' => $message,
+			'errors' => $errors,
+			'id' => $id,
             'personas' => $personas,
-             'filejs' => $this->filejs
-        ]);
+            'filejs' => $this->filejs
+		]);
 
-    }
-public function save_turnado(array $data,$file, $app) {
+	}
+
+    public function save_turnado(array $data,$file, $app) {
 
         $data['estatus'] =  'ACTIVO';
         $validate = $this->validate($data,$file);
@@ -92,8 +80,8 @@ public function save_turnado(array $data,$file, $app) {
                 BaseController::insert_anexos_interno($max,$file);
             }
 
-            BaseController::send_notificaciones($data,$datos,'IRAC');
-            BaseController::send_notificaciones_varios($data,$datos,'IRAC');
+            BaseController::send_notificaciones($data,$datos,'Documento Diverso');
+            BaseController::send_notificaciones_varios($data,$datos,'Documento Diverso');
 
             $success = BaseController::success();
             echo json_encode($success);
@@ -174,6 +162,7 @@ public function save_turnado(array $data,$file, $app) {
 
    
     
+
 
 
 }

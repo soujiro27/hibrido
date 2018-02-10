@@ -1,9 +1,11 @@
 <?php 
 namespace App\Controllers\Oficios;
 
-use App\Controllers\Template;
-use Sirius\Validation\Validator;
 use Carbon\Carbon;
+
+use App\Controllers\Template;
+use App\Controllers\ValidateController;
+use App\Controllers\BaseController;
 
 use App\Models\Volantes\Volantes;
 use App\Models\Catalogos\PuestosJuridico;
@@ -32,6 +34,7 @@ class IracController extends Template {
             ->join('sia_TurnadosJuridico as t','t.idVolante','=','sia_Volantes.idVolante')
             ->where('sub.nombre','=','IRAC')
             ->where('t.idAreaRecepcion','=',"$area")
+            ->where('t.idTipoTurnado','E')
             ->get();
 
         	echo $this->render('/Oficios/Irac/index.twig',[
@@ -52,60 +55,40 @@ class IracController extends Template {
 			'mensaje' => $message,
 			'errors' => $errors,
 			'id' => $id,
-            'personas' => $personas
+            'personas' => $personas,
+            'filejs' => $this->filejs
 		]);
 
 	}
 
-    public function save_turnado(array $data,$files, $app) {
-        
-            $nombre_file = $files['archivo']['name'];
-            $size_file = $files['archivo']['size'];
-            $id = $data['idVolante'];
-            $area = $this->Area($id); 
-            $idPuesto = $data['idUsrReceptor'];
+    public function save_turnado(array $data,$file, $app) {
 
-            $puestos = PuestosJuridico::select('u.idUsuario')
-					->join('sia_usuarios as u','u.idEmpleado','=','sia_PuestosJuridico.rpe')
-					->where('sia_PuestosJuridico.idPuestoJuridico',"$idPuesto")
-					->get();
-		    $idPuesto = $puestos[0]['idUsuario'];
+        $data['estatus'] =  'ACTIVO';
+        $validate = $this->validate($data,$file);
+        $nombre_file = $file['file']['name'];
 
-            $errors = ApiController::validate_file($nombre_file,$size_file);
-            if(empty($errors)){
-                if(empty($this->validate($data))){
-                    $turno = new TurnadosJuridico([
-                        'idVolante' => $data['idVolante'],
-                        'idAreaRemitente' => $area,
-                        'idAreaRecepcion' => $area,
-                        'idUsrReceptor' => $idPuesto,
-                        'idEstadoTurnado' => 'En Atencion',
-                        'idTipoTurnado' => $data['idTipoTurnado'],
-                        'idTipoPrioridad' =>$data['idTipoPrioridad'],
-                        'comentario' => $data['comentario'],
-                        'usrAlta' => $_SESSION['idUsuario'],
-                        'estatus' => 'ACTIVO',
-                        'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s')
-                    ]);
+        if(empty($validate)){
 
-                    $turno->save();
-                    $max = TurnadosJuridico::all()->max('idTurnadoJuridico');
-
-                    if(ApiController::upload_files($id,$max,$files)){
-                        ApiController::notificaciones($idPuesto,$data['idVolante']);
-                        $app->redirect('/SIA/juridico/Irac/'.$id);        
-                    } else { 
-                        $this->create($id,'Hubo un Error Intente de Nuevo',false);        
-                    }
-
-                } else {
-                    $this->create($id,$message = false,$errors);    
-                }   
-
-            }else{
-                $this->create($id,$message = false,$errors);
-            }
+            $datos = BaseController::datos_insert_turnados($data);
+            $max = BaseController::insert_turnado_interno($data,$datos);
             
+            if(!empty($nombre_file)){
+
+                BaseController::insert_anexos_interno($max,$file);
+            }
+
+            BaseController::send_notificaciones($data,$datos,'IRAC');
+            BaseController::send_notificaciones_varios($data,$datos,'IRAC');
+
+            $success = BaseController::success();
+            echo json_encode($success);
+
+
+        } else {
+
+            echo json_encode($valida);
+        }
+
     }
 
 
@@ -121,46 +104,62 @@ class IracController extends Template {
             'errors' => $errors,
             'id' => $id,
             'turnados' => $turnados,
+            'filejs' => $this->filejs
         ]);
     }
 
 
-    public function validate($data){
-        $errors = [];
-        $validator = new \Sirius\Validation\Validator;
-        $validator->add(
-            array(
-            'idVolante' => 'required | Number | MaxLength(4)',
-            'idUsrReceptor' => 'required | Number | MaxLength(3)',
-            'comentario' => 'MaxLength(350)',
-            'idTipoPrioridad' => 'required | Alpha | MaxLength(15)'
-        ));
-
-        if(!$validator->validate($data)){
-            $errors = $validator->getMessages();
-            return $errors;
-        }else{
-
-            return $errors;
-        }   
-    }
-
-    public function Area($id){
+    public function validate($data, $file){
         
-        $volante = TurnadosJuridico::where('idVolante',"$id")->get();
+        $res = [];
+        $final = [];
 
-        return $volante[0]['idAreaRecepcion'];
+        $nombre_file = $file['file']['name'];
 
+        $res[0] = ValidateController::string($data['idTipoPrioridad'],'idTipoPrioridad',10);
+        $res[1] = ValidateController::alphaNumeric($data['comentario'],'comentario',350);
+        $res[2] = ValidateController::string($data['estatus'],'estatus',10);
+
+        $res[3] = ValidateController::number($data['idUsrReceptor'],'idUsrReceptor',true);
+        $res[4] = ValidateController::number($data['idVolante'],'idVolante',true);
+
+        if(!empty($nombre_file)){
+
+            $res[5] = ValidateController::alphaNumeric($nombre_file,'Archivo',50);
+            
+        }
+
+        foreach ($res as $key => $value) {
+            if(!empty($value)){
+                array_push($final,$value);
+            }
+        }
+
+
+        return $final;
+        
     }
+
+   
+
 
     public function load_personal($id){
 
         $turnado_volantes = TurnadosJuridico::select('idAreaRecepcion')->where('idVolante',"$id")->get();
         $idTurnado = $turnado_volantes[0]['idAreaRecepcion'];
 
-        $puestos = PuestosJuridico::where('idArea',"$idTurnado")->get();
+        $rpe = $_SESSION['idEmpleado'];
+
+        $puestos = PuestosJuridico::where('idArea',"$idTurnado")
+                                    ->where('rpe','<>',"$rpe")
+                                    ->get();
         return $puestos;
 
     }
+
+   
+    
+
+
 
 }

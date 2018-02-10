@@ -129,15 +129,19 @@ class volantesDiversosController extends Template {
             
                 $areas = $this->create_turnados($data['idTurnado']);
 
+               
+
                 foreach ($areas as $key => $value) {
                     
                     $datos_director_area = BaseController::get_data_area($value);
+
+                    $idUsuario = $datos_director_area[0]['idUsuario'];
                 
                     $turno = new TurnadosJuridico([
                         'idVolante' => $max,
                         'idAreaRemitente' => 'DGAJ',
                         'idAreaRecepcion' => $value,
-                        'idUsrReceptor' => $datos_director_area[0]['idUsuario'],
+                        'idUsrReceptor' => $idUsuario ,
                         'idEstadoTurnado' => 'EN ATENCION',
                         'idTipoTurnado' => 'E',
                         'idTipoPrioridad' => $data['idCaracter'],

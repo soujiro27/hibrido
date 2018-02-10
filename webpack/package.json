@@ -1,0 +1,32 @@
+{
+  "name": "volantes",
+  "version": "0.0.5",
+  "description": "js de los volantes con webpack",
+  "main": "index.js",
+  "scripts": {
+    "dev:dll":"webpack --config webpack.dll.config.js",
+    "dev:code": "webpack --watch"
+  },
+  "author": "JC USTARROZ",
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "3.3.1",
+    "jquery-confirm": "3.3.2",
+    "jquery-ui": "1.12.1",
+    "jquery-validation": "1.17.0"
+  },
+  "devDependencies": {
+    "babel-core": "6.26.0",
+    "babel-loader": "7.1.2",
+    "babel-plugin-transform-async-to-generator": "6.24.1",
+    "babel-polyfill": "6.26.0",
+    "babel-preset-latest": "6.24.1",
+    "file-loader": "1.1.6",
+    "html-loader": "0.5.5",
+    "jquery-ui-browserify": "1.11.0-pre-seelio",
+    "stylus": "^0.54.5",
+    "stylus-loader": "3.0.1",
+    "url-loader": "0.6.2",
+    "webpack": "3.10.0"
+  }
+}
