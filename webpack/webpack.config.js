@@ -1,19 +1,23 @@
-const path = require('path')
-const webpack = require('webpack')
+const path = require('path');
+const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
 module.exports = {
     entry :{
-        Catalogos:[path.resolve(__dirname,'./Catalogos/index.js')]
+        Catalogos:['babel-polyfill',path.resolve(__dirname,'./Catalogos/index.js')]
     }, 
     output:{
         filename: '[name].js',
-        path: path.resolve(__dirname,'../public/js_webpack/'),
-        publicPath:path.resolve(__dirname,'../public/js_webpack/')
+        path: path.resolve(__dirname,'../public/js/'),
+        publicPath:path.resolve(__dirname,'../public/js/')
     },
     module:{
         rules:[
             {
                 test:/\.styl$/,
-                loader:'stylus-loader'
+                use:ExtractTextPlugin.extract({
+                    use:['css-loader','stylus-loader']
+                })
             },
             {
                 test:/\.(jpg|png|)$/,
@@ -44,6 +48,12 @@ module.exports = {
     plugins:[
         new webpack.DllReferencePlugin({
             manifest:require('./vendor-manifest.json')
+        }),
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jquery: "jQuery",
+            "windows.jQuery": "jquery",
+            jQuery:'jquery'
         })
     ]
 }

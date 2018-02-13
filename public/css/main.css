@@ -2979,6 +2979,9 @@ input[type=file] {
 label.is-invalid {
   color: #f00;
 }
+input:valid {
+  border: thin solid #008000;
+}
 /*------------particulares----------*/
 div.row-form {
   margin-bottom: 10px !important;
