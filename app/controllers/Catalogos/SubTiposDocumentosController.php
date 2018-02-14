@@ -12,7 +12,7 @@ use App\Controllers\ValidateController;
 class SubTiposDocumentosController extends template {
 	
 	private $modulo = 'SubTipos-Documentos';
-	private $filejs = 'Catalogos';
+	private $filejs = 'subDocumentos';
 
 	#crea la tabla principal
 	public function index()

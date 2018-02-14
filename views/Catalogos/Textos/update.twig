@@ -1,54 +1,54 @@
 {% extends 'layoutForm.twig' %}
 {% block title %}ACtualizar Registro{% endblock %}
 {% block form %}
-    <form id="DoctosTextos-update" method="POST"  data-ruta="DoctosTextos">
-        <div class="form-group idDocumento row" >
-            <label class="form-control-label col-lg-2" for="idDocumento">Tipo de Documento</label>
-            <select class="form-control col-lg-2" id="idDocumento" name="documento" required="required">
-                <option value="">Seleccione una Opcion</option>
-                {% for tipo in documentos %}
-                    {% if tipo.idTipoDocto == doctoTexto.idTipoDocto %}
-                        <option value ="{{ tipo.idTipoDocto }}" selected>{{ tipo.nombre }}</option>
-                    {% else %}
-                        <option value ="{{ tipo.idTipoDocto }}">{{ tipo.nombre }}</option>
-                    {% endif %}
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group subDocumento row">
-            <label class="form-control-label col-lg-2" for="subDocumento">Tipo de SubDocumento</label>
-            <select class="form-control col-lg-2" id="subDocumento" name="subDocumento" required="required">
-                {% for sub in subtipos %}
-                    {% if sub.idSubTipoDocumento == doctoTexto.idSubTipoDocumento %}
-                        <option value="{{ sub.idSubTipoDocumento }}" selected >{{ sub.nombre }}</option>
-                    {% else %}
-                        <option value="{{ sub.idSubTipoDocumento }}">{{ sub.nombre }}</option>
-                    {% endif %}
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group texto">
-            <label class="form-control-label" for="textoForm">Texto</label>
-            <textarea class="form-control" id="ckeditor" rows="3" name="texto" required="" placeholder="texto">{{ doctoTexto.texto }}</textarea>
-            <input type="hidden" name="idDocumentoTexto" value="{{ doctoTexto.idDocumentoTexto }}">
-        </div>
-        <div class="form-group estatus row">
-            <label class="form-control-label col-lg-2" for="estatus">Estatus</label>
-            <select name="estatus" id="estatus" class="form-control col-lg-2">
-                {% if doctoTexto.estatus=='ACTIVO' %}
-                    <option value="ACTIVO" selected>ACTIVO</option>
-                    <option value="INACTIVO" >INACTIVO</option>
+<form id="update-textos" method="POST"  data-ruta="DoctosTextos">
+    <div class="form-group idDocumento row" >
+        <label class="form-control-label col-lg-2" for="idDocumento">Tipo de Documento</label>
+        <select class="form-control col-lg-2" id="idDocumento" name="documento" required="required">
+            <option value="">Seleccione una Opcion</option>
+            {% for tipo in documentos %}
+                {% if tipo.idTipoDocto == doctoTexto.idTipoDocto %}
+                    <option value ="{{ tipo.idTipoDocto }}" selected>{{ tipo.nombre }}</option>
                 {% else %}
-                    <option value="ACTIVO" >ACTIVO</option>
-                    <option value="INACTIVO" selected>INACTIVO</option>
+                    <option value ="{{ tipo.idTipoDocto }}">{{ tipo.nombre }}</option>
                 {% endif %}
-            </select>
-        </div>
-        <div class="form-group send">
-            <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
-            <button class="btn btn-danger btn-sm" id="cancelar" data-ruta="DoctosTextos">Cancelar</button>
-        </div>
-    </form>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group subDocumento row">
+        <label class="form-control-label col-lg-2" for="subDocumento">Tipo de SubDocumento</label>
+        <select class="form-control col-lg-2" id="subDocumento" name="subDocumento" required="required">
+            {% for sub in subtipos %}
+                {% if sub.idSubTipoDocumento == doctoTexto.idSubTipoDocumento %}
+                    <option value="{{ sub.idSubTipoDocumento }}" selected >{{ sub.nombre }}</option>
+                {% else %}
+                    <option value="{{ sub.idSubTipoDocumento }}">{{ sub.nombre }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group texto">
+        <label class="form-control-label" for="textoForm">Texto</label>
+        <textarea class="form-control" id="ckeditor" rows="3" name="texto" required="" placeholder="texto">{{ doctoTexto.texto }}</textarea>
+        <input type="hidden" name="idDocumentoTexto" value="{{ doctoTexto.idDocumentoTexto }}">
+    </div>
+    <div class="form-group estatus row">
+        <label class="form-control-label col-lg-2" for="estatus">Estatus</label>
+        <select name="estatus" id="estatus" class="form-control col-lg-2">
+            {% if doctoTexto.estatus=='ACTIVO' %}
+                <option value="ACTIVO" selected>ACTIVO</option>
+                <option value="INACTIVO" >INACTIVO</option>
+            {% else %}
+                <option value="ACTIVO" >ACTIVO</option>
+                <option value="INACTIVO" selected>INACTIVO</option>
+            {% endif %}
+        </select>
+    </div>
+    <div class="form-group send">
+        <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
+        <button class="btn btn-danger btn-sm" id="cancelar" data-ruta="DoctosTextos">Cancelar</button>
+    </div>
+</form>
 
 
 {% endblock %}

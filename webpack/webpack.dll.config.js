@@ -2,7 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 module.exports = {
     entry :{
-        vendor: ['jquery','drip-form-validator','sweetalert']
+        vendor: ['jquery','jquery-confirm','jquery-validation','jquery-ui-browserify','jquery-ui']
     }, 
     output:{
         filename: '[name].js',

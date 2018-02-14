@@ -13,8 +13,9 @@ use App\Models\Catalogos\SubTiposDocumentos;
 class TextosController extends Template {
 
 	private $modulo = 'Textos Juridico';
-	private $filejs = 'Catalogos';
+	private $filejs = 'Textos';
 	private $ckeditor = true;
+	
 	#Crea la tabla principal 
 	public function index(){
 		$textos = Textos::all();

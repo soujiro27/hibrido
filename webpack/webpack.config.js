@@ -4,7 +4,10 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     entry :{
-        Catalogos:['babel-polyfill',path.resolve(__dirname,'./Catalogos/index.js')]
+        Caracteres:['babel-polyfill',path.resolve(__dirname,'./Catalogos/Caracteres/index.js')],
+        Textos:['babel-polyfill',path.resolve(__dirname,'./Catalogos/Textos/index.js')],
+        SubDocumentos:['babel-polyfill',path.resolve(__dirname,'./Catalogos/subDocumentos/index.js')]
+
     }, 
     output:{
         filename: '[name].js',

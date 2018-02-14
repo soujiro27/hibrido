@@ -1,7 +1,7 @@
 {% extends 'layoutForm.twig' %}
-{% block title %}Añadir Registro{% endblock %}
+{% block title %}Nuevo Registro{% endblock %}
 {% block form %}
-<form id="Caracteres" method="POST"  data-ruta="Caracteres">
+<form id="Caracteres-insert" method="POST"  data-ruta="Caracteres">
 
     <div class="form-group row">
         <label class="col-lg-1" for="siglas">Siglas</label>
@@ -13,10 +13,9 @@
                 pattern="[a-zA-Z]+" 
                 name="siglas" 
                 maxlength="2"
-                
-
+                required
             />
-            <div class="invalid-feedback" id="invalid-feedback">El campo es Obligatorio y solo puede tener maximo 2 Caracteres</div>
+           
         </div>
         
     </div>
@@ -31,9 +30,9 @@
                 name="nombre" 
                 pattern="[a-zA-Z]+"
                 maxlength="10" 
-                                 
+                required         
             />
-             <div class="invalid-feedback" id="invalid-feedback">El campo es Obligatorio y solo puede tener maximo 10 Caracteres</div>
+            
         </div>
 
     </div>

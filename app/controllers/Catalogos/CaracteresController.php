@@ -11,7 +11,7 @@ use App\Controllers\ValidateController;
 class CaracteresController extends Template {
 
 	private $modulo = 'Caracteres';
-	private $filejs = 'Catalogos';
+	private $filejs = 'Caracteres';
 
 	#obtiene los registros para la tabla principal
 	public function index(){
