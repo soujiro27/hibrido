@@ -1,14 +1,31 @@
 {% extends 'layoutForm.twig' %}
 {% block title %}
-  <div class="header-irac">
-    <a  href="#!" class="active">Nueva Asignacion</a>
-    <a href="/SIA/juridico/Irac/historial/{{ id }}" class="no-active">Respuestas</a>
+  <div class="header-menu-oficios">
+    <button class="btn btn-info" id="menu-oficios"><i class="fa fa-th-list"></i></button>
+    <span>Asignacion</span>
+    <div class="menu-oficios">
+      <ul>
+        <li>
+          <a href="/SIA/juridico/{{ ruta }}/historial/{{ id }}">Respuestas</a>      
+        </li>
+        {% if cedula %}
+          <li>
+            <a href="/SIA/juridico/{{ ruta }}/Observaciones/{{ id }}">Observaciones</a>
+          </li>
+          <li>
+            <a href="/SIA/juridico/{{ ruta }}/Cedula/{{ id }}">Cedula</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+    
+    
   </div>
 {% endblock %}
 
 {% block form %}
 
-    <form id="asignacion"   data-ruta="Irac" method="POST" enctype="multipart/form-data">
+    <form id="asignacion"   data-ruta="{{ ruta }}" method="POST" enctype="multipart/form-data">
       <input type="hidden" value="{{ id }}" id="idVolante" name="idVolante">
       <input type="hidden" name="idEstadoTurnado" value='NUEVO'>
       <div class="row row-form">
@@ -46,14 +63,14 @@
       <div class="row row-form">
         <div class="col-lg-11">
             <label>Comentario</label>
-            <textarea placeholder="Comentario" class="form-control" name="comentario"></textarea>
+            <textarea placeholder="Comentario" class="form-control" name="comentario" maxlength="350"></textarea>
         </div>
       </div>
        <div class="form-group send">
             <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
-            <button class="btn btn-danger btn-sm" id="cancelar" data-ruta="Irac">Cancelar</button>
+            <button class="btn btn-danger btn-sm" id="cancelar" data-ruta="{{ ruta }}">Cancelar</button>
       </div>
 
     </form>
-   {% include 'errors.twig' %}
+   
 {% endblock %}

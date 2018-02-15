@@ -61,10 +61,12 @@ class volantesController extends Template{
 	#manda a traer el formulario de insercion
 	public function create(){
 		
+		$base = new BaseController();
+
+
 		$documentos = TiposDocumentos::where('estatus','ACTIVO')->where('tipo','JURIDICO')->get();
 		$caracteres = Caracteres::where('estatus','ACTIVO')->get();
-		$turnados  = Areas::where('idAreaSuperior','DGAJ')->where('estatus','ACTIVO')->get();
-		$turnadoDireccion = array ('idArea'=>'DGAJ','nombre' => 'DIRECCIÓN GENERAL DE ASUNTOS JURIDICOS');
+		$areas = $base->load_areas();
 		$acciones = Acciones::where('estatus','ACTIVO')->get();
 		
 		echo $this->render('Volantes/volantes/create.twig',[
@@ -73,8 +75,7 @@ class volantesController extends Template{
 			'documentos' => $documentos,
 			'cuenta' =>  $_SESSION['idCuentaActual'],
 			'caracteres' => $caracteres,
-			'turnados' => $turnados,
-            'direccionGral' => $turnadoDireccion,
+			'areas' => $areas,
             'acciones' => $acciones,
 			'filejs' => $this->filejs
 		]);
@@ -168,8 +169,10 @@ class volantesController extends Template{
 
 	public function createUpdate($id, $app){
 		
+		$base = new BaseController();
+
 		$volantes = Volantes::find($id);
-		$turnados  = Areas::where('idAreaSuperior','DGAJ')->where('estatus','ACTIVO')->get();
+		$turnados  = $base->load_areas();
 		$acciones = Acciones::where('estatus','ACTIVO')->get();
 		$caracteres = Caracteres::where('estatus','ACTIVO')->get();
 		$turnadosJuridico = TurnadosJuridico::where('idVolante',"$id")->get();

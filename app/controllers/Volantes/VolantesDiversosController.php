@@ -23,7 +23,7 @@ use Carbon\Carbon;
 class volantesDiversosController extends Template { 
 
     private $modulo = 'Volantes-Diversos';
-    private $filejs = 'Volantes';
+    private $filejs = 'Diversos';
 
 
 	#crea la tabla con los registros
@@ -64,8 +64,6 @@ class volantesDiversosController extends Template {
     public function create() {
         $documentos = TiposDocumentos::where('estatus','ACTIVO')->where('tipo','JURIDICO')->get();
 		$caracteres = Caracteres::where('estatus','ACTIVO')->get();
-		$turnados  = Areas::where('idAreaSuperior','DGAJ')->where('estatus','ACTIVO')->get();
-		$turnadoDireccion = array ('idArea'=>'DGAJ','nombre' => 'DIRECCIÓN GENERAL DE ASUNTOS JURIDICOS');
 		$acciones = Acciones::where('estatus','ACTIVO')->get();
         
         echo $this->render('Volantes/volantesDiversos/create.twig',[
@@ -73,8 +71,6 @@ class volantesDiversosController extends Template {
             'documentos' => $documentos,
             'caracteres' => $caracteres,
             'acciones' => $acciones,
-            'turnados' => $turnados,
-            'direccionGral' => $turnadoDireccion,
             'modulo' => $this->modulo,
             'filejs' => $this->filejs
         ]);
@@ -288,7 +284,7 @@ class volantesDiversosController extends Template {
         $res[3] = ValidateController::alphaNumeric($data['fDocumento'],'fDocumento',10);
         $res[4] = ValidateController::alphaNumeric($data['fRecepcion'],'fRecepcion',10);
         $res[5] = ValidateController::alphaNumeric($data['hRecepcion'],'hRecepcion',5);
-        $res[6] = ValidateController::string($data['idRemitente'],'idRemitente',20);
+        $res[6] = ValidateController::alphaNumeric($data['idRemitente'],'idRemitente',20);
         $res[7] = ValidateController::alphaNumeric($data['idTurnado'],'idTurnado',50);
         $res[8] = ValidateController::string($data['estatus'],'estatus',10);
 

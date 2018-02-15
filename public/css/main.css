@@ -2999,20 +2999,6 @@ select.select-order {
   width: 100% !important;
   margin-bottom: 20px;
 }
-a.active {
-  padding: 5px;
-  margin: 0 5px;
-  border-radius: 5px 5px 0px 0px;
-  text-decoration: none;
-  background-color: #65140f;
-  color: #fff;
-  font-weight: normal;
-  box-shadow: 3px 3px 3px #000;
-}
-a.no-active {
-  padding: 5px;
-  margin: 0 5px;
-}
 td.send {
   color: #26bce0;
 }
@@ -3086,4 +3072,38 @@ div.URGENTE div.file i {
 div.NORMAL div.file a,
 div.URGENTE div.file a {
   text-decoration: none;
+}
+table#main-table-oficios {
+  font-size: 13px !important;
+}
+div.header-menu-oficios {
+  position: relative;
+}
+div.header-menu-oficios div.menu-oficios {
+  position: absolute;
+  top: 23px;
+  left: -5px;
+  z-index: 999;
+  display: none;
+}
+div.header-menu-oficios div.menu-oficios ul {
+  list-style: none;
+  margin: 5px;
+  padding: 3px 5px;
+  background-color: #5bc0de;
+  border-radius: 0px 8px 0px 0px;
+}
+div.header-menu-oficios div.menu-oficios ul li {
+  padding: 3px;
+}
+div.header-menu-oficios div.menu-oficios ul li a {
+  color: #fff;
+  font-weight: normal;
+  text-decoration: none;
+}
+div.header-menu-oficios div.menu-oficios ul li:hover {
+  background-color: #fff;
+}
+div.header-menu-oficios div.menu-oficios ul li:hover a {
+  color: #2c3e50;
 }

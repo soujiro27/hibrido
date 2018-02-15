@@ -6,7 +6,12 @@ module.exports = {
     entry :{
         Caracteres:['babel-polyfill',path.resolve(__dirname,'./Catalogos/Caracteres/index.js')],
         Textos:['babel-polyfill',path.resolve(__dirname,'./Catalogos/Textos/index.js')],
-        SubDocumentos:['babel-polyfill',path.resolve(__dirname,'./Catalogos/subDocumentos/index.js')]
+        SubDocumentos:['babel-polyfill',path.resolve(__dirname,'./Catalogos/subDocumentos/index.js')],
+        Acciones:['babel-polyfill',path.resolve(__dirname,'./Catalogos/Acciones/index.js')],
+        Volantes:['babel-polyfill',path.resolve(__dirname,'./Volantes/volantes/index.js')],
+        Diversos:['babel-polyfill',path.resolve(__dirname,'./Volantes/diversos/index.js')],
+        Documentos:['babel-polyfill',path.resolve(__dirname,'./Documentos/general/index.js')],
+        Irac:['babel-polyfill',path.resolve(__dirname,'./Oficios/Irac/index.js')]
 
     }, 
     output:{

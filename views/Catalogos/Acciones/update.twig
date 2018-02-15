@@ -1,10 +1,17 @@
 {% extends 'layoutForm.twig' %}
 {% block title %}Actualizar Registro{% endblock %}
 {% block form %}
-    <form id="Acciones-update" method="POST"  data-ruta="Acciones">
+    <form id="update-acciones" method="POST"  data-ruta="Acciones">
         <div class="form-group row">
             <label class="form-control-label col-lg-1" for="nombre">Nombre </label>
-            <input class="form-control col-lg-2" id="nombre" type="text" placeholder="Nombre"  pattern="[A-Za-z].{1,10}" name="nombre" title="Nombre Incorrecto o Caracteres maximos" value="{{ accion.nombre }}"/>
+            <input 
+                class="form-control col-lg-2" 
+                type="text" 
+                placeholder="Nombre"  
+                pattern="[A-Za-z]+" 
+                name="nombre" 
+                maxlength="50" 
+                value="{{ accion.nombre }}"/>
         </div>
         <div class="form-group row">
             <label class="form-control-label col-lg-1" for="estatus">Estatus</label>

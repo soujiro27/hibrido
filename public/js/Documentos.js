@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "C:\\xampp\\htdocs\\SIA\\hibrido\\public\\js";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 344);
+/******/ 	return __webpack_require__(__webpack_require__.s = 361);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -11651,12 +11651,7 @@ module.exports = function () {
 module.exports = "<div id=\"order-form\" class=\"order-form\">\r\n    <label for=\"campo\">Campo:</label>\r\n    <select name=\"campo\" id=\"campo\" required class=\"form-control select-order\">\r\n        <option value=\"\">Escoga una Opcion</option>\r\n        <option value=\"folio\">FOLIO</option>\r\n        <option value=\"numDocumento\">DOCUMENTO</option>\r\n        <option value=\"idRemitente\">REMITENTE</option>\r\n        <option value=\"idTurnado\">TURNADO</option>\r\n        <option value=\"fRecepcion\">FECHA</option>\r\n        <option value=\"extemporaneo\">DESFAZADO</option>\r\n        <option value=\"nombre\">OFICIO</option>\r\n        <option value=\"estadoProceso\">ESTADO</option>\r\n    </select>\r\n\r\n    <label for=\"tipo\">Tipo:</label>\r\n    <select name=\"tipo\" id=\"tipo\" required class=\"form-control select-order\">\r\n        <option value=\"\">Escoga una Opcion</option>\r\n        <option value=\"asc\">Ascendente</option>\r\n        <option value=\"desc\">Descendente</option>\r\n    </select>\r\n    <label for=\"year\">Año</label>\r\n    <select name=\"year\" id=\"year\" class=\"form-control select-order\">\r\n        <option value=\"\">Año</option>\r\n        <option value=\"2017\">2017</option>\r\n        <option value=\"2018\">2018</option>\r\n    </select>\r\n\r\n</div>\r\n";
 
 /***/ }),
-/* 336 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = (__webpack_require__(64))(3);
-
-/***/ }),
+/* 336 */,
 /* 337 */,
 /* 338 */,
 /* 339 */,
@@ -11664,35 +11659,50 @@ module.exports = (__webpack_require__(64))(3);
 /* 341 */,
 /* 342 */,
 /* 343 */,
-/* 344 */
+/* 344 */,
+/* 345 */,
+/* 346 */,
+/* 347 */,
+/* 348 */,
+/* 349 */,
+/* 350 */,
+/* 351 */,
+/* 352 */,
+/* 353 */,
+/* 354 */,
+/* 355 */,
+/* 356 */,
+/* 357 */,
+/* 358 */,
+/* 359 */,
+/* 360 */,
+/* 361 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(129);
-module.exports = __webpack_require__(345);
+module.exports = __webpack_require__(362);
 
 
 /***/ }),
-/* 345 */
+/* 362 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var base = __webpack_require__(127);
+var general = __webpack_require__(363);
 var b = new base();
-
-var subDocumentos = __webpack_require__(346);
-var sd = new subDocumentos();
+var g = new general();
 
 b.cancel();
 b.logout();
-b.load_update_form();
+b.ordenamiento();
 
-sd.validate_insert_form();
-sd.validate_update_form();
+g.load_update_form();
 
 /***/ }),
-/* 346 */
+/* 363 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11700,94 +11710,22 @@ sd.validate_update_form();
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jqueryValidation = __webpack_require__(336);
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var base = __webpack_require__(127);
-var b = new base();
+
 module.exports = function () {
     function _class() {
         _classCallCheck(this, _class);
     }
 
     _createClass(_class, [{
-        key: 'validate_insert_form',
-        value: function validate_insert_form() {
-            $('form#insert-subDocumentos').validate({
-                rules: {
-                    documento: { required: true },
-                    nombre: {
-                        required: true,
-                        maxlength: 50
-                    },
-                    auditoria: {
-                        required: true,
-                        maxlength: 2
-                    }
-                },
-                messages: {
-                    documento: {
-                        required: 'El Campo es Obligatorio'
-                    },
-                    nombre: {
-                        required: 'El Campo es Obligatorio',
-                        maxlength: 'Maximo 50 Caracteres'
-                    },
-                    auditoria: {
-                        required: 'El campo es Obligatorio',
-                        maxlength: 'Valor Incorrecto'
-                    }
-                },
-                submitHandler: function submitHandler() {
-                    var formData = $('form#insert-subDocumentos').serializeArray();
-                    b.new_insert(formData, 'SubTiposDocumentos');
-                },
-                errorClass: 'is-invalid'
-            });
-        }
-    }, {
-        key: 'validate_update_form',
-        value: function validate_update_form() {
-
-            $('form#update-subDocumentos').validate({
-                rules: {
-                    documento: { required: true },
-                    nombre: {
-                        required: true,
-                        maxlength: 50
-                    },
-                    auditoria: {
-                        required: true,
-                        maxlength: 2
-                    },
-                    estatus: {
-                        required: true,
-                        maxlength: 8
-                    }
-                },
-                messages: {
-                    documento: {
-                        required: 'El Campo es Obligatorio'
-                    },
-                    nombre: {
-                        required: 'El Campo es Obligatorio',
-                        maxlength: 'Maximo 50 Caracteres'
-                    },
-                    auditoria: {
-                        required: 'El Campo es Obligatorio',
-                        maxlength: 'Valor Incorrecto'
-                    },
-                    estatus: {
-                        required: 'El Campo es Obligatorio',
-                        maxlength: 'Valor Incorrecto'
-                    }
-                },
-                submitHandler: function submitHandler() {
-                    var formData = $('form#update-subDocumentos').serializeArray();
-                    b.new_update(formData, 'SubTiposDocumentos');
-                },
-                errorClass: 'is-invalid'
+        key: 'load_update_form',
+        value: function load_update_form() {
+            $('table#main-table-files tbody tr').click(function () {
+                var id = $(this).children().first().text();
+                var ruta = $(this).data('ruta');
+                location.href = '/SIA/juridico/' + ruta + '/' + id;
             });
         }
     }]);

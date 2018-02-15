@@ -21,43 +21,83 @@
         <div class="row row-form">
             <div class="col-lg-2">
                 <label for="Folio">Folio</label>
-                <input class="form-control" id="Folio" type="number" readonly value="{{ volantes.folio }}" />
+                <input 
+                    class="form-control" 
+                    type="number" 
+                    readonly 
+                    value="{{ volantes.folio }}" 
+                />
             </div>
+
             <div class="col-lg-2">
                 <label for="subFolio">subFolio</label>
                 <input class="form-control" id="subFolio" type="number"  readonly value="{{ volantes.subFolio }}" />
             </div>
+
             <div class="col-lg-4">
                 <label for="numDocumento">Numero de Documento</label>
-                    <input class="form-control" id="numDocumento" type="text" name="numDocumento" required="" value="{{ volantes.numDocumento }}"  />
-
+                <input 
+                    class="form-control" 
+                    type="text" 
+                    name="numDocumento" 
+                    value="{{ volantes.numDocumento }}"  
+                    maxlength="20" 
+                />
             </div>
+
             <div class="col-lg-2">
                 <label for="anexos">Numero de Anexos</label>
-                <input class="form-control" id="anexos" type="number" name="anexos" required="" pattern="[0-9]{1,16}" value ="{{ volantes.anexos }}" />
+                <input 
+                    class="form-control" 
+                    type="number" 
+                    name="anexos" 
+                    pattern="[0-9]+" 
+                    min="0"
+                    max="99"
+                    value ="{{ volantes.anexos }}" 
+                />
             </div>
         </div>
+        
         <div class="row row-form">
             <div class="col-lg-3">
                 <label for="fDocumento">Fecha de Documento</label>
-                <input class="form-control fechaInput" id="fDocumento" type="text" name="fDocumento" required="" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" value="{{ volantes.fDocumento }}"/>
+                <input class="form-control fechaInput"  type="text" name="fDocumento" required="" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" value="{{ volantes.fDocumento }}"/>
             </div>
+
             <div class="col-lg-3">
                 <label for="fRecepcion">Fecha de Recepcion</label>
-                <input class="form-control fechaInput" id="fRecepcion" type="text" name="fRecepcion" required="" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" value="{{ volantes.fRecepcion }}" />
+                <input class="form-control fechaInput"  type="text" name="fRecepcion" required="" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" value="{{ volantes.fRecepcion }}" />
             </div>
+
             <div class="col-lg-3">
                 <label for="hRecepcion">Hora de Recepcion</label>
-                <input class="form-control" id="hRecepcion" type="time" name="hRecepcion" required="" pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}" placeholder="00:00" title="Formato de 24 horas 00:00" value="{{ volantes.hRecepcion | hora }}" />
+                <input 
+                    class="form-control" 
+                    type="time" 
+                    name="hRecepcion"  
+                    pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}" 
+                    placeholder="00:00" 
+                    min="08:00"
+                    max="18:15"
+                    value="{{ volantes.hRecepcion | hora }}" 
+                />
             </div>
         </div>
 
         <div class="row row-form">
             <div class="col-lg-10">
                 <label for="Asunto">Asunto</label>
-                <textarea class="form-control" rows="3" name="asunto" required="" placeholder="Asunto">{{ volantes.asunto }}</textarea>
+                <textarea 
+                    class="form-control" 
+                    rows="3" 
+                    name="asunto" 
+                    placeholder="Asunto"
+                    maxlength="350" 
+                >{{ volantes.asunto }}</textarea>
             </div>
         </div>
+
         <div class="row row-form">
             <div class="col-lg-2">
                 <label for="idCaracter">Caracter</label>
@@ -127,7 +167,6 @@
 
 </form>
 
-{% include 'errors.twig' %}
 {% endblock %}
 
 

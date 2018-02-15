@@ -12,7 +12,7 @@ use App\Controllers\ValidateController;
 class AccionesController extends Template{
 	
 	private $modulo = 'Acciones';
-	private $filejs = 'Catalogos';
+	private $filejs = 'Acciones';
 
 	#crea la tabla con los registros
 	public function index(){

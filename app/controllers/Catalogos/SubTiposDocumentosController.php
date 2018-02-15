@@ -51,6 +51,7 @@ class SubTiposDocumentosController extends template {
 		            'idTipoDocto' =>$data['documento'],
 		            'nombre' => $data['nombre'],
 		            'auditoria' => $data['auditoria'],
+		            'tipo' => 'JURIDICO',
 		            'usrAlta' => $_SESSION['idUsuario'],
 		            'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s')
 		        ]);

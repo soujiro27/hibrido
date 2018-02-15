@@ -11,10 +11,25 @@ use App\Models\Catalogos\PuestosJuridico;
 use App\Models\Documentos\TurnadosJuridico;
 use App\Models\Documentos\AnexosJuridico;
 use App\Models\Volantes\Volantes;
+use App\Models\Volantes\Areas;
+use App\Models\Base\UsuariosRoles;
 
  
 
 class BaseController {
+
+    public function load_areas(){
+        $res = [];
+        $turnados  = Areas::where('idAreaSuperior','DGAJ')->where('estatus','ACTIVO')->get();
+        $turnadoDireccion = array ('idArea'=>'DGAJ','nombre' => 'DIRECCIÓN GENERAL DE ASUNTOS JURIDICOS');
+        
+        foreach ($turnados as $key => $value) {
+            $res[$key] = $turnados[$key];
+        }
+        array_push($res,$turnadoDireccion);
+
+        return $res;
+    }
 
 	public function upload_file_areas($file,$idVolante){
 
@@ -37,7 +52,7 @@ class BaseController {
 
 	}
 
-		public function upload_file_interno($file,$idVolante,$nombre_final){
+	public function upload_file_interno($file,$idVolante,$nombre_final){
 
 		$directory ='hibrido/files/'.$idVolante.'/Internos';
     
@@ -142,7 +157,7 @@ class BaseController {
 	}
 
 
-	    public function datos_insert_turnados($data){
+	public function datos_insert_turnados($data){
 
         $res = [];
         $id = $data['idVolante'];
@@ -245,6 +260,24 @@ class BaseController {
         foreach ($users as $key => $value) {
             BaseController::notificaciones($users[$key]['idUsuario'],$mensaje);
         }
+    }
+
+    public function rol_cedulas($modulo){
+
+        $res = true;
+
+        $idUsuario = $_SESSION['idUsuario'];
+        $roles = UsuariosRoles::select('rm.idModulo')
+                ->join('sia_rolesmodulos as rm','rm.idRol','=','sia_usuariosroles.idRol')
+                ->where('sia_usuariosroles.idUsuario',"$idUsuario")
+                ->where('rm.idModulo',"$modulo")
+                ->get();
+        if($roles->isEmpty()){
+             $res = false;
+        }
+
+        return $res;
+
     }
 
 	

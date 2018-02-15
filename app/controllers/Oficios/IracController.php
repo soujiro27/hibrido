@@ -6,22 +6,36 @@ use Carbon\Carbon;
 use App\Controllers\Template;
 use App\Controllers\ValidateController;
 use App\Controllers\BaseController;
+use App\Controllers\Oficios\BaseOficiosController;
 
 use App\Models\Volantes\Volantes;
 use App\Models\Catalogos\PuestosJuridico;
 use App\Models\Documentos\TurnadosJuridico;
+use App\Models\Oficios\Observaciones;
 
 use App\Controllers\ApiController;
 
 class IracController extends Template {
 
 	private $modulo = 'Irac';
-    private $filejs = 'Oficios';
+    private $filejs = 'Irac';
+    private $ckeditor = true;
 
-	public function index() {
+	public function index($data) {
+
 		$id = $_SESSION['idEmpleado'];
         $areas = PuestosJuridico::where('rpe','=',"$id")->get();
         $area = $areas[0]['idArea'];
+
+        $now = Carbon::now('America/Mexico_City')->format('Y');
+        $campo = 'Folio';
+        $tipo = 'desc';
+
+        if(!empty($data)){
+            $now = $data['year'];
+            $campo = $data['campo'];
+            $tipo = $data['tipo'];
+        }
 
          $iracs = Volantes::select('sia_Volantes.idVolante','sia_Volantes.folio',
             'sia_Volantes.numDocumento','sia_Volantes.idRemitente','sia_Volantes.fRecepcion','sia_Volantes.asunto'
@@ -35,112 +49,66 @@ class IracController extends Template {
             ->where('sub.nombre','=','IRAC')
             ->where('t.idAreaRecepcion','=',"$area")
             ->where('t.idTipoTurnado','E')
+            ->whereYear('sia_Volantes.fRecepcion','=',"$now")
+            ->orderBy("$campo","$tipo")
             ->get();
 
-        	echo $this->render('/Oficios/Irac/index.twig',[
+        	echo $this->render('/Oficios/index.twig',[
             'iracs' => $iracs,
             'sesiones'=> $_SESSION,
-            'modulo' => 'Irac',
+            'modulo' => $this->modulo,
+            'ruta' => $this->modulo,
             'filejs' => $this->filejs
             ]);
 
 	}
 
-	public function create($id,$message, $errors) {
+	public function create($id) {
 		
+        $base = new BaseController();
+        $cedula = $base->rol_cedulas('IRAC');
+
         $personas = $this->load_personal($id);
-        echo $this->render('Oficios/Irac/create.twig',[
+        echo $this->render('Oficios/create.twig',[
 			'sesiones' => $_SESSION,
 			'modulo' => $this->modulo,
-			'mensaje' => $message,
-			'errors' => $errors,
 			'id' => $id,
             'personas' => $personas,
-            'filejs' => $this->filejs
+            'filejs' => $this->filejs,
+            'ruta' => $this->modulo,
+            'cedula' => $cedula
 		]);
 
 	}
 
     public function save_turnado(array $data,$file, $app) {
 
-        $data['estatus'] =  'ACTIVO';
-        $validate = $this->validate($data,$file);
-        $nombre_file = $file['file']['name'];
-
-        if(empty($validate)){
-
-            $datos = BaseController::datos_insert_turnados($data);
-            $max = BaseController::insert_turnado_interno($data,$datos);
-            
-            if(!empty($nombre_file)){
-
-                BaseController::insert_anexos_interno($max,$file);
-            }
-
-            BaseController::send_notificaciones($data,$datos,'IRAC');
-            BaseController::send_notificaciones_varios($data,$datos,'IRAC');
-
-            $success = BaseController::success();
-            echo json_encode($success);
-
-
-        } else {
-
-            echo json_encode($valida);
-        }
-
+        $save = new BaseOficiosController();
+        $save->save_turnado($data,$file, $app, $this->modulo);
+       
     }
 
 
 
-    public function createDocumentos($id,$message, $errors) {
-        $turnados = $this->load_personal($id);
+    public function createDocumentos($id){
 
+        $base = new BaseController();
 
-         echo $this->render('Oficios/Irac/documentos.twig',[
+        $personas = $this->load_personal($id);
+        $cedula = $base->rol_cedulas('IRAC');
+
+         echo $this->render('Oficios/documentos.twig',[
             'sesiones' => $_SESSION,
             'modulo' => $this->modulo,
-            'mensaje' => $message,
-            'errors' => $errors,
             'id' => $id,
-            'turnados' => $turnados,
-            'filejs' => $this->filejs
+            'turnados' => $personas,
+            'filejs' => $this->filejs,
+            'ruta' => $this->modulo,
+            'cedula' => $cedula
         ]);
     }
 
 
-    public function validate($data, $file){
-        
-        $res = [];
-        $final = [];
-
-        $nombre_file = $file['file']['name'];
-
-        $res[0] = ValidateController::string($data['idTipoPrioridad'],'idTipoPrioridad',10);
-        $res[1] = ValidateController::alphaNumeric($data['comentario'],'comentario',350);
-        $res[2] = ValidateController::string($data['estatus'],'estatus',10);
-
-        $res[3] = ValidateController::number($data['idUsrReceptor'],'idUsrReceptor',true);
-        $res[4] = ValidateController::number($data['idVolante'],'idVolante',true);
-
-        if(!empty($nombre_file)){
-
-            $res[5] = ValidateController::alphaNumeric($nombre_file,'Archivo',50);
-            
-        }
-
-        foreach ($res as $key => $value) {
-            if(!empty($value)){
-                array_push($final,$value);
-            }
-        }
-
-
-        return $final;
-        
-    }
-
-   
 
 
     public function load_personal($id){
@@ -157,9 +125,71 @@ class IracController extends Template {
 
     }
 
-   
-    
+    public function observaciones($id){
 
+        
+        $base = new BaseController();
+        $cedula = $base->rol_cedulas('IRAC');
+
+         echo $this->render('Oficios/Irac/Observaciones.twig',[
+            'sesiones' => $_SESSION,
+            'modulo' => $this->modulo,
+            'id' => $id,
+            'filejs' => $this->filejs,
+            'ruta' => $this->modulo,
+            'cedula' => $cedula,
+            'ckeditor' => $this->ckeditor
+        ]);
+
+
+    }
+
+    public function save_observaciones(array $data, $app){
+
+        $data['estatus'] = 'ACTIVO';
+
+        $validate = $this->validate_observaciones(array $data);
+        
+        if(empty($validate)){
+
+            $observacion = new Observaciones([
+
+            ]);
+
+
+        } else {
+
+            echo json_encode($validate);
+        }
+
+
+    }
+
+
+    public function validate_observaciones(array $data){
+
+        $validate = new ValidateController();
+
+        $res = [];
+        $final = [];
+
+        
+        $res[0] = $validate->alphaNumeric($data['pagina'],'pagina',50);
+        $res[1] = $validate->alphaNumeric($data['parrafo'],'parrafo',50);
+        $res[2] = $validate->alphaNumeric($data['observacion'],'observacion',350);
+        $res[3] = $validate->string($data['estatus'],'estatus',10);
+
+        $res[4] = $validate->number($data['idVolante'],'idVolante',true);
+
+        foreach ($res as $key => $value) {
+            if(!empty($value)){
+                array_push($final,$value);
+            }
+        }
+
+
+        return $final;
+    }
 
 
 }

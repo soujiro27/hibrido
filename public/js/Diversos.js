@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "C:\\xampp\\htdocs\\SIA\\hibrido\\public\\js";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 344);
+/******/ 	return __webpack_require__(__webpack_require__.s = 356);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -11657,22 +11657,39 @@ module.exports = "<div id=\"order-form\" class=\"order-form\">\r\n    <label for
 module.exports = (__webpack_require__(64))(3);
 
 /***/ }),
-/* 337 */,
+/* 337 */
+/***/ (function(module, exports) {
+
+module.exports = "\r\n<div class=\"table-areas-turnar\">\r\n\t<table class=\"table\">\r\n\t\t<thead>\r\n\t\t\t<th>Seleccionar</th>\r\n\t\t\t<th>Area</th>\r\n\t\t</thead>\r\n\t\t<tbody id=\"body-areas\">\r\n\t\t\t:body:\r\n\t\t</tbody>\r\n\t</table>\r\n</div>";
+
+/***/ }),
 /* 338 */,
 /* 339 */,
 /* 340 */,
 /* 341 */,
 /* 342 */,
 /* 343 */,
-/* 344 */
+/* 344 */,
+/* 345 */,
+/* 346 */,
+/* 347 */,
+/* 348 */,
+/* 349 */,
+/* 350 */,
+/* 351 */,
+/* 352 */,
+/* 353 */,
+/* 354 */,
+/* 355 */,
+/* 356 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(129);
-module.exports = __webpack_require__(345);
+module.exports = __webpack_require__(357);
 
 
 /***/ }),
-/* 345 */
+/* 357 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11680,19 +11697,24 @@ module.exports = __webpack_require__(345);
 
 var base = __webpack_require__(127);
 var b = new base();
-
-var subDocumentos = __webpack_require__(346);
-var sd = new subDocumentos();
+var diversos = __webpack_require__(358);
+var d = new diversos();
 
 b.cancel();
+b.load_date_inputs();
+b.load_subdocumentos();
 b.logout();
-b.load_update_form();
+b.ordenamiento();
 
-sd.validate_insert_form();
-sd.validate_update_form();
+d.load_update_form();
+d.load_remitentes();
+d.turnar();
+d.turnar_update();
+d.form_submit();
+d.form_update();
 
 /***/ }),
-/* 346 */
+/* 358 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11702,99 +11724,517 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _jqueryValidation = __webpack_require__(336);
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var base = __webpack_require__(127);
+var modals = __webpack_require__(359);
+
 var b = new base();
+var m = new modals();
+
 module.exports = function () {
-    function _class() {
-        _classCallCheck(this, _class);
-    }
+	function _class() {
+		_classCallCheck(this, _class);
+	}
 
-    _createClass(_class, [{
-        key: 'validate_insert_form',
-        value: function validate_insert_form() {
-            $('form#insert-subDocumentos').validate({
-                rules: {
-                    documento: { required: true },
-                    nombre: {
-                        required: true,
-                        maxlength: 50
-                    },
-                    auditoria: {
-                        required: true,
-                        maxlength: 2
-                    }
-                },
-                messages: {
-                    documento: {
-                        required: 'El Campo es Obligatorio'
-                    },
-                    nombre: {
-                        required: 'El Campo es Obligatorio',
-                        maxlength: 'Maximo 50 Caracteres'
-                    },
-                    auditoria: {
-                        required: 'El campo es Obligatorio',
-                        maxlength: 'Valor Incorrecto'
-                    }
-                },
-                submitHandler: function submitHandler() {
-                    var formData = $('form#insert-subDocumentos').serializeArray();
-                    b.new_insert(formData, 'SubTiposDocumentos');
-                },
-                errorClass: 'is-invalid'
-            });
-        }
-    }, {
-        key: 'validate_update_form',
-        value: function validate_update_form() {
+	_createClass(_class, [{
+		key: 'load_update_form',
+		value: function load_update_form() {
+			$('table#main-table-volantes tbody tr').click(function () {
+				var id = $(this).children().first().text();
+				var ruta = $(this).data('ruta');
+				location.href = '/SIA/juridico/' + ruta + '/' + id;
+			});
+		}
+	}, {
+		key: 'load_remitentes',
+		value: function load_remitentes() {
 
-            $('form#update-subDocumentos').validate({
-                rules: {
-                    documento: { required: true },
-                    nombre: {
-                        required: true,
-                        maxlength: 50
-                    },
-                    auditoria: {
-                        required: true,
-                        maxlength: 2
-                    },
-                    estatus: {
-                        required: true,
-                        maxlength: 8
-                    }
-                },
-                messages: {
-                    documento: {
-                        required: 'El Campo es Obligatorio'
-                    },
-                    nombre: {
-                        required: 'El Campo es Obligatorio',
-                        maxlength: 'Maximo 50 Caracteres'
-                    },
-                    auditoria: {
-                        required: 'El Campo es Obligatorio',
-                        maxlength: 'Valor Incorrecto'
-                    },
-                    estatus: {
-                        required: 'El Campo es Obligatorio',
-                        maxlength: 'Valor Incorrecto'
-                    }
-                },
-                submitHandler: function submitHandler() {
-                    var formData = $('form#update-subDocumentos').serializeArray();
-                    b.new_update(formData, 'SubTiposDocumentos');
-                },
-                errorClass: 'is-invalid'
-            });
-        }
-    }]);
+			$('select#tipoRemitente').change(function () {
 
-    return _class;
+				var tipoRemitente = $(this).val();
+				m.remitentes(tipoRemitente);
+			});
+		}
+	}, {
+		key: 'turnar',
+		value: function turnar() {
+			var self = this;
+			$('button#btn-turnar').click(function (e) {
+				e.preventDefault();
+				self.load_areas_turnados();
+			});
+		}
+	}, {
+		key: 'turnar_update',
+		value: function turnar_update() {
+			var self = this;
+			$('button#btn-turnar-update').click(function (e) {
+				e.preventDefault();
+				self.load_areas_update();
+			});
+		}
+	}, {
+		key: 'load_areas_update',
+		value: function () {
+			var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+				var idVolante, check, datos, table, html, tabla;
+				return regeneratorRuntime.wrap(function _callee$(_context) {
+					while (1) {
+						switch (_context.prev = _context.next) {
+							case 0:
+								idVolante = $('input#idVolante').val();
+								_context.next = 3;
+								return this.load_areas_turnar_update(idVolante);
+
+							case 3:
+								check = _context.sent;
+								_context.next = 6;
+								return this.load_areas_turnar();
+
+							case 6:
+								datos = _context.sent;
+								table = this.construct_table_update_turnos(check, datos);
+								html = __webpack_require__(337);
+								tabla = html.replace(':body:', table);
+
+								m.turnar(tabla);
+
+							case 11:
+							case 'end':
+								return _context.stop();
+						}
+					}
+				}, _callee, this);
+			}));
+
+			function load_areas_update() {
+				return _ref.apply(this, arguments);
+			}
+
+			return load_areas_update;
+		}()
+	}, {
+		key: 'load_areas_turnados',
+		value: function () {
+			var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+				var datos, table, html, tabla;
+				return regeneratorRuntime.wrap(function _callee2$(_context2) {
+					while (1) {
+						switch (_context2.prev = _context2.next) {
+							case 0:
+								_context2.next = 2;
+								return this.load_areas_turnar();
+
+							case 2:
+								datos = _context2.sent;
+								table = this.construc_table_areas(datos);
+								html = __webpack_require__(337);
+								tabla = html.replace(':body:', table);
+
+								m.turnar(tabla);
+
+							case 7:
+							case 'end':
+								return _context2.stop();
+						}
+					}
+				}, _callee2, this);
+			}));
+
+			function load_areas_turnados() {
+				return _ref2.apply(this, arguments);
+			}
+
+			return load_areas_turnados;
+		}()
+	}, {
+		key: 'construct_table_update_turnos',
+		value: function construct_table_update_turnos(check, data) {
+
+			var tr = '';
+
+			for (var x in data) {
+
+				tr += '<tr>\n\t\t\t\t\t<td><input type="checkbox" id="area" value="' + data[x].idArea + '" ';
+
+				for (var y in check) {
+
+					if (check[y].idAreaRecepcion == data[x].idArea) {
+
+						tr += ' disabled';
+					}
+				}
+
+				tr += ' ></td><td>' + data[x].nombre + '</td></tr>';
+			}
+
+			return tr;
+		}
+	}, {
+		key: 'construc_table_areas',
+		value: function construc_table_areas(data) {
+
+			var tr = '';
+			$.each(data, function (index, val) {
+				tr += '<tr>\n\t\t\t\t\t<td><input type="checkbox" id="area" value="' + data[index].idArea + '"></td>\n\t\t\t\t\t<td>' + data[index].nombre + '</td>\n\t\t\t\t\t</tr>';
+			});
+
+			return tr;
+		}
+	}, {
+		key: 'load_areas_turnar',
+		value: function load_areas_turnar() {
+
+			var datos = new Promise(function (resolve) {
+				$.get({
+					url: '/SIA/juridico/api/areas',
+					success: function success(json) {
+						resolve(JSON.parse(json));
+					}
+				});
+			});
+			return datos;
+		}
+	}, {
+		key: 'load_areas_turnar_update',
+		value: function load_areas_turnar_update(idVolante) {
+
+			var datos = new Promise(function (resolve) {
+				$.get({
+					url: '/SIA/juridico/api/areas/update',
+					data: {
+						idVolante: idVolante
+					},
+					success: function success(json) {
+						resolve(JSON.parse(json));
+					}
+				});
+			});
+			return datos;
+		}
+	}, {
+		key: 'form_submit',
+		value: function form_submit() {
+			var _rules;
+
+			$('form#form-diversos').validate({
+				rules: (_rules = {
+					idTipoDocto: { required: true },
+					idSubTipoDocumento: { required: true },
+					extemporaneo: { required: true },
+					hRecepcion: { required: true },
+					idCaracter: { required: true },
+					idTurnado: { required: true },
+					idAccion: { required: true },
+					nombreRemitente: { required: true },
+					puestoRemitente: { required: true }
+				}, _defineProperty(_rules, 'idTurnado', { required: true }), _defineProperty(_rules, 'folio', {
+					required: true,
+					number: true,
+					min: 1
+				}), _defineProperty(_rules, 'subFolio', {
+					required: true,
+					number: true,
+					min: 0
+				}), _defineProperty(_rules, 'numDocumento', {
+					required: true,
+					maxlength: 20
+				}), _defineProperty(_rules, 'anexos', {
+					required: true,
+					number: true,
+					min: 0
+				}), _defineProperty(_rules, 'fDocumento', {
+					required: true,
+					date: true
+				}), _defineProperty(_rules, 'fRecepcion', {
+					required: true,
+					date: true
+				}), _rules),
+				messages: {
+					idTipoDocto: 'Obligatorio',
+					idSubTipoDocumento: 'Obligatorio',
+					extemporaneo: 'Obligatorio',
+					hRecepcion: 'Obligatorio',
+					idTurnado: 'Obligatorio',
+					idAccion: 'Obligatorio',
+					idCaracter: 'Obligatorio',
+					folio: {
+						required: 'Obligatorio',
+						number: 'Solo acepta numeros',
+						min: 'Valor No valido'
+					},
+					subFolio: {
+						required: 'Obligatorio',
+						number: 'Solo acepta numeros',
+						min: 'Valor No valido'
+					},
+					numDocumento: {
+						required: 'Obligatorio',
+						maxlength: 'Maximo 20 Caracteres'
+					}, anexos: {
+						required: 'Obligatorio',
+						number: 'Solo acepta numeros',
+						min: 'Valor No valido'
+					},
+					fDocumento: {
+						required: 'Obligatorio',
+						date: 'Formato Incorrecto'
+					},
+					fRecepcion: {
+						required: 'Obligatorio',
+						date: 'Fomrato Incorrecto'
+					},
+					nombreRemitente: {
+						required: 'Seleccione un Remitente'
+					},
+					puestoRemitente: {
+						required: 'Seleccione un Remitente'
+					}
+
+				},
+				submitHandler: function submitHandler(form) {
+					var formData = new FormData(document.getElementById('form-diversos'));
+					b.new_insert_with_file(formData, 'VolantesDiversos');
+				},
+				errorClass: "is-invalid"
+			});
+		}
+	}, {
+		key: 'form_update',
+		value: function form_update() {
+
+			$('form#diversos-udpate').validate({
+				rules: {
+					hRecepcion: { required: true },
+					idCaracter: { required: true },
+					idTurnado: { required: true },
+					idAccion: { required: true },
+					numDocumento: {
+						required: true,
+						maxlength: 20
+					},
+					anexos: {
+						required: true,
+						number: true,
+						min: 0
+					},
+					fDocumento: {
+						required: true,
+						date: true
+					},
+					fRecepcion: {
+						required: true,
+						date: true
+					}
+
+				},
+				messages: {
+					hRecepcion: 'Obligatorio',
+					idTurnado: 'Obligatorio',
+					idAccion: 'Obligatorio',
+					idCaracter: 'Obligatorio',
+					folio: {
+						required: 'Obligatorio',
+						number: 'Solo acepta numeros',
+						min: 'Valor No valido'
+					},
+					subFolio: {
+						required: 'Obligatorio',
+						number: 'Solo acepta numeros',
+						min: 'Valor No valido'
+					},
+					numDocumento: {
+						required: 'Obligatorio',
+						maxlength: 'Maximo 20 Caracteres'
+					}, anexos: {
+						required: 'Obligatorio',
+						number: 'Solo acepta numeros',
+						min: 'Valor No valido'
+					},
+					fDocumento: {
+						required: 'Obligatorio',
+						date: 'Formato Incorrecto'
+					},
+					fRecepcion: {
+						required: 'Obligatorio',
+						date: 'Fomrato Incorrecto'
+					}
+
+				},
+				submitHandler: function submitHandler(form) {
+					var formData = $('form#diversos-udpate').serializeArray();
+					b.new_update(formData, 'VolantesDiversos');
+				},
+				errorClass: "is-invalid"
+			});
+		}
+	}]);
+
+	return _class;
 }();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(49)))
+
+/***/ }),
+/* 359 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jqueryConfirm = __webpack_require__(331);
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+module.exports = function () {
+	function _class() {
+		_classCallCheck(this, _class);
+	}
+
+	_createClass(_class, [{
+		key: 'remitentes',
+		value: function remitentes(tipoRemintente) {
+			var html = __webpack_require__(360);
+			var self = this;
+			$.confirm({
+				title: 'Seleccione Remitente',
+				content: html,
+				icon: 'fa fa-envelope-open-o',
+				type: 'blue',
+				columnClass: 'col-md-11 col-md-offset-1',
+				draggable: false,
+				buttons: {
+					confirm: {
+						text: 'Aceptar',
+						btnClass: 'btn-primary',
+						action: function action() {
+
+							var input = $('input:radio[name=remitente]:checked');
+
+							var idPuesto = input.val();
+							var siglasArea = input.data('siglas');
+							var nombre = input.parent().next().text();
+							var puesto = input.parent().next().next().text();
+
+							$('input#idRemitenteJuridico').val(idPuesto);
+							$('input#idRemitente').val(siglasArea);
+							$('input#nombreRemitente').val(nombre);
+							$('input#puestoRemitente').val(puesto);
+						}
+					}
+				},
+				onOpenBefore: function onOpenBefore() {
+					$('input#remitente').keyup(function (event) {
+						var siglas = $(this).val();
+						self.construct_tabla_remitentes(tipoRemintente, siglas);
+					});
+				}
+			});
+		}
+	}, {
+		key: 'construct_tabla_remitentes',
+		value: function () {
+			var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(tipo, siglas) {
+				var datos, table;
+				return regeneratorRuntime.wrap(function _callee$(_context) {
+					while (1) {
+						switch (_context.prev = _context.next) {
+							case 0:
+								_context.next = 2;
+								return this.remitentes_volantes(tipo, siglas);
+
+							case 2:
+								datos = _context.sent;
+								table = this.table_remitentes(datos);
+
+								$('tbody#body-remitentes').html(table);
+
+							case 5:
+							case 'end':
+								return _context.stop();
+						}
+					}
+				}, _callee, this);
+			}));
+
+			function construct_tabla_remitentes(_x, _x2) {
+				return _ref.apply(this, arguments);
+			}
+
+			return construct_tabla_remitentes;
+		}()
+	}, {
+		key: 'table_remitentes',
+		value: function table_remitentes(data) {
+			var table = '';
+			$.each(data, function (index, el) {
+				table += '<tr><td><input type="radio" name="remitente" value="' + el.idRemitenteJuridico + '" data-siglas="' + el.siglasArea + '"></td>\n\t\t\t\t\t\t<td>' + el.saludo + ' ' + el.nombre + ' </td>\n\t\t\t\t\t\t<td>' + el.puesto + '</td>\n\t\t\t\t\t</tr>';
+			});
+
+			return table;
+		}
+	}, {
+		key: 'remitentes_volantes',
+		value: function remitentes_volantes(dato, sigla) {
+			var datos = new Promise(function (resolve) {
+				$.get({
+					url: '/SIA/juridico/api/remitentes',
+					data: {
+						tipo: dato,
+						siglas: sigla
+					},
+					success: function success(json) {
+						resolve(JSON.parse(json));
+					}
+				});
+			});
+			return datos;
+		}
+	}, {
+		key: 'turnar',
+		value: function turnar(html) {
+			$.confirm({
+				title: 'Seleccione Areas a Turnar',
+				content: html,
+				icon: 'fa fa-address-book',
+				type: 'blue',
+				columnClass: 'col-md-11 col-md-offset-1',
+				draggable: false,
+				buttons: {
+					confirm: {
+						text: 'Aceptar',
+						btnClass: 'btn-primary',
+						action: function action() {
+							var areas = [];
+							$("input:checkbox:checked").each(function () {
+								areas.push($(this).val());
+							});
+							$('input#idTurnado').val(areas);
+						}
+					}
+				}
+
+			});
+		}
+	}]);
+
+	return _class;
+}();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(49)))
+
+/***/ }),
+/* 360 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"input\">\r\n\t<input type=\"text\" id=\"remitente\"  class=\"form-control\" placeholder=\"Busqueda por siglas del Area\">\r\n</div>\r\n<div class=\"table-remitentes\">\r\n\t<table class=\"table\">\r\n\t\t<thead>\r\n\t\t\t<th>Seleccionar</th>\r\n\t\t\t<th>Nombre</th>\r\n\t\t\t<th>Puesto</th>\r\n\t\t</thead>\r\n\t\t<tbody id=\"body-remitentes\"></tbody>\r\n\t</table>\r\n</div>";
 
 /***/ })
 /******/ ]);

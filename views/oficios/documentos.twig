@@ -1,8 +1,25 @@
 {% extends 'layoutForm.twig' %}
 {% block title %}
-  <div class="header-irac">
-    <a  href="/SIA/juridico/Irac/{{ id }}">Nueva Asignacion</a>
-    <a href="#!" class="active">Respuestas</a>
+  <div class="header-menu-oficios">
+    <button class="btn btn-info" id="menu-oficios"><i class="fa fa-th-list"></i></button>
+    <span>Respuestas</span>
+    <div class="menu-oficios">
+      <ul>
+        <li>
+          <a href="/SIA/juridico/{{ ruta }}/{{ id }}">Asignacion</a>      
+        </li>
+        {% if cedula %}
+          <li>
+            <a href="/SIA/juridico/{{ ruta }}/Observaciones/{{ id }}">Observaciones</a>
+          </li>
+          <li>
+            <a href="/SIA/juridico/{{ ruta }}/Cedula/{{ id }}">Cedula</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+    
+    
   </div>
 {% endblock %}
 

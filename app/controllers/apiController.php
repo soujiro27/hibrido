@@ -121,7 +121,7 @@ class ApiController {
 		$sigla = $data['siglas'];
          $remitentes  = Remitentes::where('estatus','=','ACTIVO')
         ->where('tipoRemitente','=',"$tipo")
-        ->where('siglasArea','like',"%".$sigla)
+        ->where('siglasArea','like',"%".$sigla."%")
         ->get();
         echo json_encode($remitentes);
 	}
