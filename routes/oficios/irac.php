@@ -50,14 +50,18 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 	});
 
 
-	$app->post('/Observaciones/create',function() use ($controller,$app){
+	$app->post('/Irac/Observaciones/create',function() use ($controller,$app){
 		$controller->save_observaciones($app->request->post(),$app);
 	});
 
 
-	$app->post('/Observaciones/update',function() use ($controller,$app){
+	$app->post('/Irac/Observaciones/update',function() use ($controller,$app){
 		$controller->update_observaciones($app->request->post(),$app);
 	});
+
+	$app->post('/Irac/cedula/create',function() use ($controller,$app){
+		$controller->save_cedula($app->request->post(),$app);
+	});	
 
 
 

@@ -13,6 +13,7 @@ use App\Models\Volantes\VolantesDocumentos;
 use App\Models\Catalogos\PuestosJuridico;
 use App\Models\Documentos\TurnadosJuridico;
 use App\Models\Oficios\Observaciones;
+use App\Models\Oficios\DocumentosSiglas;
 
 use App\Controllers\ApiController;
 
@@ -286,13 +287,106 @@ class IracController extends Template {
 
         $base = new BaseController();
         $cedula = $base->rol_cedulas('IRAC');
+        $documentos = DocumentosSiglas::where('idVolante',"$id")->get();
         
-        echo $this->render('Oficios/Irac/insert-cedula.twig',[
-            'sesiones' => $_SESSION,
-            'modulo' => $this->modulo,
-            'filejs' => $this->filejs,
-            'ruta' => $this->modulo,
-            'cedula' => $cedula        ]);
+        if($documentos->isEmpty()){
+
+            echo $this->render('Oficios/Irac/insert-cedula.twig',[
+                'sesiones' => $_SESSION,
+                'modulo' => $this->modulo,
+                'filejs' => $this->filejs,
+                'ruta' => $this->modulo,
+                'cedula' => $cedula,        
+                'idVolante' => $id 
+            ]);
+
+        } else {
+
+            echo $this->render('Oficios/Irac/update-cedula.twig',[
+                'sesiones' => $_SESSION,
+                'modulo' => $this->modulo,
+                'filejs' => $this->filejs,
+                'ruta' => $this->modulo,
+                'cedula' => $cedula,        
+                'documentos' => $documentos
+            ]);
+
+        }
+
+        /*
+
+        
+        */
+
+    }
+
+    public function save_cedula(array $data,$app){
+        
+        $data['estatus'] = 'ACTIVO';
+        $idVolante = $data['idVolante'];
+        
+        $volantesDocumentos = VolantesDocumentos::where('idVolante',"$idVolante")->get();
+        $base = new BaseController();
+
+        $subTipoDoc = $volantesDocumentos[0]['idSubTipoDocumento'];
+        $validate = $this->validate_cedula($data,true);
+
+        if(empty($validate)){
+
+            $documento = new DocumentosSiglas([
+                'idVolante' => $idVolante,
+                'idSubTipoDocumento' => $subTipoDoc,
+                'idPuestosJuridico' => $data['idPuestosJuridico'],
+                'fOficio' => $data['fOficio'],
+                'siglas' => $data['siglas'],
+                'numFolio' => $data['numFolio'],
+                'usrAlta' => $_SESSION['idUsuario'],
+                'estatus' => $data['estatus'],
+                'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s')
+
+            ]);
+
+            $documento->save();
+            $sucess = $base->success();
+            echo json_encode($sucess);
+
+        } else {
+
+            echo json_encode($validate);
+        }
+    }
+
+    public function validate_cedula(array $data,$tipo){
+
+         $validate = new ValidateController();
+
+        $res = [];
+        $final = [];
+
+        $res[0] = $validate->alphaNumeric($data['siglas'],'siglas',50);
+        $res[1] = $validate->alphaNumeric($data['fOficio'],'fOficio',10);
+        $res[2] = $validate->alphaNumeric($data['idPuestosJuridico'],'idPuestosJuridico',50);
+        $res[3] = $validate->alphaNumeric($data['numFolio'],'numFolio',15);
+        $res[4] = $validate->string($data['estatus'],'estatus',10);
+
+        if($tipo){
+            
+            $res[5] = $validate->number($data['idVolante'],'idVolante',true);
+        
+        } else {
+
+            $res[5] = $validate->number($data['idObservacionDoctoJuridico'],'idObservacionDoctoJuridico',true);    
+        }
+
+
+        foreach ($res as $key => $value) {
+            if(!empty($value)){
+                array_push($final,$value);
+            }
+        }
+
+
+        return $final;
 
     }
 

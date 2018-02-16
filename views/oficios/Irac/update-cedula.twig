@@ -1,0 +1,102 @@
+
+{% extends 'layoutForm.twig' %}
+
+{% block btnHeader %}
+    <a  href ="/SIA/juridico/{{ruta}}/Observaciones/{{ obsv.idVolante }}" class="btn btn-info btn-color" role="button" id="add-btn-observaciones" data-volante="{{ idVolante }}">
+        Mostrar Observaciones
+    </a>
+{% endblock %}
+
+
+{% block title %}
+  <div class="header-menu-oficios">
+    <button class="btn btn-info" id="menu-oficios"><i class="fa fa-th-list"></i></button>
+    <span>Observaciones</span>
+    <div class="menu-oficios">
+      <ul>
+        <li>
+          <a href="/SIA/juridico/{{ ruta }}/{{ idVolante }}">Asignacion</a>      
+        </li>
+        <li>
+          <a href="/SIA/juridico/{{ ruta }}/historial/{{ idVolante }}">Respuestas</a>      
+        </li>
+        {% if cedula %}
+          <li>
+            <a href="/SIA/juridico/{{ ruta }}/cedula/create/{{ idVolante }}">Cedula</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+    
+    
+  </div>
+{% endblock %}
+
+{% block form %}
+<div class="row form-update-cedula">
+    <div class="col-lg-4">
+<form class="form" id="insert-cedula-irac" method="POST"  data-ruta="Irac">
+        <div>
+            <div class="form-group siglas row">
+                <label class="form-control-label col-lg-4" for="siglas">Siglas</label>
+                <input type="hidden" name="idVolante" value="{{ idVolante }}"/>
+                <input 
+                    class="form-control col-lg-6"  
+                    type="text"
+                    name="siglas" 
+                    maxlength="50"
+                    value="{{ documentos[0].siglas }}"
+                />
+            </div>
+            
+            <div class="form-group fecha row">
+                <label class="form-control-label col-lg-4" for="fecha">Fecha Documento</label>
+                <input class="form-control fechaInput col-lg-6" type="text" name="fOficio" required="" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" 
+                value="{{ documentos[0].fOficio }}"
+                />
+            </div>
+            <div class="form-group firmas row">
+                <label class="form-control-label col-lg-4" for="numFolio">Añadir Firmas</label>
+                <button class="btn btn-info col-lg-6" id="modalFirmas">Firmas</button>
+                <input 
+                    type="hidden" 
+                    name="idPuestosJuridico"        
+                    id="idPuestosJuridico" 
+                    value="{{ documentos[0].idPuestosJuridico }}"
+                />
+            </div>
+            <div class="form-group numFolio row">
+                <label class="form-control-label col-lg-4" for="numFolio">Numero Folio</label>
+                <input 
+                    class="form-control col-lg-6"   
+                    type="text" 
+                    name="numFolio" 
+                    maxlength="20" 
+                    value="{{ documentos[0].numFolio }}"
+                />
+            </div>
+
+        </div>
+
+
+        <div class="form-group send">
+            <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
+            <button class="btn btn-danger" id="cancelar">Cancelar</button>
+        </div>
+    </form>
+    </div>
+    <div class="col-lg-8">
+    <iframe src="/SIA/hibrido/cedulas/Irac.php?param=2216"></iframe>
+        
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+

@@ -11700,7 +11700,7 @@ module.exports = __webpack_require__(365);
 
 var base = __webpack_require__(128);
 var irac = __webpack_require__(366);
-var baseOficios = __webpack_require__(367);
+var baseOficios = __webpack_require__(369);
 
 var b = new base();
 var i = new irac();
@@ -11709,6 +11709,7 @@ var bo = new baseOficios();
 b.cancel();
 b.logout();
 b.ordenamiento();
+b.load_date_inputs();
 
 bo.load_oficio();
 bo.menu_oficios();
@@ -11718,10 +11719,10 @@ bo.carga_datos_turnado();
 bo.load_modal_request();
 
 i.validate_insert_observaciones();
-i.load_form_observaciones();
 i.load_update_form_observaciones();
 i.validate_update_observaciones();
 i.load_puestos_cedula();
+i.validate_insert_cedula();
 
 /***/ }),
 /* 366 */
@@ -11738,7 +11739,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var modals = __webpack_require__(371);
+var modals = __webpack_require__(367);
 var m = new modals();
 
 module.exports = function () {
@@ -11747,16 +11748,6 @@ module.exports = function () {
     }
 
     _createClass(_class, [{
-        key: 'load_form_observaciones',
-        value: function load_form_observaciones() {
-
-            $('button#add-btn-observaciones').click(function () {
-                $('table').toggle();
-                $('form').toggle();
-                $(this).hide();
-            });
-        }
-    }, {
         key: 'load_update_form_observaciones',
         value: function load_update_form_observaciones() {
 
@@ -11810,13 +11801,13 @@ module.exports = function () {
                     var texto = CKEDITOR.instances['ckeditor'].getData();
                     var formData = $('form#Observaciones-insert').serializeArray();
                     formData[3].value = texto;
-                    self.new_insert(formData, 'Observaciones', formData[0].value);
+                    self.new_insert_observacion(formData, 'Irac', formData[0].value);
                 },
                 errorClass: 'is-invalid'
             });
         }
     }, {
-        key: 'new_insert',
+        key: 'new_insert_observacion',
         value: function () {
             var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(datos, ruta, idVolante) {
                 var res, table;
@@ -11825,7 +11816,7 @@ module.exports = function () {
                         switch (_context.prev = _context.next) {
                             case 0:
                                 _context.next = 2;
-                                return this.send_data_insert_without_file(datos, ruta);
+                                return this.send_data_insert_observaciones(datos, ruta);
 
                             case 2:
                                 res = _context.sent;
@@ -11835,7 +11826,7 @@ module.exports = function () {
 
                                     m.errors(table);
                                 } else {
-                                    m.success(ruta, idVolante);
+                                    m.success_observacion(ruta, idVolante);
                                 }
 
                             case 4:
@@ -11846,18 +11837,18 @@ module.exports = function () {
                 }, _callee, this);
             }));
 
-            function new_insert(_x, _x2, _x3) {
+            function new_insert_observacion(_x, _x2, _x3) {
                 return _ref.apply(this, arguments);
             }
 
-            return new_insert;
+            return new_insert_observacion;
         }()
     }, {
-        key: 'send_data_insert_without_file',
-        value: function send_data_insert_without_file(datos, ruta) {
+        key: 'send_data_insert_observaciones',
+        value: function send_data_insert_observaciones(datos, ruta) {
             var prom = new Promise(function (resolve) {
                 $.post({
-                    url: '/SIA/juridico/' + ruta + '/create',
+                    url: '/SIA/juridico/' + ruta + '/Observaciones/create',
                     data: datos,
                     success: function success(res) {
                         resolve(JSON.parse(res));
@@ -11912,13 +11903,13 @@ module.exports = function () {
                     var formData = $('form#Observaciones-update').serializeArray();
                     formData[4].value = texto;
                     var idVolante = $('a#add-btn-observaciones').data('volante');
-                    self.new_update(formData, 'Observaciones', idVolante);
+                    self.new_update_observacion(formData, 'Irac', idVolante);
                 },
                 errorClass: 'is-invalid'
             });
         }
     }, {
-        key: 'new_update',
+        key: 'new_update_observacion',
         value: function () {
             var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(datos, ruta, idVolante) {
                 var res, table;
@@ -11927,7 +11918,7 @@ module.exports = function () {
                         switch (_context2.prev = _context2.next) {
                             case 0:
                                 _context2.next = 2;
-                                return this.update_data(datos, ruta);
+                                return this.update_observaciones(datos, ruta);
 
                             case 2:
                                 res = _context2.sent;
@@ -11937,7 +11928,7 @@ module.exports = function () {
 
                                     m.errors(table);
                                 } else {
-                                    m.success_update(ruta, idVolante);
+                                    m.success_update_observacion(ruta, idVolante);
                                 }
 
                             case 4:
@@ -11948,18 +11939,18 @@ module.exports = function () {
                 }, _callee2, this);
             }));
 
-            function new_update(_x4, _x5, _x6) {
+            function new_update_observacion(_x4, _x5, _x6) {
                 return _ref2.apply(this, arguments);
             }
 
-            return new_update;
+            return new_update_observacion;
         }()
     }, {
-        key: 'update_data',
-        value: function update_data(datos, ruta) {
+        key: 'update_observaciones',
+        value: function update_observaciones(datos, ruta) {
             var promesa = new Promise(function (resolve) {
                 $.post({
-                    url: '/SIA/juridico/' + ruta + '/update',
+                    url: '/SIA/juridico/' + ruta + '/observaciones/update',
                     data: datos,
                     success: function success(res) {
                         resolve(JSON.parse(res));
@@ -12000,18 +11991,16 @@ module.exports = function () {
                     while (1) {
                         switch (_context3.prev = _context3.next) {
                             case 0:
-
-                                console.table(datos);
-                                _context3.next = 3;
+                                _context3.next = 2;
                                 return this.load_puestos_juridico();
 
-                            case 3:
+                            case 2:
                                 datos = _context3.sent;
                                 table = this.construct_table_puestos_juridico(datos);
 
                                 m.puestos_juridico(table);
 
-                            case 6:
+                            case 5:
                             case 'end':
                                 return _context3.stop();
                         }
@@ -12043,16 +12032,109 @@ module.exports = function () {
         key: 'construct_table_puestos_juridico',
         value: function construct_table_puestos_juridico(datos) {
 
-            var html = __webpack_require__(373);
+            var html = __webpack_require__(368);
             var tr = '';
 
             for (var x in datos) {
-                tr += '<tr>\n                    <td><input type="radio" name="puestos" value="' + datos[x].idPuestoJuridico + '"></td>\n                    <td>' + datos[x].saludo + ' ' + datos[x].nombre + ' ' + datos[x].paterno + ' ' + datos[x].materno + ' </td>\n                    <td>' + datos[x].puesto + '</td>\n                </tr>';
+                tr += '<tr>\n                    <td><input type="checkbox" name="puestos" value="' + datos[x].idPuestoJuridico + '"></td>\n                    <td>' + datos[x].saludo + ' ' + datos[x].nombre + ' ' + datos[x].paterno + ' ' + datos[x].materno + ' </td>\n                    <td>' + datos[x].puesto + '</td>\n                </tr>';
             }
 
             var table = html.replace(':body:', tr);
 
             return table;
+        }
+    }, {
+        key: 'validate_insert_cedula',
+        value: function validate_insert_cedula() {
+
+            var self = this;
+
+            $('form#insert-cedula-irac').validate({
+
+                rules: {
+                    siglas: {
+                        required: true,
+                        maxlength: 50
+                    },
+                    fOficio: { required: true },
+                    numFolio: {
+                        required: true,
+                        maxlength: 20
+                    }
+                },
+                messages: {
+                    siglas: {
+                        required: 'El Campo es Obligatorio',
+                        maxlength: 'Maximo 50 Caracteres'
+                    },
+                    fOficio: {
+                        required: 'El Campo es Obligatorio'
+                    },
+                    numFolio: {
+                        required: 'El Campo es Obligatorio',
+                        maxlength: 'Maximo 50 Caracteres'
+                    }
+                },
+                submitHandler: function submitHandler(form) {
+
+                    var datos = $('form#insert-cedula-irac').serializeArray();
+                    var idVolante = datos[0].value;
+                    self.new_insert_cedula(datos, 'Irac', idVolante);
+                },
+                errorClass: 'is-invalid'
+            });
+        }
+    }, {
+        key: 'new_insert_cedula',
+        value: function () {
+            var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(datos, ruta, idVolante) {
+                var res, table;
+                return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                    while (1) {
+                        switch (_context4.prev = _context4.next) {
+                            case 0:
+                                _context4.next = 2;
+                                return this.send_data_insert_cedula(datos, ruta);
+
+                            case 2:
+                                res = _context4.sent;
+
+                                if (res[0].campo != 'success') {
+                                    table = this.construct_table_errors(res);
+
+                                    m.errors(table);
+                                } else {
+                                    m.success_cedula(ruta, idVolante);
+                                }
+
+                            case 4:
+                            case 'end':
+                                return _context4.stop();
+                        }
+                    }
+                }, _callee4, this);
+            }));
+
+            function new_insert_cedula(_x7, _x8, _x9) {
+                return _ref4.apply(this, arguments);
+            }
+
+            return new_insert_cedula;
+        }()
+    }, {
+        key: 'send_data_insert_cedula',
+        value: function send_data_insert_cedula(datos, ruta) {
+            var prom = new Promise(function (resolve) {
+                $.post({
+                    url: '/SIA/juridico/' + ruta + '/cedula/create',
+                    data: datos,
+                    success: function success(res) {
+                        resolve(JSON.parse(res));
+                    }
+                });
+            });
+
+            return prom;
         }
     }]);
 
@@ -12062,6 +12144,155 @@ module.exports = function () {
 
 /***/ }),
 /* 367 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jqueryConfirm = __webpack_require__(129);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+module.exports = function () {
+    function _class() {
+        _classCallCheck(this, _class);
+    }
+
+    _createClass(_class, [{
+        key: 'errors',
+        value: function errors(html) {
+            $.confirm({
+                title: 'Tu Registro NO pudo ser almacenado',
+                content: html,
+                icon: 'fa fa-times-circle',
+                type: 'red',
+                columnClass: 'col-md-5 col-md-offset-1',
+                draggable: false,
+                buttons: {
+                    confirm: {
+                        text: 'Aceptar',
+                        btnClass: 'btn-primary'
+                    }
+                }
+            });
+        }
+    }, {
+        key: 'success_observacion',
+        value: function success_observacion(ruta, idVolante) {
+            $.confirm({
+                title: 'Tu Registro se ha almacenado Correctamente',
+                content: '¿ Deseas agregar otro registro?',
+                icon: 'fa fa-check-circle',
+                type: 'green',
+                columnClass: 'col-md-8 col-md-offset-1',
+                draggable: false,
+                buttons: {
+                    confirm: {
+                        text: 'SI',
+                        btnClass: 'btn-primary',
+                        action: function action() {
+                            location.href = '/SIA/juridico/Irac/add/observaciones/' + idVolante;
+                        }
+                    },
+                    cancel: {
+                        text: 'NO',
+                        btnClass: 'btn-red',
+                        action: function action() {
+                            location.href = '/SIA/juridico/Irac';
+                        }
+                    }
+                }
+            });
+        }
+    }, {
+        key: 'success_update_observacion',
+        value: function success_update_observacion(ruta, idVolante) {
+            $.confirm({
+                title: 'Tu Registro se ha Actualizado Correctamente',
+                content: '',
+                icon: 'fa fa-check-circle',
+                type: 'green',
+                columnClass: 'col-md-8 col-md-offset-1',
+                draggable: false,
+                buttons: {
+                    confirm: {
+                        text: 'Aceptar',
+                        btnClass: 'btn-primary',
+                        action: function action() {
+                            location.href = '/SIA/juridico/' + ruta + '/Observaciones/' + idVolante;
+                        }
+                    }
+                }
+            });
+        }
+    }, {
+        key: 'puestos_juridico',
+        value: function puestos_juridico(html) {
+
+            $.confirm({
+                title: 'Selecciona Firmas',
+                content: html,
+                icon: 'fa fa-times-circle',
+                type: 'blue',
+                columnClass: 'col-md-11 col-md-offset-1',
+                draggable: false,
+                buttons: {
+                    confirm: {
+                        text: 'Aceptar',
+                        btnClass: 'btn-primary',
+                        action: function action() {
+
+                            var puestos = [];
+
+                            $("input:checkbox:checked").each(function () {
+
+                                puestos.push($(this).val());
+                            });
+
+                            $('input#idPuestosJuridico').val(puestos);
+                        }
+                    }
+                }
+            });
+        }
+    }, {
+        key: 'success_cedula',
+        value: function success_cedula(ruta, idVolante) {
+
+            $.confirm({
+                title: 'La Cedula se ha almacenado Correctamente',
+                content: '',
+                icon: 'fa fa-check-circle',
+                type: 'green',
+                columnClass: 'col-md-8 col-md-offset-1',
+                draggable: false,
+                buttons: {
+                    confirm: {
+                        text: 'SI',
+                        btnClass: 'btn-primary',
+                        action: function action() {
+                            location.href = '/SIA/juridico/' + ruta;
+                        }
+                    }
+                }
+            });
+        }
+    }]);
+
+    return _class;
+}();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(46)))
+
+/***/ }),
+/* 368 */
+/***/ (function(module, exports) {
+
+module.exports = "<table class=\"table table-hover modal-puestos-juridico\">\r\n    <thead>\r\n        <th>Seleccionar</th>\r\n        <th>Nombre</th>\r\n        <th>Puesto</th>\r\n    </thead>\r\n    <tbody>\r\n        :body:\r\n    </tbody>\r\n</table>";
+
+/***/ }),
+/* 369 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12079,7 +12310,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var modals = __webpack_require__(368);
+var modals = __webpack_require__(370);
 
 module.exports = function (_modals) {
 	_inherits(Asignacion, _modals);
@@ -12209,7 +12440,7 @@ module.exports = function (_modals) {
 				var idVolante = $(this).data('id');
 				var idPuesto = $(this).data('puesto');
 
-				var tabla = __webpack_require__(369);
+				var tabla = __webpack_require__(371);
 				var html = tabla.replace(':idVolante:', idVolante).replace(':usuario:', idPuesto);
 
 				self.request(html);
@@ -12219,7 +12450,7 @@ module.exports = function (_modals) {
 		key: 'construct_tables_documentos',
 		value: function construct_tables_documentos(datos) {
 
-			var box_html = __webpack_require__(370);
+			var box_html = __webpack_require__(372);
 			var html = '';
 			var idUsuario = $('div#datos-turnado').data('idusuario');
 
@@ -12316,7 +12547,7 @@ module.exports = function (_modals) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(46)))
 
 /***/ }),
-/* 368 */
+/* 370 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12387,133 +12618,16 @@ module.exports = function () {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(46)))
 
 /***/ }),
-/* 369 */
+/* 371 */
 /***/ (function(module, exports) {
 
 module.exports = "<form data-ruta=\"Irac\" method=\"POST\" enctype=\"multipart/form-data\" id=\"request-form\">\r\n\t<div class=\"row row-form\">\r\n\t\t <div class=\"col-lg-5\">\r\n        <label>Prioridad</label>\r\n        <select class=\"form-control\" name=\"idTipoPrioridad\" required>\r\n          <option value=\"\">Seleccione una Opcion</option>\r\n          <option value=\"NORMAL\">Normal</option>\r\n          <option value=\"URGENTE\">Urgente</option>\r\n        </select>\r\n      </div>\r\n      \r\n      </div>\r\n\r\n      <div class=\"row row-form\">\r\n        <div class=\"col-lg-11\">\r\n          <label>Anexar Documento</label>\r\n          <input type=\"file\" name=\"file\" class=\"form-control\">\r\n        </div>\r\n      </div>\r\n\r\n      <div class=\"row row-form\">\r\n        <div class=\"col-lg-11\">\r\n            <label>Comentario</label>\r\n            <textarea placeholder=\"Comentario\" class=\"form-control\" name=\"comentario\"></textarea>\r\n        </div>\r\n\t</div>\r\n  <input type=\"hidden\" name=\"idEstadoTurnado\" value=\"RESPUESTA\">\r\n  <input type=\"hidden\" name=\"idVolante\" value=\":idVolante:\">\r\n  <input type=\"hidden\" name=\"idUsrReceptor\" value=\":usuario:\">\r\n</form>";
 
 /***/ }),
-/* 370 */
+/* 372 */
 /***/ (function(module, exports) {
 
 module.exports = "<div class=\":prioridad:\">\r\n\r\n\t\t<div class=\"user\">\r\n\t\t\t<i class=\":icon:\"></i>\r\n\t\t</div>\r\n\t\t<div class=\"nombre\">\r\n\t\t\t<p>:nombre:</p>\r\n\t\t</div>\r\n\t\t<div class=\"fecha\">\r\n\t\t\t<p>:fecha:</p>\r\n\t\t</div>\r\n\t\t<div class=\"hora\">\r\n\t\t\t<p>:hora:</p>\r\n\t\t</div>\r\n\t\t<div class=\"comentario\">\r\n\t\t\t<p>:comentario:</p>\r\n\t\t</div>\r\n\r\n\t\t<div class=\"file\">\r\n\t\t\t<p>\r\n\t\t\t\t:archivo:\r\n\t\t\t</p>\r\n\t\t</div>\r\n\r\n\r\n</div>";
-
-/***/ }),
-/* 371 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function($) {
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _jqueryConfirm = __webpack_require__(129);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-module.exports = function () {
-    function _class() {
-        _classCallCheck(this, _class);
-    }
-
-    _createClass(_class, [{
-        key: 'errors',
-        value: function errors(html) {
-            $.confirm({
-                title: 'Tu Registro NO pudo ser almacenado',
-                content: html,
-                icon: 'fa fa-times-circle',
-                type: 'red',
-                columnClass: 'col-md-5 col-md-offset-1',
-                draggable: false,
-                buttons: {
-                    confirm: {
-                        text: 'Aceptar',
-                        btnClass: 'btn-primary'
-                    }
-                }
-            });
-        }
-    }, {
-        key: 'success',
-        value: function success(ruta, idVolante) {
-            $.confirm({
-                title: 'Tu Registro se ha almacenado Correctamente',
-                content: '¿ Deseas agregar otro registro?',
-                icon: 'fa fa-check-circle',
-                type: 'green',
-                columnClass: 'col-md-8 col-md-offset-1',
-                draggable: false,
-                buttons: {
-                    confirm: {
-                        text: 'SI',
-                        btnClass: 'btn-primary',
-                        action: function action() {
-                            location.href = '/SIA/juridico/Irac/add/observaciones/' + idVolante;
-                        }
-                    },
-                    cancel: {
-                        text: 'NO',
-                        btnClass: 'btn-red',
-                        action: function action() {
-                            location.href = '/SIA/juridico/Irac';
-                        }
-                    }
-                }
-            });
-        }
-    }, {
-        key: 'success_update',
-        value: function success_update(ruta, idVolante) {
-            $.confirm({
-                title: 'Tu Registro se ha Actualizado Correctamente',
-                content: '',
-                icon: 'fa fa-check-circle',
-                type: 'green',
-                columnClass: 'col-md-8 col-md-offset-1',
-                draggable: false,
-                buttons: {
-                    confirm: {
-                        text: 'Aceptar',
-                        btnClass: 'btn-primary',
-                        action: function action() {
-                            location.href = '/SIA/juridico/Irac/Observaciones/' + idVolante;
-                        }
-                    }
-                }
-            });
-        }
-    }, {
-        key: 'puestos_juridico',
-        value: function puestos_juridico(html) {
-
-            $.confirm({
-                title: 'Selecciona Firmas',
-                content: html,
-                icon: 'fa fa-times-circle',
-                type: 'blue',
-                columnClass: 'col-md-11 col-md-offset-1',
-                draggable: false,
-                buttons: {
-                    confirm: {
-                        text: 'Aceptar',
-                        btnClass: 'btn-primary'
-                    }
-                }
-            });
-        }
-    }]);
-
-    return _class;
-}();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(46)))
-
-/***/ }),
-/* 372 */,
-/* 373 */
-/***/ (function(module, exports) {
-
-module.exports = "<table class=\"table table-hover modal-puestos-juridico\">\r\n    <thead>\r\n        <th>Seleccionar</th>\r\n        <th>Nombre</th>\r\n        <th>Puesto</th>\r\n    </thead>\r\n    <tbody>\r\n        :body:\r\n    </tbody>\r\n</table>";
 
 /***/ })
 /******/ ]);
