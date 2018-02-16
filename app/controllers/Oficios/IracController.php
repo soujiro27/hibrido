@@ -9,6 +9,7 @@ use App\Controllers\BaseController;
 use App\Controllers\Oficios\BaseOficiosController;
 
 use App\Models\Volantes\Volantes;
+use App\Models\Volantes\VolantesDocumentos;
 use App\Models\Catalogos\PuestosJuridico;
 use App\Models\Documentos\TurnadosJuridico;
 use App\Models\Oficios\Observaciones;
@@ -130,6 +131,7 @@ class IracController extends Template {
         
         $base = new BaseController();
         $cedula = $base->rol_cedulas('IRAC');
+        $observaciones = Observaciones::where('idVolante',"$id")->orderBy('idObservacionDoctoJuridico','DESC')->get();
 
          echo $this->render('Oficios/Irac/Observaciones.twig',[
             'sesiones' => $_SESSION,
@@ -138,23 +140,56 @@ class IracController extends Template {
             'filejs' => $this->filejs,
             'ruta' => $this->modulo,
             'cedula' => $cedula,
-            'ckeditor' => $this->ckeditor
+            'observaciones' => $observaciones
         ]);
+    }
 
 
+    public function createObservaciones($id){
+
+        $base = new BaseController();
+        $cedula = $base->rol_cedulas('IRAC');
+
+         echo $this->render('Oficios/Irac/create-observaciones.twig',[
+            'sesiones' => $_SESSION,
+            'modulo' => $this->modulo,
+            'id' => $id,
+            'filejs' => $this->filejs,
+            'ruta' => $this->modulo,
+            'cedula' => $cedula,
+            'ckeditor' => $this->ckeditor        
+        ]);
     }
 
     public function save_observaciones(array $data, $app){
 
         $data['estatus'] = 'ACTIVO';
+        $id = $data['idVolante'];
 
-        $validate = $this->validate_observaciones(array $data);
-        
+        $base = new BaseController();
+        $validate = $this->validate_observaciones($data,true);
+
+        $vd = VolantesDocumentos::where('idVolante',"$id")->get();
+        $subTipo = $vd[0]['idSubTipoDocumento'];
+        $cveAuditoria = $vd[0]['cveAuditoria'];
+
         if(empty($validate)){
 
             $observacion = new Observaciones([
-
+                'idVolante' => $id,
+                'idSubTipoDocumento' => $subTipo,
+                'cveAuditoria' => $cveAuditoria,
+                'pagina' => $data['pagina'],
+                'parrafo' => $data['parrafo'],
+                'observacion' => $data['observacion'],
+                'usrAlta' => $_SESSION['idUsuario'],
+                'estatus' => $data['estatus'],
+                'fAlta' => Carbon::now('America/Mexico_City')->format('Y-m-d H:i:s')
             ]);
+
+            $observacion->save();
+            $success = $base->success();
+            echo json_encode($success);
 
 
         } else {
@@ -162,16 +197,64 @@ class IracController extends Template {
             echo json_encode($validate);
         }
 
+    }
+
+    public function create_Update_Observaciones($id){
+
+        $base = new BaseController();
+        $cedula = $base->rol_cedulas('IRAC');
+        $observacion = Observaciones::find("$id");
+        
+        echo $this->render('Oficios/Irac/update-observaciones.twig',[
+            'sesiones' => $_SESSION,
+            'modulo' => $this->modulo,
+            'filejs' => $this->filejs,
+            'ruta' => $this->modulo,
+            'cedula' => $cedula,
+            'ckeditor' => $this->ckeditor,
+            'obsv' => $observacion
+        ]);
+
+    }
+
+    public function update_observaciones(array $data, $app) {
+
+        $validate = $this->validate_observaciones($data,false);
+        $id = $data['idObservacionDoctoJuridico'];
+        $base = new BaseController();
+
+        if(empty($validate)){
+
+            Observaciones::find($id)->update([
+                'pagina' => $data['pagina'],
+                'parrafo' => $data['parrafo'],
+                'observacion' => $data['observacion'],
+                'usrModificacion' => $_SESSION['idUsuario'],
+                'estatus' => $data['estatus'],
+                'fModificacion' => Carbon::now('America/Mexico_City')->format('Y-m-d H:i:s')
+
+            ]);
+
+            $success = $base->success();
+            echo json_encode($success);
+
+
+        } else {
+
+            echo json_encode($validate);
+        }
 
     }
 
 
-    public function validate_observaciones(array $data){
+    public function validate_observaciones(array $data, $tipo){
 
         $validate = new ValidateController();
 
         $res = [];
         $final = [];
+
+
 
         
         $res[0] = $validate->alphaNumeric($data['pagina'],'pagina',50);
@@ -179,7 +262,15 @@ class IracController extends Template {
         $res[2] = $validate->alphaNumeric($data['observacion'],'observacion',350);
         $res[3] = $validate->string($data['estatus'],'estatus',10);
 
-        $res[4] = $validate->number($data['idVolante'],'idVolante',true);
+        if($tipo){
+            
+            $res[4] = $validate->number($data['idVolante'],'idVolante',true);
+        
+        } else {
+
+            $res[4] = $validate->number($data['idObservacionDoctoJuridico'],'idObservacionDoctoJuridico',true);    
+        }
+
 
         foreach ($res as $key => $value) {
             if(!empty($value)){
@@ -189,6 +280,20 @@ class IracController extends Template {
 
 
         return $final;
+    }
+
+    public function createCedula($id){
+
+        $base = new BaseController();
+        $cedula = $base->rol_cedulas('IRAC');
+        
+        echo $this->render('Oficios/Irac/insert-cedula.twig',[
+            'sesiones' => $_SESSION,
+            'modulo' => $this->modulo,
+            'filejs' => $this->filejs,
+            'ruta' => $this->modulo,
+            'cedula' => $cedula        ]);
+
     }
 
 

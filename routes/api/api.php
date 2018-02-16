@@ -49,6 +49,12 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 	});
 
 
+	$app->get('/api/puestosJuridico',function() use ($controller,$app){
+		$controller->load_puestos_juridicos_area();
+	});
+
+	
+
 	$app->get('/datos/Sessions',function() use ($controller,$app){
 		 $datos = array(
         "idUsuario"         => $_SESSION['idUsuario'],

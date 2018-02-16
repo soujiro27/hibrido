@@ -3073,7 +3073,9 @@ div.NORMAL div.file a,
 div.URGENTE div.file a {
   text-decoration: none;
 }
-table#main-table-oficios {
+table#main-table-oficios,
+table.table-observaciones,
+table.modal-puestos-juridico {
   font-size: 13px !important;
 }
 div.header-menu-oficios {
@@ -3106,4 +3108,13 @@ div.header-menu-oficios div.menu-oficios ul li:hover {
 }
 div.header-menu-oficios div.menu-oficios ul li:hover a {
   color: #2c3e50;
+}
+table.table-observaciones {
+  margin: 1% !important;
+  width: 98% !important;
+  border: 1px solid #f1f2f2;
+}
+a.btn-color {
+  text-decoration: none;
+  color: #fff !important;
 }

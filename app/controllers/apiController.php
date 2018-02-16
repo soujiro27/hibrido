@@ -212,7 +212,16 @@ class ApiController {
 		return $id;
 	}
 
-	
+	public function load_puestos_juridicos_area(){
+
+		$idArea = $_SESSION['idArea'];
+		$personal = PuestosJuridico::where('idArea',"$idArea")
+									->where('titular','No')
+									->where('estatus','ACTIVO')
+									->get();
+		echo json_encode($personal);
+
+	}
 
 
 }

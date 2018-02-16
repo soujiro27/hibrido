@@ -31,6 +31,20 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 	});
 
 
+	$app->get('/Irac/add/observaciones/:id',function($id) use ($controller,$app){
+		$controller->createObservaciones($id);
+	});
+
+	$app->get('/Irac/update/observaciones/:id',function($id) use ($controller,$app){
+		$controller->create_Update_Observaciones($id);
+	});
+
+	$app->get('/Irac/cedula/create/:id',function($id) use ($controller,$app){
+		$controller->createCedula($id);
+	});
+
+
+	/*----------------post----------------*/
 	$app->post('/Irac/create',function() use ($controller,$app){
 		$controller->save_turnado($app->request->post(),$_FILES,$app);
 	});
@@ -38,6 +52,11 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 
 	$app->post('/Observaciones/create',function() use ($controller,$app){
 		$controller->save_observaciones($app->request->post(),$app);
+	});
+
+
+	$app->post('/Observaciones/update',function() use ($controller,$app){
+		$controller->update_observaciones($app->request->post(),$app);
 	});
 
 

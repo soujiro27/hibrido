@@ -1,0 +1,88 @@
+
+{% extends 'layoutForm.twig' %}
+
+{% block btnHeader %}
+    <a  href ="/SIA/juridico/{{ruta}}/Observaciones/{{ obsv.idVolante }}" class="btn btn-info btn-color" role="button" id="add-btn-observaciones" data-volante="{{ obsv.idVolante }}">
+        Mostrar Observaciones
+    </a>
+{% endblock %}
+
+
+{% block title %}
+  <div class="header-menu-oficios">
+    <button class="btn btn-info" id="menu-oficios"><i class="fa fa-th-list"></i></button>
+    <span>Observaciones</span>
+    <div class="menu-oficios">
+      <ul>
+        <li>
+          <a href="/SIA/juridico/{{ ruta }}/{{ obsv.idVolante }}">Asignacion</a>      
+        </li>
+        <li>
+          <a href="/SIA/juridico/{{ ruta }}/historial/{{ obsv.idVolante }}">Respuestas</a>      
+        </li>
+        {% if cedula %}
+          <li>
+            <a href="/SIA/juridico/{{ ruta }}/cedula/create/{{ obsv.idVolante }}">Cedula</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+    
+    
+  </div>
+{% endblock %}
+
+{% block form %}
+<form class="form" id="DocumentosSiglas" method="POST"  data-ruta="Irac">
+        <div>
+            <div class="form-group siglas row">
+                <label class="form-control-label col-lg-2" for="siglas">Siglas</label>
+                <input 
+                    class="form-control col-lg-2"  
+                    type="text"
+                    name="siglas" 
+                    maxlength="50" 
+                />
+                <input type="hidden" name="idVolante" value="{{ idVolante }}"/>
+            </div>
+            
+            <div class="form-group fecha row">
+                <label class="form-control-label col-lg-2" for="fecha">Fecha Documento</label>
+                <input class="form-control fechaInput col-lg-2" type="text" name="fOficio" required="" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))"/>
+            </div>
+            <div class="form-group firmas row">
+                <label class="form-control-label col-lg-2" for="numFolio">Añadir Firmas</label>
+                <button class="btn btn-info col-lg-2" id="modalFirmas">Firmas</button>
+                <input type="hidden" name="idPuestosJuridico" id="idPuestosJuridico">
+            </div>
+            <div class="form-group numFolio row">
+                <label class="form-control-label col-lg-2" for="numFolio">Numero Folio</label>
+                <input class="form-control col-lg-2" type="text" name="numFolio" maxlength="5" />
+            </div>
+
+        </div>
+
+
+        <div class="form-group send">
+            <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
+            <button class="btn btn-danger" id="cancelar">Cancelar</button>
+        </div>
+    </form>
+    {% if err %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error!</strong> {{ err }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+{% endblock %}
+
+
+
+
+
+
+
+
+
