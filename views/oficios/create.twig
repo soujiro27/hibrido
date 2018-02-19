@@ -16,6 +16,11 @@
             <a href="/SIA/juridico/{{ ruta }}/Cedula/{{ id }}">Cedula</a>
           </li>
         {% endif %}
+        {% if ruta=='confrontasJuridico' %}
+            <li>
+            <a href="/SIA/juridico/{{ ruta }}/cedula/create/{{ id }}">Cedula</a>
+          </li>
+        {% endif %}
       </ul>
     </div>
     

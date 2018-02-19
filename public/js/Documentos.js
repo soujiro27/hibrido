@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "C:\\xampp\\htdocs\\SIA\\hibrido\\public\\js";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 361);
+/******/ 	return __webpack_require__(__webpack_require__.s = 367);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -11676,22 +11676,28 @@ module.exports = "<div id=\"order-form\" class=\"order-form\">\r\n    <label for
 /* 358 */,
 /* 359 */,
 /* 360 */,
-/* 361 */
+/* 361 */,
+/* 362 */,
+/* 363 */,
+/* 364 */,
+/* 365 */,
+/* 366 */,
+/* 367 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(130);
-module.exports = __webpack_require__(362);
+module.exports = __webpack_require__(368);
 
 
 /***/ }),
-/* 362 */
+/* 368 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var base = __webpack_require__(128);
-var general = __webpack_require__(363);
+var general = __webpack_require__(369);
 var b = new base();
 var g = new general();
 
@@ -11702,7 +11708,7 @@ b.ordenamiento();
 g.load_update_form();
 
 /***/ }),
-/* 363 */
+/* 369 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

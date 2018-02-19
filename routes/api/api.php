@@ -53,6 +53,10 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 		$controller->load_puestos_juridicos_area();
 	});
 
+	$app->get('/api/promocionAcciones',function() use ($controller,$app){
+		$controller->load_textos_promocion_acciones();
+	});
+
 	
 
 	$app->get('/datos/Sessions',function() use ($controller,$app){

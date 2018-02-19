@@ -11,7 +11,7 @@
 {% block title %}
   <div class="header-menu-oficios">
     <button class="btn btn-info" id="menu-oficios"><i class="fa fa-th-list"></i></button>
-    <span>Observaciones</span>
+    <span>Cedula</span>
     <div class="menu-oficios">
       <ul>
         <li>
@@ -63,6 +63,18 @@
                     value="{{ datos.idPuestosJuridico }}"
                 />
             </div>
+
+            <div class="form-group firmas row">
+                <label class="form-control-label col-lg-2" for="numFolio">Promocion de Acciones</label>
+                <button class="btn btn-info col-lg-2" id="modalTextos">Texto</button>
+                <input 
+                    type="hidden" 
+                    name="idDocumentoTexto"        
+                    id="idDocumentoTexto" 
+                    value="{{ datos.idDocumentoTexto }}"
+                />
+            </div>
+
             <div class="form-group numFolio row">
                 <label class="form-control-label col-lg-2" for="numFolio">Numero Folio</label>
                 <input 

@@ -1,0 +1,56 @@
+{% extends 'layoutForm.twig' %}
+
+{% block btnHeader %}
+    <a  href ="/SIA/juridico/{{ruta}}/add/observaciones/{{ id }}" class="btn btn-info btn-color" role="button" id="add-btn-observaciones">
+        Añadir Observacion
+    </a>
+{% endblock %}
+
+
+{% block title %}
+  <div class="header-menu-oficios">
+    <button class="btn btn-info" id="menu-oficios"><i class="fa fa-th-list"></i></button>
+    <span>Observaciones</span>
+    <div class="menu-oficios">
+      <ul>
+        <li>
+          <a href="/SIA/juridico/{{ ruta }}/{{ id }}">Asignacion</a>      
+        </li>
+        <li>
+          <a href="/SIA/juridico/{{ ruta }}/historial/{{ id }}">Respuestas</a>      
+        </li>
+        {% if cedula %}
+          <li>
+            <a href="/SIA/juridico/{{ ruta }}/Cedula/{{ id }}">Cedula</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+    
+    
+  </div>
+{% endblock %}
+
+{% block form %}
+
+<table class="table table-hover table-observaciones" id="observaciones" >
+    <thead>
+        <th>Pagina</th>
+        <th>Parrafo</th>
+        <th>Observacion</th>
+        <th>Estatus</th>
+    </thead>
+    <tbody>
+        {% for observacion in observaciones %}
+            <tr data-id="{{observacion.idObservacionDoctoJuridico}}">
+                <td>{{ observacion.pagina }}</td>
+                <td>{{ observacion.parrafo }}</td>
+                <td>{{ observacion.observacion }}</td>
+                <td>{{ observacion.estatus }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

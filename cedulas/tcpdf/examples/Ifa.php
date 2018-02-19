@@ -259,7 +259,16 @@ $pdf->Ln(15);
 
 $usr=$_SESSION["idUsuario"];
 
-$sql="SELECT ar.idArea,pj.puesto juridico,CONCAT(us.saludo,' ',us.nombre,' ',us.paterno,' ',us.materno) nombre, ds.siglas,ds.fOficio FROM sia_Volantes vo INNER JOIN sia_areas ar on vo.idTurnado= ar.idArea INNER JOIN sia_usuarios us on ar.idEmpleadoTitular=us.idEmpleado INNER JOIN sia_PuestosJuridico pj on us.idEmpleado=pj.rpe INNER JOIN sia_DocumentosSiglas ds on vo.idVolante = ds.idVolante WHERE vo.idVolante='$idVolante'";
+$sql="SELECT ar.idArea,pj.puesto juridico,
+CONCAT(pj.saludo,' ',pj.nombre,' ',pj.paterno,' ',pj.materno) 
+nombre, ds.siglas,ds.fOficio 
+FROM sia_Volantes vo 
+LEFT JOIN sia_TurnadosJuridico tj on tj.idVolante = vo.idVolante
+LEFT JOIN sia_areas ar on tj.idAreaRecepcion = ar.idArea 
+LEFT JOIN sia_usuarios us on ar.idEmpleadoTitular=us.idEmpleado 
+LEFT JOIN sia_PuestosJuridico pj on us.idEmpleado=pj.rpe 
+LEFT JOIN sia_DocumentosSiglas ds on vo.idVolante = ds.idVolante 
+WHERE vo.idVolante='$idVolante' and tj.idTipoTurnado='E'";
 
 $jefe=consultaRetorno($sql,$db);
 $titular=$jefe[0]['nombre'];

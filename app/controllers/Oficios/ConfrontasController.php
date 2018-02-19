@@ -1,25 +1,43 @@
 <?php 
 namespace App\Controllers\Oficios;
 
-use App\Controllers\Template;
-use Sirius\Validation\Validator;
 use Carbon\Carbon;
 
+use App\Controllers\Template;
+use App\Controllers\ValidateController;
+use App\Controllers\BaseController;
+use App\Controllers\Oficios\BaseOficiosController;
+
 use App\Models\Volantes\Volantes;
+use App\Models\Volantes\VolantesDocumentos;
 use App\Models\Catalogos\PuestosJuridico;
 use App\Models\Documentos\TurnadosJuridico;
+use App\Models\Oficios\Observaciones;
+use App\Models\Oficios\DocumentosSiglas;
+use App\Models\Oficios\Espacios;
 
 use App\Controllers\ApiController;
 
 class ConfrontasController extends Template {
 
-	private $modulo = 'Confronta';
-    private $filejs = 'Oficios';
+	private $modulo = 'confrontasJuridico';
+    private $filejs = 'Confronta';
 
 	public function index() {
+
 		$id = $_SESSION['idEmpleado'];
         $areas = PuestosJuridico::where('rpe','=',"$id")->get();
         $area = $areas[0]['idArea'];
+
+        $now = Carbon::now('America/Mexico_City')->format('Y');
+        $campo = 'Folio';
+        $tipo = 'desc';
+
+        if(!empty($data)){
+            $now = $data['year'];
+            $campo = $data['campo'];
+            $tipo = $data['tipo'];
+        }
 
         $iracs = Volantes::select('sia_Volantes.idVolante','sia_Volantes.folio',
             'sia_Volantes.numDocumento','sia_Volantes.idRemitente','sia_Volantes.fRecepcion','sia_Volantes.asunto'
@@ -33,112 +51,66 @@ class ConfrontasController extends Template {
             ->where('sub.nombre','=','CONFRONTA')
             ->where('t.idAreaRecepcion','=',"$area")
             ->where('t.idTipoTurnado','E')
+            ->whereYear('sia_Volantes.fRecepcion','=',"$now")
+            ->orderBy("$campo","$tipo")
             ->get();
 
-        	echo $this->render('/oficios/Confronta/index.twig',[
+        	echo $this->render('/oficios/index.twig',[
             'iracs' => $iracs,
             'sesiones'=> $_SESSION,
             'modulo' => $this->modulo,
-            'filejs' => $this->filejs
+            'filejs' => $this->filejs,
+            'ruta' => $this->modulo
             ]);
 
 	}
 
-	public function create($id,$message, $errors) {
+	public function create($id) {
         
+        $base = new BaseController();
+        $cedula = $base->rol_cedulas('CONFRONTA');
+
         $personas = $this->load_personal($id);
-        echo $this->render('Oficios/Confronta/create.twig',[
+        echo $this->render('Oficios/create.twig',[
             'sesiones' => $_SESSION,
             'modulo' => $this->modulo,
-            'mensaje' => $message,
-            'errors' => $errors,
             'id' => $id,
             'personas' => $personas,
-            'filejs' => $this->filejs
+            'filejs' => $this->filejs,
+            'ruta' => $this->modulo,
+            'cedula' => $cedula
         ]);
 
     }
 
     public function save_turnado(array $data,$file, $app) {
 
-        $data['estatus'] =  'ACTIVO';
-        $validate = $this->validate($data,$file);
-        $nombre_file = $file['file']['name'];
-
-        if(empty($validate)){
-
-            $datos = BaseController::datos_insert_turnados($data);
-            $max = BaseController::insert_turnado_interno($data,$datos);
-            
-            if(!empty($nombre_file)){
-
-                BaseController::insert_anexos_interno($max,$file);
-            }
-
-            BaseController::send_notificaciones($data,$datos,'Confronta');
-            BaseController::send_notificaciones_varios($data,$datos,'Confronta');
-
-            $success = BaseController::success();
-            echo json_encode($success);
-
-
-        } else {
-
-            echo json_encode($valida);
-        }
-
+        $save = new BaseOficiosController();
+        $save->save_turnado($data,$file, $app, $this->modulo);
+       
     }
 
 
 
-    public function createDocumentos($id,$message, $errors) {
-        $turnados = $this->load_personal($id);
+    public function createDocumentos($id){
 
+        $base = new BaseController();
 
-         echo $this->render('Oficios/Confronta/documentos.twig',[
+        $personas = $this->load_personal($id);
+        $cedula = $base->rol_cedulas('CONFRONTAS');
+
+         echo $this->render('Oficios/documentos.twig',[
             'sesiones' => $_SESSION,
             'modulo' => $this->modulo,
-            'mensaje' => $message,
-            'errors' => $errors,
             'id' => $id,
-            'turnados' => $turnados,
-            'filejs' => $this->filejs
+            'turnados' => $personas,
+            'filejs' => $this->filejs,
+            'ruta' => $this->modulo,
+            'cedula' => $cedula
         ]);
     }
 
 
-    public function validate($data, $file){
-        
-        $res = [];
-        $final = [];
-
-        $nombre_file = $file['file']['name'];
-
-        $res[0] = ValidateController::string($data['idTipoPrioridad'],'idTipoPrioridad',10);
-        $res[1] = ValidateController::alphaNumeric($data['comentario'],'comentario',350);
-        $res[2] = ValidateController::string($data['estatus'],'estatus',10);
-
-        $res[3] = ValidateController::number($data['idUsrReceptor'],'idUsrReceptor',true);
-        $res[4] = ValidateController::number($data['idVolante'],'idVolante',true);
-
-        if(!empty($nombre_file)){
-
-            $res[5] = ValidateController::alphaNumeric($nombre_file,'Archivo',50);
-            
-        }
-
-        foreach ($res as $key => $value) {
-            if(!empty($value)){
-                array_push($final,$value);
-            }
-        }
-
-
-        return $final;
-        
-    }
-
-   
 
 
     public function load_personal($id){
@@ -152,6 +124,41 @@ class ConfrontasController extends Template {
                                     ->where('rpe','<>',"$rpe")
                                     ->get();
         return $puestos;
+
+    }
+
+    public function createCedula($id){
+
+        $base = new BaseController();
+        $cedula = $base->rol_cedulas('CONFRONTAS');
+        $documentos = DocumentosSiglas::where('idVolante',"$id")->get();
+        $espacios = Espacios::where('idVolante',"$id")->get();
+        
+        if($documentos->isEmpty()){
+
+            echo $this->render('Oficios/Confronta/insert.twig',[
+                'sesiones' => $_SESSION,
+                'modulo' => $this->modulo,
+                'filejs' => $this->filejs,
+                'ruta' => $this->modulo,
+                'cedula' => $cedula,        
+                'idVolante' => $id 
+            ]);
+
+        } else {
+
+            echo $this->render('Oficios/Confronta/update.twig',[
+                'sesiones' => $_SESSION,
+                'modulo' => $this->modulo,
+                'filejs' => $this->filejs,
+                'ruta' => $this->modulo,
+                'cedula' => $cedula,        
+                'documentos' => $documentos,
+                'idVolante' => $id,
+                'espacios' => $espacios
+            ]);
+
+        }
 
     }
 

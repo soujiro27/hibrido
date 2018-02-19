@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "C:\\xampp\\htdocs\\SIA\\hibrido\\public\\js";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 344);
+/******/ 	return __webpack_require__(__webpack_require__.s = 377);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -11659,41 +11659,414 @@ module.exports = (__webpack_require__(64))(3);
 /***/ }),
 /* 337 */,
 /* 338 */,
-/* 339 */,
-/* 340 */,
-/* 341 */,
-/* 342 */,
+/* 339 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jqueryValidation = __webpack_require__(336);
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var modals = __webpack_require__(340);
+
+module.exports = function (_modals) {
+	_inherits(Asignacion, _modals);
+
+	function Asignacion() {
+		_classCallCheck(this, Asignacion);
+
+		return _possibleConstructorReturn(this, (Asignacion.__proto__ || Object.getPrototypeOf(Asignacion)).apply(this, arguments));
+	}
+
+	_createClass(Asignacion, [{
+		key: 'load_oficio',
+		value: function load_oficio() {
+			$('table#main-table-oficios tbody tr').click(function () {
+				var id = $(this).children().first().text();
+				var ruta = $(this).data('ruta');
+				location.href = '/SIA/juridico/' + ruta + '/' + id;
+			});
+		}
+	}, {
+		key: 'menu_oficios',
+		value: function menu_oficios() {
+
+			$('button#menu-oficios').click(function () {
+				$('div.menu-oficios').toggle('slow');
+			});
+		}
+	}, {
+		key: 'form_submit',
+		value: function form_submit() {
+			var self = this;
+			var ruta = $('form#asignacion').data('ruta');
+
+			$('form#asignacion').validate({
+				rules: {
+					idUsrReceptor: { required: true },
+					idTipoPrioridad: { required: true },
+					comentario: { required: true },
+					idVolante: { required: true }
+				},
+				messages: {
+					idUsrReceptor: 'Obligatorio',
+					idTipoPrioridad: 'Obligatorio',
+					comentario: 'Obligatorio',
+					idVolante: 'Obligatorio'
+
+				},
+				submitHandler: function submitHandler(form) {
+					var formData = new FormData(document.getElementById('asignacion'));
+					self.new_insert_with_file(formData, ruta);
+				},
+				errorClass: "is-invalid"
+			});
+		}
+	}, {
+		key: 'carga_datos_turnado',
+		value: function carga_datos_turnado() {
+			var self = this;
+			$('select#personal-turnado').change(function () {
+				var idPuestoJuridico = $(this).val();
+				var idVolante = $(this).data('id');
+
+				self.construc_table_turnado(idVolante, idPuestoJuridico);
+
+				$('button#request-turno').attr('data-puesto', idPuestoJuridico);
+			});
+		}
+	}, {
+		key: 'construc_table_turnado',
+		value: function () {
+			var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(idVolante, idPuestoJuridico) {
+				var datos, table;
+				return regeneratorRuntime.wrap(function _callee$(_context) {
+					while (1) {
+						switch (_context.prev = _context.next) {
+							case 0:
+								_context.next = 2;
+								return this.load_documentos_turnados(idVolante, idPuestoJuridico);
+
+							case 2:
+								datos = _context.sent;
+								table = this.construct_tables_documentos(datos);
+
+								$('div#datos-turnado').html(table);
+								//console.log(datos)
+
+							case 5:
+							case 'end':
+								return _context.stop();
+						}
+					}
+				}, _callee, this);
+			}));
+
+			function construc_table_turnado(_x, _x2) {
+				return _ref.apply(this, arguments);
+			}
+
+			return construc_table_turnado;
+		}()
+	}, {
+		key: 'load_documentos_turnados',
+		value: function load_documentos_turnados(idVolante, idPuesto) {
+			var datos = new Promise(function (resolve) {
+				$.get({
+					url: '/SIA/juridico/api/documentosTurnados',
+					data: {
+						idVolante: idVolante,
+						idPuesto: idPuesto
+					},
+					success: function success(json) {
+						resolve(JSON.parse(json));
+					}
+				});
+			});
+
+			return datos;
+		}
+	}, {
+		key: 'load_modal_request',
+		value: function load_modal_request() {
+
+			var self = this;
+
+			$('button#request-turno').click(function () {
+
+				var idVolante = $(this).data('id');
+				var idPuesto = $(this).data('puesto');
+
+				var tabla = __webpack_require__(341);
+				var html = tabla.replace(':idVolante:', idVolante).replace(':usuario:', idPuesto);
+
+				self.request(html);
+			});
+		}
+	}, {
+		key: 'construct_tables_documentos',
+		value: function construct_tables_documentos(datos) {
+
+			var box_html = __webpack_require__(342);
+			var html = '';
+			var idUsuario = $('div#datos-turnado').data('idusuario');
+
+			for (var x in datos) {
+
+				var nombre = datos[x].saludo + ' ' + datos[x].nombre + ' ' + datos[x].paterno + ' ' + datos[x].materno;
+				var fAlta = datos[x].fAlta;
+				var fecha = fAlta.substring(0, 10);
+				var hora = fAlta.substring(10, 16);
+				var comentario = datos[x].comentario;
+				var icon = void 0;
+				var file = void 0;
+
+				if (idUsuario == datos[x].usrAlta) {
+					icon = 'fa fa-arrow-circle-down blue';
+				} else {
+
+					icon = 'fa fa-arrow-circle-up red';
+				}
+
+				if (datos[x].archivoFinal == null) {
+
+					file = '<i class="fa fa-times-circle"></i>';
+				} else {
+
+					file = '<a  target="_blank" href="/SIA/hibrido/files/' + datos[x].idVolante + '/Internos/' + datos[x].archivoFinal + '">\n\t\t\t\t\t\t<i class="fa fa-file"></i>\n\t\t\t\t\t\t</a>';
+				}
+
+				html += box_html.replace(':icon:', icon).replace(':prioridad:', datos[x].idTipoPrioridad).replace(':nombre:', nombre).replace(':fecha:', fecha).replace(':hora:', hora).replace(':comentario:', comentario.toUpperCase()).replace(':archivo:', file);
+			}
+
+			return html;
+		}
+	}, {
+		key: 'new_insert_with_file',
+		value: function () {
+			var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(datos, ruta) {
+				var res, table;
+				return regeneratorRuntime.wrap(function _callee2$(_context2) {
+					while (1) {
+						switch (_context2.prev = _context2.next) {
+							case 0:
+								_context2.next = 2;
+								return this.send_data_insert_with_file(datos, ruta);
+
+							case 2:
+								res = _context2.sent;
+
+								if (res[0].campo != 'success') {
+									table = this.construct_table_errors(res);
+
+									this.errors(table);
+								} else {
+									this.success(ruta);
+								}
+
+							case 4:
+							case 'end':
+								return _context2.stop();
+						}
+					}
+				}, _callee2, this);
+			}));
+
+			function new_insert_with_file(_x3, _x4) {
+				return _ref2.apply(this, arguments);
+			}
+
+			return new_insert_with_file;
+		}()
+	}, {
+		key: 'send_data_insert_with_file',
+		value: function send_data_insert_with_file(datos, ruta) {
+			var prom = new Promise(function (resolve) {
+				$.post({
+					url: '/SIA/juridico/' + ruta + '/create',
+					data: datos,
+					success: function success(res) {
+						resolve(JSON.parse(res));
+					},
+					cache: false,
+					contentType: false,
+					processData: false,
+					dataType: "html"
+				});
+			});
+
+			return prom;
+		}
+	}]);
+
+	return Asignacion;
+}(modals);
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(46)))
+
+/***/ }),
+/* 340 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jqueryConfirm = __webpack_require__(129);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+module.exports = function () {
+	function _class() {
+		_classCallCheck(this, _class);
+	}
+
+	_createClass(_class, [{
+		key: 'request',
+		value: function request(html) {
+
+			var self = this;
+
+			$.confirm({
+				title: 'Responder Turnado',
+				content: html,
+				icon: 'fa fa-times-circle',
+				type: 'blue',
+				columnClass: 'col-md-11 col-md-offset-1',
+				draggable: false,
+				buttons: {
+					confirm: {
+						text: 'Aceptar',
+						btnClass: 'btn-primary',
+						action: function action() {
+
+							var formData = new FormData(document.getElementById('request-form'));
+							self.new_insert_with_file(formData, 'Irac');
+						}
+					}
+				}
+			});
+		}
+	}, {
+		key: 'success',
+		value: function success(ruta) {
+			$.confirm({
+				title: 'Tu Instruccion se ha Turnado Correctamente',
+				content: '',
+				icon: 'fa fa-check-circle',
+				type: 'green',
+				columnClass: 'col-md-8 col-md-offset-1',
+				draggable: false,
+				buttons: {
+					confirm: {
+						text: 'Aceptar',
+						btnClass: 'btn-primary',
+						action: function action() {
+							location.href = '/SIA/juridico/' + ruta;
+						}
+					}
+				}
+			});
+		}
+	}]);
+
+	return _class;
+}();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(46)))
+
+/***/ }),
+/* 341 */
+/***/ (function(module, exports) {
+
+module.exports = "<form data-ruta=\"Irac\" method=\"POST\" enctype=\"multipart/form-data\" id=\"request-form\">\r\n\t<div class=\"row row-form\">\r\n\t\t <div class=\"col-lg-5\">\r\n        <label>Prioridad</label>\r\n        <select class=\"form-control\" name=\"idTipoPrioridad\" required>\r\n          <option value=\"\">Seleccione una Opcion</option>\r\n          <option value=\"NORMAL\">Normal</option>\r\n          <option value=\"URGENTE\">Urgente</option>\r\n        </select>\r\n      </div>\r\n      \r\n      </div>\r\n\r\n      <div class=\"row row-form\">\r\n        <div class=\"col-lg-11\">\r\n          <label>Anexar Documento</label>\r\n          <input type=\"file\" name=\"file\" class=\"form-control\">\r\n        </div>\r\n      </div>\r\n\r\n      <div class=\"row row-form\">\r\n        <div class=\"col-lg-11\">\r\n            <label>Comentario</label>\r\n            <textarea placeholder=\"Comentario\" class=\"form-control\" name=\"comentario\"></textarea>\r\n        </div>\r\n\t</div>\r\n  <input type=\"hidden\" name=\"idEstadoTurnado\" value=\"RESPUESTA\">\r\n  <input type=\"hidden\" name=\"idVolante\" value=\":idVolante:\">\r\n  <input type=\"hidden\" name=\"idUsrReceptor\" value=\":usuario:\">\r\n</form>";
+
+/***/ }),
+/* 342 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\":prioridad:\">\r\n\r\n\t\t<div class=\"user\">\r\n\t\t\t<i class=\":icon:\"></i>\r\n\t\t</div>\r\n\t\t<div class=\"nombre\">\r\n\t\t\t<p>:nombre:</p>\r\n\t\t</div>\r\n\t\t<div class=\"fecha\">\r\n\t\t\t<p>:fecha:</p>\r\n\t\t</div>\r\n\t\t<div class=\"hora\">\r\n\t\t\t<p>:hora:</p>\r\n\t\t</div>\r\n\t\t<div class=\"comentario\">\r\n\t\t\t<p>:comentario:</p>\r\n\t\t</div>\r\n\r\n\t\t<div class=\"file\">\r\n\t\t\t<p>\r\n\t\t\t\t:archivo:\r\n\t\t\t</p>\r\n\t\t</div>\r\n\r\n\r\n</div>";
+
+/***/ }),
 /* 343 */,
-/* 344 */
+/* 344 */,
+/* 345 */,
+/* 346 */,
+/* 347 */,
+/* 348 */,
+/* 349 */,
+/* 350 */,
+/* 351 */,
+/* 352 */,
+/* 353 */,
+/* 354 */,
+/* 355 */,
+/* 356 */,
+/* 357 */,
+/* 358 */,
+/* 359 */,
+/* 360 */,
+/* 361 */,
+/* 362 */,
+/* 363 */,
+/* 364 */,
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */,
+/* 369 */,
+/* 370 */,
+/* 371 */,
+/* 372 */,
+/* 373 */,
+/* 374 */,
+/* 375 */,
+/* 376 */,
+/* 377 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(130);
-module.exports = __webpack_require__(345);
+module.exports = __webpack_require__(378);
 
 
 /***/ }),
-/* 345 */
+/* 378 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var base = __webpack_require__(128);
-var caracteres = __webpack_require__(346);
+var confronta = __webpack_require__(379);
+var baseOficios = __webpack_require__(339);
 
 var b = new base();
-var c = new caracteres();
+var c = new confronta();
+var bo = new baseOficios();
 
 b.cancel();
-b.load_update_form();
 b.logout();
+b.ordenamiento();
+b.load_date_inputs();
 
-c.load_update_form();
-c.validate_insert_form();
-c.validate_update_form();
+bo.load_oficio();
+bo.menu_oficios();
+
+bo.form_submit();
+bo.carga_datos_turnado();
+bo.load_modal_request();
 
 /***/ }),
-/* 346 */
+/* 379 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11705,85 +12078,15 @@ var _jqueryValidation = __webpack_require__(336);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var base = __webpack_require__(128);
-var b = new base();
-
 module.exports = function () {
     function _class() {
         _classCallCheck(this, _class);
     }
 
     _createClass(_class, [{
-        key: 'validate_insert_form',
-        value: function validate_insert_form() {
-
-            $('form#Caracteres-insert').validate({
-                rules: {
-                    siglas: {
-                        required: true,
-                        maxlength: 2
-                    },
-                    nombre: {
-                        required: true,
-                        maxlength: 10
-                    }
-                },
-                messages: {
-                    siglas: {
-                        required: 'El campo es Obligatorio',
-                        maxlength: 'Maximo 2 Caracteres'
-                    },
-                    nombre: {
-                        required: 'El campo es Obligatorio',
-                        maxlength: 'Maximo 10 Caracteres'
-                    }
-                },
-                submitHandler: function submitHandler(form) {
-                    var datos = $('form#Caracteres-insert').serializeArray();
-                    b.new_insert(datos, 'Caracteres');
-                },
-                errorClass: 'is-invalid'
-
-            });
-        }
-    }, {
-        key: 'validate_update_form',
-        value: function validate_update_form() {
-            $('form#Caracteres-update').validate({
-                rules: {
-                    nombre: {
-                        required: true,
-                        maxlength: 10
-                    },
-                    siglas: {
-                        required: true,
-                        maxlength: 2
-                    },
-                    estatus: {
-                        required: true,
-                        maxlength: 8
-                    }
-                },
-                messages: {
-                    siglas: {
-                        required: 'El campo es Obligatorio',
-                        maxlength: 'Maximo 2 Caracteres'
-                    },
-                    nombre: {
-                        required: 'El campo es Obligatorio',
-                        maxlength: 'Maximo 10 Caracteres'
-                    },
-                    estatus: {
-                        required: 'El campo es Obligatorio',
-                        maxlength: 'Valor Incorrecto'
-                    }
-                },
-                submitHandler: function submitHandler(form) {
-                    var datos = $('form#Caracteres-update').serializeArray();
-                    b.new_update(datos, 'Caracteres');
-                },
-                errorClass: 'is-invalid'
-            });
+        key: 'validate_form_insert',
+        value: function validate_form_insert() {
+            $('form#confrontasJuridico').validate({});
         }
     }]);
 

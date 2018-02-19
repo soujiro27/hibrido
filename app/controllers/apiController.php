@@ -1,12 +1,16 @@
 <?php 
 namespace App\Controllers;
-use App\Models\Catalogos\SubTiposDocumentos;
 use App\Models\Api\Auditorias;
 use App\Models\Api\AuditoriasUnidades;
 use App\Models\Api\Unidades;
+
 use App\Models\Catalogos\PuestosJuridico;
+use App\Models\Catalogos\SubTiposDocumentos;
+use App\Models\Catalogos\Textos;
+
 use App\Models\Documentos\AnexosJuridico;
 use App\Models\Documentos\TurnadosJuridico;
+
 use App\Models\Volantes\Remitentes;
 use App\Models\Volantes\Volantes;
 use App\Models\Volantes\VolantesDocumentos;
@@ -220,6 +224,12 @@ class ApiController {
 									->where('estatus','ACTIVO')
 									->get();
 		echo json_encode($personal);
+
+	}
+
+	public function load_textos_promocion_acciones(){
+		$textos = Textos::where('idTipoDocto','OFICIO')->where('estatus','ACTIVO')->get();
+		echo json_encode($textos);
 
 	}
 

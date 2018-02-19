@@ -14,6 +14,7 @@ use App\Models\Catalogos\PuestosJuridico;
 use App\Models\Documentos\TurnadosJuridico;
 use App\Models\Oficios\Observaciones;
 use App\Models\Oficios\DocumentosSiglas;
+use App\Models\Oficios\Espacios;
 
 use App\Controllers\ApiController;
 
@@ -288,6 +289,7 @@ class IracController extends Template {
         $base = new BaseController();
         $cedula = $base->rol_cedulas('IRAC');
         $documentos = DocumentosSiglas::where('idVolante',"$id")->get();
+        $espacios = Espacios::where('idVolante',"$id")->get();
         
         if($documentos->isEmpty()){
 
@@ -308,15 +310,12 @@ class IracController extends Template {
                 'filejs' => $this->filejs,
                 'ruta' => $this->modulo,
                 'cedula' => $cedula,        
-                'documentos' => $documentos
+                'documentos' => $documentos,
+                'idVolante' => $id,
+                'espacios' => $espacios
             ]);
 
         }
-
-        /*
-
-        
-        */
 
     }
 
@@ -347,6 +346,17 @@ class IracController extends Template {
             ]);
 
             $documento->save();
+
+            $espacios = new Espacios([
+                'idVolante' => $idVolante,
+                'encabezado' => $data['encabezado'],
+                'cuerpo' => $data['cuerpo'],
+                'pie' => $data['pie'],
+                'usrAlta' => $_SESSION['idUsuario']
+            ]);
+
+            $espacios->save();
+
             $sucess = $base->success();
             echo json_encode($sucess);
 
@@ -356,9 +366,45 @@ class IracController extends Template {
         }
     }
 
+
+    public function update_cedula(array $data){
+
+        $data['estatus'] = 'ACTIVO';
+        $validate = $this->validate_cedula($data,false);
+        $idDocumentoSiglas = $data['idDocumentoSiglas']; 
+        $idVolante = $data['idVolante'];
+        $base = new BaseController();
+
+        if(empty($validate)){
+
+            DocumentosSiglas::find($idDocumentoSiglas)->update([
+                'idPuestosJuridico' => $data['idPuestosJuridico'],
+                'fOficio' => $data['fOficio'],
+                'siglas' => $data['siglas'],
+                'numFolio' => $data['numFolio'],
+                'usrModificacion' => $_SESSION['idUsuario'],
+                'fModificacion' => Carbon::now('America/Mexico_City')->format('Y-m-d H:i:s')
+            ]);
+
+            Espacios::where('idVolante',"$idVolante")->update([
+                'encabezado' => $data['encabezado'],
+                'cuerpo' => $data['cuerpo'],
+                'pie' => $data['pie']
+            ]);
+
+            echo  json_encode($base->success());
+
+        } else {
+
+            echo json_encode($validate);
+
+        }
+
+    }
+
     public function validate_cedula(array $data,$tipo){
 
-         $validate = new ValidateController();
+        $validate = new ValidateController();
 
         $res = [];
         $final = [];
@@ -368,14 +414,18 @@ class IracController extends Template {
         $res[2] = $validate->alphaNumeric($data['idPuestosJuridico'],'idPuestosJuridico',50);
         $res[3] = $validate->alphaNumeric($data['numFolio'],'numFolio',15);
         $res[4] = $validate->string($data['estatus'],'estatus',10);
+        $res[5] = $validate->number($data['encabezado'],'encabezado',false);
+        $res[6] = $validate->number($data['cuerpo'],'cuerpo',false);
+        $res[7] = $validate->number($data['pie'],'pie',false);
+
 
         if($tipo){
             
-            $res[5] = $validate->number($data['idVolante'],'idVolante',true);
+            $res[8] = $validate->number($data['idVolante'],'idVolante',true);
         
         } else {
 
-            $res[5] = $validate->number($data['idObservacionDoctoJuridico'],'idObservacionDoctoJuridico',true);    
+            $res[8] = $validate->number($data['idDocumentoSiglas'],'idDocumentoSiglas',true);    
         }
 
 

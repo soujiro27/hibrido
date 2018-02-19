@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "C:\\xampp\\htdocs\\SIA\\hibrido\\public\\js";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 350);
+/******/ 	return __webpack_require__(__webpack_require__.s = 356);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -11670,15 +11670,21 @@ module.exports = (__webpack_require__(64))(3);
 /* 347 */,
 /* 348 */,
 /* 349 */,
-/* 350 */
+/* 350 */,
+/* 351 */,
+/* 352 */,
+/* 353 */,
+/* 354 */,
+/* 355 */,
+/* 356 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(130);
-module.exports = __webpack_require__(351);
+module.exports = __webpack_require__(357);
 
 
 /***/ }),
-/* 351 */
+/* 357 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11687,7 +11693,7 @@ module.exports = __webpack_require__(351);
 var base = __webpack_require__(128);
 var b = new base();
 
-var volantes = __webpack_require__(352);
+var volantes = __webpack_require__(358);
 var v = new volantes();
 
 b.cancel();
@@ -11703,7 +11709,7 @@ v.form_submit();
 v.form_update();
 
 /***/ }),
-/* 352 */
+/* 358 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11715,7 +11721,7 @@ var _jqueryValidation = __webpack_require__(336);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var modals = __webpack_require__(353);
+var modals = __webpack_require__(359);
 var base = __webpack_require__(128);
 
 var m = new modals();
@@ -11924,7 +11930,7 @@ module.exports = function () {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(46)))
 
 /***/ }),
-/* 353 */
+/* 359 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11978,7 +11984,7 @@ module.exports = function () {
 	}, {
 		key: 'dictamen',
 		value: function dictamen() {
-			var html = __webpack_require__(354);
+			var html = __webpack_require__(360);
 			$.confirm({
 				title: 'Cuenta Publica',
 				content: html,
@@ -12004,7 +12010,7 @@ module.exports = function () {
 	}, {
 		key: 'load_select_auditoria',
 		value: function load_select_auditoria() {
-			var html = __webpack_require__(355);
+			var html = __webpack_require__(361);
 			var self = this;
 			$.confirm({
 				title: 'Auditoria',
@@ -12139,13 +12145,13 @@ module.exports = function () {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(46)))
 
 /***/ }),
-/* 354 */
+/* 360 */
 /***/ (function(module, exports) {
 
 module.exports = "<h4>Seleccione la Cuenta Publica</h4>\r\n<select class=\"form-control\" id=\"cuenta\">\r\n\t<option value=\"\">Escoga una opcion</option>\r\n\t<option value=\"CTA-2015\">2015</option>\r\n\t<option value=\"CTA-2016\">2016</option>\r\n</select>";
 
 /***/ }),
-/* 355 */
+/* 361 */
 /***/ (function(module, exports) {
 
 module.exports = "<div class=\"inputAuditoria\">\r\n    <p>Cuenta Publica</p> <span id=\"numero-auditoria\"></span>\r\n    <input type=\"number\" id=\"numero-auditoria\" class=\"form-control\">\t\r\n    </div>\r\n    \r\n    <div class=\"table-datos-auditoria\">\r\n        <table id=\"datos-auditoria\" class=\"table\">\r\n            <thead>\r\n                <th>Sujeto</th>\r\n                <th>Rubro</th>\r\n                <th>Tipo</th>\r\n            </thead>\r\n            <tbody></tbody>\r\n        </table>\r\n    </div>\r\n    <div class=\"turnado-datos-auditoria\">\r\n        <table id=\"turnados-auditoria\" class=\"table\">\r\n            <thead>\r\n                <th>Documento</th>\r\n                <th>Turnado</th>\r\n            </thead>\r\n            <tbody></tbody>\r\n        </table>\r\n    </div>\r\n    <div id=\"errors-auditoria\"></div>\r\n    ";

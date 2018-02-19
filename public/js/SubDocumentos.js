@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "C:\\xampp\\htdocs\\SIA\\hibrido\\public\\js";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 344);
+/******/ 	return __webpack_require__(__webpack_require__.s = 350);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -11664,15 +11664,21 @@ module.exports = (__webpack_require__(64))(3);
 /* 341 */,
 /* 342 */,
 /* 343 */,
-/* 344 */
+/* 344 */,
+/* 345 */,
+/* 346 */,
+/* 347 */,
+/* 348 */,
+/* 349 */,
+/* 350 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(130);
-module.exports = __webpack_require__(345);
+module.exports = __webpack_require__(351);
 
 
 /***/ }),
-/* 345 */
+/* 351 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11681,7 +11687,7 @@ module.exports = __webpack_require__(345);
 var base = __webpack_require__(128);
 var b = new base();
 
-var subDocumentos = __webpack_require__(346);
+var subDocumentos = __webpack_require__(352);
 var sd = new subDocumentos();
 
 b.cancel();
@@ -11692,7 +11698,7 @@ sd.validate_insert_form();
 sd.validate_update_form();
 
 /***/ }),
-/* 346 */
+/* 352 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

@@ -2,7 +2,7 @@
 {% extends 'layoutForm.twig' %}
 
 {% block btnHeader %}
-    <a  href ="/SIA/juridico/{{ruta}}/Observaciones/{{ obsv.idVolante }}" class="btn btn-info btn-color" role="button" id="add-btn-observaciones" data-volante="{{ idVolante }}">
+    <a  href ="/SIA/juridico/{{ruta}}/Observaciones/{{idVolante }}" class="btn btn-info btn-color" role="button" id="add-btn-observaciones" data-volante="{{ idVolante }}">
         Mostrar Observaciones
     </a>
 {% endblock %}
@@ -11,7 +11,7 @@
 {% block title %}
   <div class="header-menu-oficios">
     <button class="btn btn-info" id="menu-oficios"><i class="fa fa-th-list"></i></button>
-    <span>Observaciones</span>
+    <span>Cedula</span>
     <div class="menu-oficios">
       <ul>
         <li>
@@ -35,7 +35,7 @@
 {% block form %}
 <div class="row form-update-cedula">
     <div class="col-lg-4">
-<form class="form" id="update-cedula-irac" method="POST"  data-ruta="Irac">
+<form class="form" id="update-cedula-irac" method="POST"  data-ruta="Ifa">
         <div>
             <div class="form-group siglas row">
                 <label class="form-control-label col-lg-4" for="siglas">Siglas</label>
@@ -66,6 +66,18 @@
                     value="{{ documentos[0].idPuestosJuridico }}"
                 />
             </div>
+
+            <div class="form-group firmas row">
+                <label class="form-control-label col-lg-4" for="numFolio">Promocion de Acciones</label>
+                <button class="btn btn-info col-lg-6" id="modalTextos">Texto</button>
+                <input 
+                    type="hidden" 
+                    name="idDocumentoTexto"        
+                    id="idDocumentoTexto" 
+                    value="{{ documentos[0].idDocumentoTexto }}"
+                />
+            </div>
+
             <div class="form-group numFolio row">
                 <label class="form-control-label col-lg-4" for="numFolio">Numero Folio</label>
                 <input 
@@ -98,12 +110,12 @@
 
         <div class="form-group send">
             <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
-            <button class="btn btn-danger" id="cancelar" data-ruta="Irac">Cancelar</button>
+            <button class="btn btn-danger" id="cancelar" data-ruta="Ifa">Cancelar</button>
         </div>
     </form>
     </div>
     <div class="col-lg-8">
-    <iframe src="/SIA/hibrido/cedulas/Irac.php?param={{ idVolante }}"></iframe>
+    <iframe src="/SIA/hibrido/cedulas/tcpdf/examples/Ifa.php?param1={{ idVolante }}"></iframe>
         
     </div>
 </div>

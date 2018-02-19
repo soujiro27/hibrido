@@ -11,7 +11,9 @@ module.exports = {
         Volantes:['babel-polyfill',path.resolve(__dirname,'./Volantes/volantes/index.js')],
         Diversos:['babel-polyfill',path.resolve(__dirname,'./Volantes/diversos/index.js')],
         Documentos:['babel-polyfill',path.resolve(__dirname,'./Documentos/general/index.js')],
-        Irac:['babel-polyfill',path.resolve(__dirname,'./Oficios/Irac/index.js')]
+        Irac:['babel-polyfill',path.resolve(__dirname,'./Oficios/Irac/index.js')],
+        Ifa:['babel-polyfill',path.resolve(__dirname,'./Oficios/Ifa/index.js')],
+        Confronta:['babel-polyfill',path.resolve(__dirname,'./Oficios/Confronta/index.js')]
 
     }, 
     output:{

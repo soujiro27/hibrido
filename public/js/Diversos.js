@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "C:\\xampp\\htdocs\\SIA\\hibrido\\public\\js";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 356);
+/******/ 	return __webpack_require__(__webpack_require__.s = 362);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -11657,18 +11657,18 @@ module.exports = "<div id=\"order-form\" class=\"order-form\">\r\n    <label for
 module.exports = (__webpack_require__(64))(3);
 
 /***/ }),
-/* 337 */
-/***/ (function(module, exports) {
-
-module.exports = "\r\n<div class=\"table-areas-turnar\">\r\n\t<table class=\"table\">\r\n\t\t<thead>\r\n\t\t\t<th>Seleccionar</th>\r\n\t\t\t<th>Area</th>\r\n\t\t</thead>\r\n\t\t<tbody id=\"body-areas\">\r\n\t\t\t:body:\r\n\t\t</tbody>\r\n\t</table>\r\n</div>";
-
-/***/ }),
+/* 337 */,
 /* 338 */,
 /* 339 */,
 /* 340 */,
 /* 341 */,
 /* 342 */,
-/* 343 */,
+/* 343 */
+/***/ (function(module, exports) {
+
+module.exports = "\r\n<div class=\"table-areas-turnar\">\r\n\t<table class=\"table\">\r\n\t\t<thead>\r\n\t\t\t<th>Seleccionar</th>\r\n\t\t\t<th>Area</th>\r\n\t\t</thead>\r\n\t\t<tbody id=\"body-areas\">\r\n\t\t\t:body:\r\n\t\t</tbody>\r\n\t</table>\r\n</div>";
+
+/***/ }),
 /* 344 */,
 /* 345 */,
 /* 346 */,
@@ -11681,15 +11681,21 @@ module.exports = "\r\n<div class=\"table-areas-turnar\">\r\n\t<table class=\"tab
 /* 353 */,
 /* 354 */,
 /* 355 */,
-/* 356 */
+/* 356 */,
+/* 357 */,
+/* 358 */,
+/* 359 */,
+/* 360 */,
+/* 361 */,
+/* 362 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(130);
-module.exports = __webpack_require__(357);
+module.exports = __webpack_require__(363);
 
 
 /***/ }),
-/* 357 */
+/* 363 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11697,7 +11703,7 @@ module.exports = __webpack_require__(357);
 
 var base = __webpack_require__(128);
 var b = new base();
-var diversos = __webpack_require__(358);
+var diversos = __webpack_require__(364);
 var d = new diversos();
 
 b.cancel();
@@ -11714,7 +11720,7 @@ d.form_submit();
 d.form_update();
 
 /***/ }),
-/* 358 */
+/* 364 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11731,7 +11737,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var base = __webpack_require__(128);
-var modals = __webpack_require__(359);
+var modals = __webpack_require__(365);
 
 var b = new base();
 var m = new modals();
@@ -11799,7 +11805,7 @@ module.exports = function () {
 							case 6:
 								datos = _context.sent;
 								table = this.construct_table_update_turnos(check, datos);
-								html = __webpack_require__(337);
+								html = __webpack_require__(343);
 								tabla = html.replace(':body:', table);
 
 								m.turnar(tabla);
@@ -11833,7 +11839,7 @@ module.exports = function () {
 							case 2:
 								datos = _context2.sent;
 								table = this.construc_table_areas(datos);
-								html = __webpack_require__(337);
+								html = __webpack_require__(343);
 								tabla = html.replace(':body:', table);
 
 								m.turnar(tabla);
@@ -12080,7 +12086,7 @@ module.exports = function () {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(46)))
 
 /***/ }),
-/* 359 */
+/* 365 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12102,7 +12108,7 @@ module.exports = function () {
 	_createClass(_class, [{
 		key: 'remitentes',
 		value: function remitentes(tipoRemintente) {
-			var html = __webpack_require__(360);
+			var html = __webpack_require__(366);
 			var self = this;
 			$.confirm({
 				title: 'Seleccione Remitente',
@@ -12231,7 +12237,7 @@ module.exports = function () {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(46)))
 
 /***/ }),
-/* 360 */
+/* 366 */
 /***/ (function(module, exports) {
 
 module.exports = "<div class=\"input\">\r\n\t<input type=\"text\" id=\"remitente\"  class=\"form-control\" placeholder=\"Busqueda por siglas del Area\">\r\n</div>\r\n<div class=\"table-remitentes\">\r\n\t<table class=\"table\">\r\n\t\t<thead>\r\n\t\t\t<th>Seleccionar</th>\r\n\t\t\t<th>Nombre</th>\r\n\t\t\t<th>Puesto</th>\r\n\t\t</thead>\r\n\t\t<tbody id=\"body-remitentes\"></tbody>\r\n\t</table>\r\n</div>";
