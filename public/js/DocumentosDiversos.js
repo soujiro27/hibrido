@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "C:\\xampp\\htdocs\\SIA\\hibrido\\public\\js";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 362);
+/******/ 	return __webpack_require__(__webpack_require__.s = 380);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -11657,23 +11657,914 @@ module.exports = function () {
 module.exports = "<div id=\"order-form\" class=\"order-form\">\r\n    <label for=\"campo\">Campo:</label>\r\n    <select name=\"campo\" id=\"campo\" required class=\"form-control select-order\">\r\n        <option value=\"\">Escoga una Opcion</option>\r\n        <option value=\"folio\">FOLIO</option>\r\n        <option value=\"numDocumento\">DOCUMENTO</option>\r\n        <option value=\"idRemitente\">REMITENTE</option>\r\n        <option value=\"idTurnado\">TURNADO</option>\r\n        <option value=\"fRecepcion\">FECHA</option>\r\n        <option value=\"extemporaneo\">DESFAZADO</option>\r\n        <option value=\"nombre\">OFICIO</option>\r\n        <option value=\"estadoProceso\">ESTADO</option>\r\n    </select>\r\n\r\n    <label for=\"tipo\">Tipo:</label>\r\n    <select name=\"tipo\" id=\"tipo\" required class=\"form-control select-order\">\r\n        <option value=\"\">Escoga una Opcion</option>\r\n        <option value=\"asc\">Ascendente</option>\r\n        <option value=\"desc\">Descendente</option>\r\n    </select>\r\n    <label for=\"year\">Año</label>\r\n    <select name=\"year\" id=\"year\" class=\"form-control select-order\">\r\n        <option value=\"\">Año</option>\r\n        <option value=\"2017\">2017</option>\r\n        <option value=\"2018\">2018</option>\r\n    </select>\r\n\r\n</div>\r\n";
 
 /***/ }),
-/* 337 */,
-/* 338 */,
-/* 339 */,
+/* 337 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jqueryValidation = __webpack_require__(130);
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var modals = __webpack_require__(338);
+
+module.exports = function (_modals) {
+    _inherits(Asignacion, _modals);
+
+    function Asignacion() {
+        _classCallCheck(this, Asignacion);
+
+        return _possibleConstructorReturn(this, (Asignacion.__proto__ || Object.getPrototypeOf(Asignacion)).apply(this, arguments));
+    }
+
+    _createClass(Asignacion, [{
+        key: 'load_oficio',
+        value: function load_oficio() {
+            $('table#main-table-oficios tbody tr').click(function () {
+                var id = $(this).children().first().text();
+                var ruta = $(this).data('ruta');
+                location.href = '/SIA/juridico/' + ruta + '/' + id;
+            });
+        }
+    }, {
+        key: 'menu_oficios',
+        value: function menu_oficios() {
+
+            $('button#menu-oficios').click(function () {
+                $('div.menu-oficios').toggle('fast');
+            });
+        }
+    }, {
+        key: 'construct_table_errors',
+        value: function construct_table_errors(datos) {
+            //construye la lista de errores
+            var ul = '';
+
+            $.each(datos, function (index, val) {
+                ul += '<ul>\n                         <li><strong>Campo:</strong> ' + datos[index].campo + '</li>\n                         <li><strong>Error:</strong> ' + datos[index].message + '</li>\n                         </ul>';
+            });
+
+            return ul;
+        }
+
+        /*--------------- Turnados y Documentos -----------------*/
+
+    }, {
+        key: 'form_submit',
+        value: function form_submit() {
+            var self = this;
+            var ruta = $('form#asignacion').data('ruta');
+
+            $('form#asignacion').validate({
+                rules: {
+                    idUsrReceptor: { required: true },
+                    idTipoPrioridad: { required: true },
+                    comentario: { required: true },
+                    idVolante: { required: true }
+                },
+                messages: {
+                    idUsrReceptor: 'Obligatorio',
+                    idTipoPrioridad: 'Obligatorio',
+                    comentario: 'Obligatorio',
+                    idVolante: 'Obligatorio'
+
+                },
+                submitHandler: function submitHandler(form) {
+                    var formData = new FormData(document.getElementById('asignacion'));
+                    self.new_insert_with_file(formData, ruta);
+                },
+                errorClass: "is-invalid"
+            });
+        }
+    }, {
+        key: 'carga_datos_turnado',
+        value: function carga_datos_turnado() {
+            var self = this;
+            $('select#personal-turnado').change(function () {
+                var idPuestoJuridico = $(this).val();
+                var idVolante = $(this).data('id');
+
+                self.construc_table_turnado(idVolante, idPuestoJuridico);
+
+                $('button#request-turno').attr('data-puesto', idPuestoJuridico);
+            });
+        }
+    }, {
+        key: 'construc_table_turnado',
+        value: function () {
+            var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(idVolante, idPuestoJuridico) {
+                var datos, table;
+                return regeneratorRuntime.wrap(function _callee$(_context) {
+                    while (1) {
+                        switch (_context.prev = _context.next) {
+                            case 0:
+                                _context.next = 2;
+                                return this.load_documentos_turnados(idVolante, idPuestoJuridico);
+
+                            case 2:
+                                datos = _context.sent;
+                                table = this.construct_tables_documentos(datos);
+
+                                $('div#datos-turnado').html(table);
+                                //console.log(datos)
+
+                            case 5:
+                            case 'end':
+                                return _context.stop();
+                        }
+                    }
+                }, _callee, this);
+            }));
+
+            function construc_table_turnado(_x, _x2) {
+                return _ref.apply(this, arguments);
+            }
+
+            return construc_table_turnado;
+        }()
+    }, {
+        key: 'load_documentos_turnados',
+        value: function load_documentos_turnados(idVolante, idPuesto) {
+            var datos = new Promise(function (resolve) {
+                $.get({
+                    url: '/SIA/juridico/api/documentosTurnados',
+                    data: {
+                        idVolante: idVolante,
+                        idPuesto: idPuesto
+                    },
+                    success: function success(json) {
+                        resolve(JSON.parse(json));
+                    }
+                });
+            });
+
+            return datos;
+        }
+    }, {
+        key: 'load_modal_request',
+        value: function load_modal_request() {
+
+            var self = this;
+
+            $('button#request-turno').click(function () {
+
+                var idVolante = $(this).data('id');
+                var idPuesto = $(this).data('puesto');
+
+                var tabla = __webpack_require__(339);
+                var html = tabla.replace(':idVolante:', idVolante).replace(':usuario:', idPuesto);
+
+                self.request(html);
+            });
+        }
+    }, {
+        key: 'construct_tables_documentos',
+        value: function construct_tables_documentos(datos) {
+
+            var box_html = __webpack_require__(384);
+            var html = '';
+            var idUsuario = $('div#datos-turnado').data('idusuario');
+
+            for (var x in datos) {
+
+                var nombre = datos[x].saludo + ' ' + datos[x].nombre + ' ' + datos[x].paterno + ' ' + datos[x].materno;
+                var fAlta = datos[x].fAlta;
+                var fecha = fAlta.substring(0, 10);
+                var hora = fAlta.substring(10, 16);
+                var comentario = datos[x].comentario;
+                var icon = void 0;
+                var file = void 0;
+
+                if (idUsuario == datos[x].usrAlta) {
+                    icon = '<img src="/SIA/hibrido/public/img/002-email.png" />';
+                } else {
+
+                    icon = '<img src="/SIA/hibrido/public/img/001-email-1.png" />';
+                }
+
+                if (datos[x].archivoFinal == null) {
+
+                    file = 'Sin Archivo';
+                } else {
+
+                    var archivo = datos[x].archivoFinal;
+                    var extension = archivo.split('.');
+                    var file_icon = void 0;
+                    if (extension[1] == 'xlsx' || extension[1] == 'xls') {
+
+                        file_icon = '005-excel.png';
+                    } else if (extension[1] == 'docx' || extension[1] == 'doc') {
+
+                        file_icon = '004-word.png';
+                    } else if (extension[1] == 'pdf') {
+
+                        file_icon = '003-pdf.png';
+                    } else if (extension[1] == 'jpg') {
+
+                        file_icon = '001-jpg.png';
+                    }
+
+                    file = '<a  target="_blank" href="/SIA/hibrido/files/' + datos[x].idVolante + '/Internos/' + datos[x].archivoFinal + '">\n\t\t\t\t\t\t<img src="/SIA/hibrido/public/img/' + file_icon + '">\n\t\t\t\t\t\t</a>';
+                }
+
+                html += '<tr>\n                        <td>' + icon + '</td>\n                        <td>' + nombre + '</td>\n                        <td>' + fecha + '</td>\n                        <td>' + hora + '</td>\n                        <td>' + comentario.toUpperCase() + '</td>\n                        <td>' + file + '</td>\n                    </tr>';
+            }
+
+            var tabla = box_html.replace(':tbody:', html);
+
+            return tabla;
+        }
+    }, {
+        key: 'new_insert_with_file',
+        value: function () {
+            var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(datos, ruta) {
+                var res, table;
+                return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                    while (1) {
+                        switch (_context2.prev = _context2.next) {
+                            case 0:
+                                _context2.next = 2;
+                                return this.send_data_insert_with_file(datos, ruta);
+
+                            case 2:
+                                res = _context2.sent;
+
+                                if (res[0].campo != 'success') {
+                                    table = this.construct_table_errors(res);
+
+                                    this.errors(table);
+                                } else {
+                                    this.success(ruta);
+                                }
+
+                            case 4:
+                            case 'end':
+                                return _context2.stop();
+                        }
+                    }
+                }, _callee2, this);
+            }));
+
+            function new_insert_with_file(_x3, _x4) {
+                return _ref2.apply(this, arguments);
+            }
+
+            return new_insert_with_file;
+        }()
+    }, {
+        key: 'send_data_insert_with_file',
+        value: function send_data_insert_with_file(datos, ruta) {
+            var prom = new Promise(function (resolve) {
+                $.post({
+                    url: '/SIA/juridico/' + ruta + '/create',
+                    data: datos,
+                    success: function success(res) {
+                        resolve(JSON.parse(res));
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    dataType: "html"
+                });
+            });
+
+            return prom;
+        }
+
+        /*---------------------------Obervaciones IRAC e IFA ----------------*/
+
+    }, {
+        key: 'validate_insert_observaciones',
+        value: function validate_insert_observaciones() {
+
+            var self = this;
+
+            $('form#Observaciones-insert').validate({
+                rules: {
+                    idVolante: {
+                        required: true,
+                        digits: true
+                    },
+                    pagina: {
+                        required: true,
+                        maxlength: 50
+                    },
+                    parrafo: {
+                        required: true,
+                        maxlength: 50
+                    },
+                    observacion: {
+                        required: true,
+                        maxlength: 350
+                    }
+                },
+                messages: {
+                    pagina: {
+                        required: 'El Campo es Obligatorio',
+                        maxlength: 'Maximo 50 caracteres'
+                    },
+                    parrafo: {
+                        required: 'El Campo es Obligatorio',
+                        maxlength: 'Maximo 50 caracteres'
+                    },
+                    observacion: {
+                        required: 'El Campo es Obligatorio',
+                        maxlength: 'Maximo 50 caracteres'
+                    }
+                },
+                submitHandler: function submitHandler(form) {
+
+                    var texto = CKEDITOR.instances['ckeditor'].getData();
+                    var formulario = $('form#Observaciones-insert');
+                    var formData = formulario.serializeArray();
+                    var ruta = formulario.data('ruta');
+                    formData[3].value = texto;
+                    self.new_insert_observacion(formData, ruta, formData[0].value);
+                },
+                errorClass: 'is-invalid'
+            });
+        }
+    }, {
+        key: 'new_insert_observacion',
+        value: function () {
+            var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(datos, ruta, idVolante) {
+                var res, table;
+                return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                    while (1) {
+                        switch (_context3.prev = _context3.next) {
+                            case 0:
+                                _context3.next = 2;
+                                return this.send_data_insert_observaciones(datos, ruta);
+
+                            case 2:
+                                res = _context3.sent;
+
+                                if (res[0].campo != 'success') {
+                                    table = this.construct_table_errors(res);
+
+                                    this.errors(table);
+                                } else {
+                                    this.success_observacion(ruta, idVolante);
+                                }
+
+                            case 4:
+                            case 'end':
+                                return _context3.stop();
+                        }
+                    }
+                }, _callee3, this);
+            }));
+
+            function new_insert_observacion(_x5, _x6, _x7) {
+                return _ref3.apply(this, arguments);
+            }
+
+            return new_insert_observacion;
+        }()
+    }, {
+        key: 'send_data_insert_observaciones',
+        value: function send_data_insert_observaciones(datos, ruta) {
+            var prom = new Promise(function (resolve) {
+                $.post({
+                    url: '/SIA/juridico/' + ruta + '/observaciones/create',
+                    data: datos,
+                    success: function success(res) {
+                        resolve(JSON.parse(res));
+                    }
+                });
+            });
+
+            return prom;
+        }
+    }, {
+        key: 'validate_update_observaciones',
+        value: function validate_update_observaciones() {
+
+            var self = this;
+
+            $('form#Observaciones-update').validate({
+                rules: {
+                    idObservacionDoctoJuridico: {
+                        required: true,
+                        digits: true
+                    },
+                    pagina: {
+                        required: true,
+                        maxlength: 50
+                    },
+                    parrafo: {
+                        required: true,
+                        maxlength: 50
+                    },
+                    observacion: {
+                        required: true,
+                        maxlength: 350
+                    }
+                },
+                messages: {
+                    pagina: {
+                        required: 'El Campo es Obligatorio',
+                        maxlength: 'Maximo 50 caracteres'
+                    },
+                    parrafo: {
+                        required: 'El Campo es Obligatorio',
+                        maxlength: 'Maximo 50 caracteres'
+                    },
+                    observacion: {
+                        required: 'El Campo es Obligatorio',
+                        maxlength: 'Maximo 50 caracteres'
+                    }
+                },
+                submitHandler: function submitHandler(form) {
+
+                    var texto = CKEDITOR.instances['ckeditor'].getData();
+                    var formulario = $('form#Observaciones-update');
+                    var formData = formulario.serializeArray();
+                    var ruta = formulario.data('ruta');
+                    formData[4].value = texto;
+                    var idVolante = $('a#add-btn-observaciones').data('volante');
+                    self.new_update_observacion(formData, ruta, idVolante);
+                },
+                errorClass: 'is-invalid'
+            });
+        }
+    }, {
+        key: 'new_update_observacion',
+        value: function () {
+            var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(datos, ruta, idVolante) {
+                var res, table;
+                return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                    while (1) {
+                        switch (_context4.prev = _context4.next) {
+                            case 0:
+                                _context4.next = 2;
+                                return this.update_observaciones(datos, ruta);
+
+                            case 2:
+                                res = _context4.sent;
+
+                                if (res[0].campo != 'success') {
+                                    table = this.construct_table_errors(res);
+
+                                    this.errors(table);
+                                } else {
+                                    this.success_update_observacion(ruta, idVolante);
+                                }
+
+                            case 4:
+                            case 'end':
+                                return _context4.stop();
+                        }
+                    }
+                }, _callee4, this);
+            }));
+
+            function new_update_observacion(_x8, _x9, _x10) {
+                return _ref4.apply(this, arguments);
+            }
+
+            return new_update_observacion;
+        }()
+    }, {
+        key: 'update_observaciones',
+        value: function update_observaciones(datos, ruta) {
+            var promesa = new Promise(function (resolve) {
+                $.post({
+                    url: '/SIA/juridico/' + ruta + '/observaciones/update',
+                    data: datos,
+                    success: function success(res) {
+                        resolve(JSON.parse(res));
+                    }
+                });
+            });
+            return promesa;
+        }
+
+        /*----------------- Carga modal de boton de firmas en cedulas----------*/
+
+    }, {
+        key: 'load_puestos_cedula',
+        value: function load_puestos_cedula() {
+
+            var self = this;
+
+            $('button#modalFirmas').click(function (e) {
+                e.preventDefault();
+                self.modal_puestos_juridico();
+            });
+        }
+    }, {
+        key: 'modal_puestos_juridico',
+        value: function () {
+            var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+                var datos, table;
+                return regeneratorRuntime.wrap(function _callee5$(_context5) {
+                    while (1) {
+                        switch (_context5.prev = _context5.next) {
+                            case 0:
+                                _context5.next = 2;
+                                return this.load_puestos_juridico();
+
+                            case 2:
+                                datos = _context5.sent;
+                                table = this.construct_table_puestos_juridico(datos);
+
+                                this.puestos_juridico(table);
+
+                            case 5:
+                            case 'end':
+                                return _context5.stop();
+                        }
+                    }
+                }, _callee5, this);
+            }));
+
+            function modal_puestos_juridico() {
+                return _ref5.apply(this, arguments);
+            }
+
+            return modal_puestos_juridico;
+        }()
+    }, {
+        key: 'load_puestos_juridico',
+        value: function load_puestos_juridico() {
+
+            var promesa = new Promise(function (resolve) {
+                $.get({
+                    url: '/SIA/juridico/api/puestosJuridico',
+                    success: function success(res) {
+                        resolve(JSON.parse(res));
+                    }
+                });
+            });
+            return promesa;
+        }
+    }, {
+        key: 'construct_table_puestos_juridico',
+        value: function construct_table_puestos_juridico(datos) {
+
+            var html = __webpack_require__(341);
+            var tr = '';
+
+            for (var x in datos) {
+                tr += '<tr>\n                    <td><input type="checkbox" name="puestos" value="' + datos[x].idPuestoJuridico + '"></td>\n                    <td>' + datos[x].saludo + ' ' + datos[x].nombre + ' ' + datos[x].paterno + ' ' + datos[x].materno + ' </td>\n                    <td>' + datos[x].puesto + '</td>\n                </tr>';
+            }
+
+            var table = html.replace(':body:', tr);
+
+            return table;
+        }
+    }, {
+        key: 'new_insert_cedula',
+        value: function () {
+            var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(datos, ruta, idVolante) {
+                var res, table;
+                return regeneratorRuntime.wrap(function _callee6$(_context6) {
+                    while (1) {
+                        switch (_context6.prev = _context6.next) {
+                            case 0:
+                                _context6.next = 2;
+                                return this.send_data_insert_cedula(datos, ruta);
+
+                            case 2:
+                                res = _context6.sent;
+
+                                if (res[0].campo != 'success') {
+                                    table = this.construct_table_errors(res);
+
+                                    this.errors(table);
+                                } else {
+                                    this.success_cedula(ruta, idVolante);
+                                }
+
+                            case 4:
+                            case 'end':
+                                return _context6.stop();
+                        }
+                    }
+                }, _callee6, this);
+            }));
+
+            function new_insert_cedula(_x11, _x12, _x13) {
+                return _ref6.apply(this, arguments);
+            }
+
+            return new_insert_cedula;
+        }()
+    }, {
+        key: 'send_data_insert_cedula',
+        value: function send_data_insert_cedula(datos, ruta) {
+            var prom = new Promise(function (resolve) {
+                $.post({
+                    url: '/SIA/juridico/' + ruta + '/cedula/create',
+                    data: datos,
+                    success: function success(res) {
+                        resolve(JSON.parse(res));
+                    }
+                });
+            });
+
+            return prom;
+        }
+    }, {
+        key: 'new_update_cedula',
+        value: function () {
+            var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(datos, ruta, idVolante) {
+                var res, table;
+                return regeneratorRuntime.wrap(function _callee7$(_context7) {
+                    while (1) {
+                        switch (_context7.prev = _context7.next) {
+                            case 0:
+                                _context7.next = 2;
+                                return this.update_data_cedula(datos, ruta);
+
+                            case 2:
+                                res = _context7.sent;
+
+                                if (res[0].campo != 'success') {
+                                    table = this.construct_table_errors(res);
+
+                                    this.errors(table);
+                                } else {
+                                    this.success_update(ruta, idVolante);
+                                }
+
+                            case 4:
+                            case 'end':
+                                return _context7.stop();
+                        }
+                    }
+                }, _callee7, this);
+            }));
+
+            function new_update_cedula(_x14, _x15, _x16) {
+                return _ref7.apply(this, arguments);
+            }
+
+            return new_update_cedula;
+        }()
+    }, {
+        key: 'update_data_cedula',
+        value: function update_data_cedula(datos, ruta) {
+            var promesa = new Promise(function (resolve) {
+                $.post({
+                    url: '/SIA/juridico/' + ruta + '/cedula/update',
+                    data: datos,
+                    success: function success(res) {
+                        resolve(JSON.parse(res));
+                    }
+                });
+            });
+            return promesa;
+        }
+    }]);
+
+    return Asignacion;
+}(modals);
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42)))
+
+/***/ }),
+/* 338 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jqueryConfirm = __webpack_require__(128);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+module.exports = function () {
+	function _class() {
+		_classCallCheck(this, _class);
+	}
+
+	_createClass(_class, [{
+		key: 'request',
+		value: function request(html) {
+
+			var self = this;
+
+			$.confirm({
+				title: 'Responder Turnado',
+				content: html,
+				icon: 'fa fa-times-circle',
+				type: 'blue',
+				columnClass: 'col-md-11 col-md-offset-1',
+				draggable: false,
+				buttons: {
+					confirm: {
+						text: 'Aceptar',
+						btnClass: 'btn-primary',
+						action: function action() {
+
+							var formData = new FormData(document.getElementById('request-form'));
+							self.new_insert_with_file(formData, 'Irac');
+						}
+					}
+				}
+			});
+		}
+	}, {
+		key: 'success',
+		value: function success(ruta) {
+			$.confirm({
+				title: 'Tu Instruccion se ha Turnado Correctamente',
+				content: '',
+				icon: 'fa fa-check-circle',
+				type: 'green',
+				columnClass: 'col-md-8 col-md-offset-1',
+				draggable: false,
+				buttons: {
+					confirm: {
+						text: 'Aceptar',
+						btnClass: 'btn-primary',
+						action: function action() {
+							location.href = '/SIA/juridico/' + ruta;
+						}
+					}
+				}
+			});
+		}
+	}, {
+		key: 'success_observacion',
+		value: function success_observacion(ruta, idVolante) {
+			$.confirm({
+				title: 'Tu Observacion se ha almacenado Correctamente',
+				content: '¿ Deseas agregar otra Observacion?',
+				icon: 'fa fa-check-circle',
+				type: 'green',
+				columnClass: 'col-md-8 col-md-offset-1',
+				draggable: false,
+				buttons: {
+					confirm: {
+						text: 'SI',
+						btnClass: 'btn-primary',
+						action: function action() {
+							location.href = '/SIA/juridico/' + ruta + '/add/observaciones/' + idVolante;
+						}
+					},
+					cancel: {
+						text: 'NO',
+						btnClass: 'btn-red',
+						action: function action() {
+							location.href = '/SIA/juridico/' + ruta;
+						}
+					}
+				}
+			});
+		}
+	}, {
+		key: 'success_update_observacion',
+		value: function success_update_observacion(ruta, idVolante) {
+			$.confirm({
+				title: 'Tu Observacion se ha Actualizado Correctamente',
+				content: '',
+				icon: 'fa fa-check-circle',
+				type: 'green',
+				columnClass: 'col-md-8 col-md-offset-1',
+				draggable: false,
+				buttons: {
+					confirm: {
+						text: 'Aceptar',
+						btnClass: 'btn-primary',
+						action: function action() {
+							location.href = '/SIA/juridico/' + ruta + '/observaciones/' + idVolante;
+						}
+					}
+				}
+			});
+		}
+	}, {
+		key: 'puestos_juridico',
+		value: function puestos_juridico(html) {
+
+			$.confirm({
+				title: 'Selecciona Firmas',
+				content: html,
+				icon: 'fa fa-times-circle',
+				type: 'blue',
+				columnClass: 'col-md-11 col-md-offset-1',
+				draggable: false,
+				buttons: {
+					confirm: {
+						text: 'Aceptar',
+						btnClass: 'btn-primary',
+						action: function action() {
+
+							var puestos = [];
+
+							$("input:checkbox:checked").each(function () {
+
+								puestos.push($(this).val());
+							});
+
+							$('input#idPuestosJuridico').val(puestos);
+						}
+					}
+				}
+			});
+		}
+	}, {
+		key: 'errors',
+		value: function errors(html) {
+			$.confirm({
+				title: 'Tu Registro NO pudo ser almacenado',
+				content: html,
+				icon: 'fa fa-times-circle',
+				type: 'red',
+				columnClass: 'col-md-5 col-md-offset-1',
+				draggable: false,
+				buttons: {
+					confirm: {
+						text: 'Aceptar',
+						btnClass: 'btn-primary'
+					}
+				}
+			});
+		}
+	}, {
+		key: 'success_cedula',
+		value: function success_cedula(ruta, idVolante) {
+
+			$.confirm({
+				title: 'La Cedula se ha almacenado Correctamente',
+				content: '',
+				icon: 'fa fa-check-circle',
+				type: 'green',
+				columnClass: 'col-md-8 col-md-offset-1',
+				draggable: false,
+				buttons: {
+					confirm: {
+						text: 'Aceptar',
+						btnClass: 'btn-primary',
+						action: function action() {
+							location.href = '/SIA/juridico/' + ruta;
+						}
+					}
+				}
+			});
+		}
+	}, {
+		key: 'success_update',
+		value: function success_update(ruta, idVolante) {
+
+			$.confirm({
+				title: 'La Cedula se ha Actualizado Correctamente',
+				content: '',
+				icon: 'fa fa-check-circle',
+				type: 'green',
+				columnClass: 'col-md-8 col-md-offset-1',
+				draggable: false,
+				buttons: {
+					confirm: {
+						text: 'Aceptar',
+						btnClass: 'btn-primary',
+						action: function action() {
+							location.href = '/SIA/juridico/' + ruta + '/cedula/create/' + idVolante;
+						}
+					}
+				}
+			});
+		}
+	}]);
+
+	return _class;
+}();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42)))
+
+/***/ }),
+/* 339 */
+/***/ (function(module, exports) {
+
+module.exports = "<form data-ruta=\"Irac\" method=\"POST\" enctype=\"multipart/form-data\" id=\"request-form\">\r\n\t<div class=\"row row-form\">\r\n\t\t <div class=\"col-lg-5\">\r\n        <label>Prioridad</label>\r\n        <select class=\"form-control\" name=\"idTipoPrioridad\" required>\r\n          <option value=\"\">Seleccione una Opcion</option>\r\n          <option value=\"NORMAL\">Normal</option>\r\n          <option value=\"URGENTE\">Urgente</option>\r\n        </select>\r\n      </div>\r\n      \r\n      </div>\r\n\r\n      <div class=\"row row-form\">\r\n        <div class=\"col-lg-11\">\r\n          <label>Anexar Documento</label>\r\n          <input type=\"file\" name=\"file\" class=\"form-control\">\r\n        </div>\r\n      </div>\r\n\r\n      <div class=\"row row-form\">\r\n        <div class=\"col-lg-11\">\r\n            <label>Comentario</label>\r\n            <textarea placeholder=\"Comentario\" class=\"form-control\" name=\"comentario\"></textarea>\r\n        </div>\r\n\t</div>\r\n  <input type=\"hidden\" name=\"idEstadoTurnado\" value=\"RESPUESTA\">\r\n  <input type=\"hidden\" name=\"idVolante\" value=\":idVolante:\">\r\n  <input type=\"hidden\" name=\"idUsrReceptor\" value=\":usuario:\">\r\n</form>";
+
+/***/ }),
 /* 340 */,
-/* 341 */,
+/* 341 */
+/***/ (function(module, exports) {
+
+module.exports = "<table class=\"table table-hover modal-puestos-juridico\">\r\n    <thead>\r\n        <th>Seleccionar</th>\r\n        <th>Nombre</th>\r\n        <th>Puesto</th>\r\n    </thead>\r\n    <tbody>\r\n        :body:\r\n    </tbody>\r\n</table>";
+
+/***/ }),
 /* 342 */
 /***/ (function(module, exports) {
 
 module.exports = "<div class=\"input\">\r\n\t<input type=\"text\" id=\"remitente\"  class=\"form-control\" placeholder=\"Busqueda por siglas del Area\">\r\n</div>\r\n<div class=\"table-remitentes\">\r\n\t<table class=\"table table-remitentes\">\r\n\t\t<thead>\r\n\t\t\t<th>Seleccionar</th>\r\n\t\t\t<th>Nombre</th>\r\n\t\t\t<th>Puesto</th>\r\n\t\t</thead>\r\n\t\t<tbody id=\"body-remitentes\"></tbody>\r\n\t</table>\r\n</div>";
 
 /***/ }),
-/* 343 */
-/***/ (function(module, exports) {
-
-module.exports = "\r\n<div class=\"table-areas-turnar\">\r\n\t<table class=\"table\">\r\n\t\t<thead>\r\n\t\t\t<th>Seleccionar</th>\r\n\t\t\t<th>Area</th>\r\n\t\t</thead>\r\n\t\t<tbody id=\"body-areas\">\r\n\t\t\t:body:\r\n\t\t</tbody>\r\n\t</table>\r\n</div>";
-
-/***/ }),
+/* 343 */,
 /* 344 */,
 /* 345 */,
 /* 346 */,
@@ -11692,40 +12583,65 @@ module.exports = "\r\n<div class=\"table-areas-turnar\">\r\n\t<table class=\"tab
 /* 359 */,
 /* 360 */,
 /* 361 */,
-/* 362 */
+/* 362 */,
+/* 363 */,
+/* 364 */,
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */,
+/* 369 */,
+/* 370 */,
+/* 371 */,
+/* 372 */,
+/* 373 */,
+/* 374 */,
+/* 375 */,
+/* 376 */,
+/* 377 */,
+/* 378 */,
+/* 379 */,
+/* 380 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(131);
-module.exports = __webpack_require__(363);
+module.exports = __webpack_require__(381);
 
 
 /***/ }),
-/* 363 */
+/* 381 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var base = __webpack_require__(129);
+var baseOficios = __webpack_require__(337);
+var diversos = __webpack_require__(382);
+
 var b = new base();
-var diversos = __webpack_require__(364);
+var bo = new baseOficios();
 var d = new diversos();
 
 b.cancel();
-b.load_date_inputs();
-b.load_subdocumentos();
 b.logout();
 b.ordenamiento();
+b.load_date_inputs();
 
-d.load_update_form();
-d.load_remitentes();
-d.turnar();
-d.turnar_update();
-d.form_submit();
-d.form_update();
+bo.load_oficio();
+bo.menu_oficios();
+
+bo.form_submit();
+bo.carga_datos_turnado();
+bo.load_modal_request();
+
+d.load_modal_internos();
+d.load_modal_externos();
+d.validate_form_insert_cedula();
+d.validate_form_update_cedula();
 
 /***/ }),
-/* 364 */
+/* 382 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11735,363 +12651,156 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _jqueryValidation = __webpack_require__(130);
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var base = __webpack_require__(129);
-var modals = __webpack_require__(365);
+var modalsDiversos = __webpack_require__(383);
+var md = new modalsDiversos();
 
-var b = new base();
-var m = new modals();
+var baseOficios = __webpack_require__(337);
+var bo = new baseOficios();
 
 module.exports = function () {
-	function _class() {
-		_classCallCheck(this, _class);
-	}
+    function _class() {
+        _classCallCheck(this, _class);
+    }
 
-	_createClass(_class, [{
-		key: 'load_update_form',
-		value: function load_update_form() {
-			$('table#main-table-volantes tbody tr').click(function () {
-				var id = $(this).children().first().text();
-				var ruta = $(this).data('ruta');
-				location.href = '/SIA/juridico/' + ruta + '/' + id;
-			});
-		}
-	}, {
-		key: 'load_remitentes',
-		value: function load_remitentes() {
+    _createClass(_class, [{
+        key: 'load_modal_internos',
+        value: function load_modal_internos() {
 
-			$('select#tipoRemitente').change(function () {
+            $('button#modalInternos').click(function (e) {
+                e.preventDefault();
+                md.remitentes('I', 'internos');
+            });
+        }
+    }, {
+        key: 'load_modal_externos',
+        value: function load_modal_externos() {
 
-				var tipoRemitente = $(this).val();
-				m.remitentes(tipoRemitente);
-			});
-		}
-	}, {
-		key: 'turnar',
-		value: function turnar() {
-			var self = this;
-			$('button#btn-turnar').click(function (e) {
-				e.preventDefault();
-				self.load_areas_turnados();
-			});
-		}
-	}, {
-		key: 'turnar_update',
-		value: function turnar_update() {
-			var self = this;
-			$('button#btn-turnar-update').click(function (e) {
-				e.preventDefault();
-				self.load_areas_update();
-			});
-		}
-	}, {
-		key: 'load_areas_update',
-		value: function () {
-			var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-				var idVolante, check, datos, table, html, tabla;
-				return regeneratorRuntime.wrap(function _callee$(_context) {
-					while (1) {
-						switch (_context.prev = _context.next) {
-							case 0:
-								idVolante = $('input#idVolante').val();
-								_context.next = 3;
-								return this.load_areas_turnar_update(idVolante);
+            $('button#modalExternos').click(function (e) {
+                e.preventDefault();
+                md.remitentes('E', 'externos');
+            });
+        }
+    }, {
+        key: 'validate_form_insert_cedula',
+        value: function validate_form_insert_cedula() {
 
-							case 3:
-								check = _context.sent;
-								_context.next = 6;
-								return this.load_areas_turnar();
+            var formulario = $('form#insert-cedula-plantilla');
+            formulario.validate({
+                rules: {
+                    numFolio: {
+                        required: true,
+                        maxlength: 20
+                    },
+                    fOficio: {
+                        required: true,
+                        maxlength: 10
+                    },
+                    siglas: {
+                        required: true,
+                        maxlength: 20
+                    },
+                    espacios: {
+                        required: true
+                    }
+                },
+                messages: {
+                    numFolio: {
+                        required: 'El Campo es Obligatorio',
+                        maxlength: 'Maximo 20 Caracteres'
+                    },
+                    fOficio: {
+                        required: 'El Campo es Obligatorio',
+                        maxlength: 'Formato Incorrecto'
+                    },
+                    siglas: {
+                        required: 'El Campo es Obligatorio',
+                        maxlength: 'Maximo 20 Caracteres'
+                    },
+                    espacios: {
+                        required: 'El Campo es Obligatorio'
+                    }
 
-							case 6:
-								datos = _context.sent;
-								table = this.construct_table_update_turnos(check, datos);
-								html = __webpack_require__(343);
-								tabla = html.replace(':body:', table);
+                },
+                submitHandler: function submitHandler(form) {
 
-								m.turnar(tabla);
+                    var datos = formulario.serializeArray();
+                    var ruta = formulario.data('ruta');
+                    var idVolante = datos[0].value;
 
-							case 11:
-							case 'end':
-								return _context.stop();
-						}
-					}
-				}, _callee, this);
-			}));
+                    var texto = CKEDITOR.instances['ckeditor'].getData();
+                    datos[datos.length - 1].value = texto;
+                    bo.new_insert_cedula(datos, ruta, idVolante);
+                },
+                errorClass: 'is-invalid'
 
-			function load_areas_update() {
-				return _ref.apply(this, arguments);
-			}
+            });
+        }
+    }, {
+        key: 'validate_form_update_cedula',
+        value: function validate_form_update_cedula() {
 
-			return load_areas_update;
-		}()
-	}, {
-		key: 'load_areas_turnados',
-		value: function () {
-			var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-				var datos, table, html, tabla;
-				return regeneratorRuntime.wrap(function _callee2$(_context2) {
-					while (1) {
-						switch (_context2.prev = _context2.next) {
-							case 0:
-								_context2.next = 2;
-								return this.load_areas_turnar();
+            var formulario = $('form#update-cedula-plantilla');
+            formulario.validate({
+                rules: {
+                    numFolio: {
+                        required: true,
+                        maxlength: 20
+                    },
+                    fOficio: {
+                        required: true,
+                        maxlength: 10
+                    },
+                    siglas: {
+                        required: true,
+                        maxlength: 20
+                    },
+                    espacios: {
+                        required: true
+                    }
+                },
+                messages: {
+                    numFolio: {
+                        required: 'El Campo es Obligatorio',
+                        maxlength: 'Maximo 20 Caracteres'
+                    },
+                    fOficio: {
+                        required: 'El Campo es Obligatorio',
+                        maxlength: 'Formato Incorrecto'
+                    },
+                    siglas: {
+                        required: 'El Campo es Obligatorio',
+                        maxlength: 'Maximo 20 Caracteres'
+                    },
+                    espacios: {
+                        required: 'El Campo es Obligatorio'
+                    }
 
-							case 2:
-								datos = _context2.sent;
-								table = this.construc_table_areas(datos);
-								html = __webpack_require__(343);
-								tabla = html.replace(':body:', table);
+                },
+                submitHandler: function submitHandler(form) {
 
-								m.turnar(tabla);
+                    var datos = formulario.serializeArray();
+                    var ruta = formulario.data('ruta');
+                    var idVolante = datos[0].value;
 
-							case 7:
-							case 'end':
-								return _context2.stop();
-						}
-					}
-				}, _callee2, this);
-			}));
+                    var texto = CKEDITOR.instances['ckeditor'].getData();
+                    datos[datos.length - 1].value = texto;
 
-			function load_areas_turnados() {
-				return _ref2.apply(this, arguments);
-			}
+                    bo.new_update_cedula(datos, ruta, idVolante);
+                },
+                errorClass: 'is-invalid'
 
-			return load_areas_turnados;
-		}()
-	}, {
-		key: 'construct_table_update_turnos',
-		value: function construct_table_update_turnos(check, data) {
+            });
+        }
+    }]);
 
-			var tr = '';
-
-			for (var x in data) {
-
-				tr += '<tr>\n\t\t\t\t\t<td><input type="checkbox" id="area" value="' + data[x].idArea + '" ';
-
-				for (var y in check) {
-
-					if (check[y].idAreaRecepcion == data[x].idArea) {
-
-						tr += ' disabled';
-					}
-				}
-
-				tr += ' ></td><td>' + data[x].nombre + '</td></tr>';
-			}
-
-			return tr;
-		}
-	}, {
-		key: 'construc_table_areas',
-		value: function construc_table_areas(data) {
-
-			var tr = '';
-			$.each(data, function (index, val) {
-				tr += '<tr>\n\t\t\t\t\t<td><input type="checkbox" id="area" value="' + data[index].idArea + '"></td>\n\t\t\t\t\t<td>' + data[index].nombre + '</td>\n\t\t\t\t\t</tr>';
-			});
-
-			return tr;
-		}
-	}, {
-		key: 'load_areas_turnar',
-		value: function load_areas_turnar() {
-
-			var datos = new Promise(function (resolve) {
-				$.get({
-					url: '/SIA/juridico/api/areas',
-					success: function success(json) {
-						resolve(JSON.parse(json));
-					}
-				});
-			});
-			return datos;
-		}
-	}, {
-		key: 'load_areas_turnar_update',
-		value: function load_areas_turnar_update(idVolante) {
-
-			var datos = new Promise(function (resolve) {
-				$.get({
-					url: '/SIA/juridico/api/areas/update',
-					data: {
-						idVolante: idVolante
-					},
-					success: function success(json) {
-						resolve(JSON.parse(json));
-					}
-				});
-			});
-			return datos;
-		}
-	}, {
-		key: 'form_submit',
-		value: function form_submit() {
-			var _rules;
-
-			$('form#form-diversos').validate({
-				rules: (_rules = {
-					idTipoDocto: { required: true },
-					idSubTipoDocumento: { required: true },
-					extemporaneo: { required: true },
-					hRecepcion: { required: true },
-					idCaracter: { required: true },
-					idTurnado: { required: true },
-					idAccion: { required: true },
-					nombreRemitente: { required: true },
-					puestoRemitente: { required: true }
-				}, _defineProperty(_rules, 'idTurnado', { required: true }), _defineProperty(_rules, 'folio', {
-					required: true,
-					number: true,
-					min: 1
-				}), _defineProperty(_rules, 'subFolio', {
-					required: true,
-					number: true,
-					min: 0
-				}), _defineProperty(_rules, 'numDocumento', {
-					required: true,
-					maxlength: 20
-				}), _defineProperty(_rules, 'anexos', {
-					required: true,
-					number: true,
-					min: 0
-				}), _defineProperty(_rules, 'fDocumento', {
-					required: true,
-					date: true
-				}), _defineProperty(_rules, 'fRecepcion', {
-					required: true,
-					date: true
-				}), _rules),
-				messages: {
-					idTipoDocto: 'Obligatorio',
-					idSubTipoDocumento: 'Obligatorio',
-					extemporaneo: 'Obligatorio',
-					hRecepcion: 'Obligatorio',
-					idTurnado: 'Obligatorio',
-					idAccion: 'Obligatorio',
-					idCaracter: 'Obligatorio',
-					folio: {
-						required: 'Obligatorio',
-						number: 'Solo acepta numeros',
-						min: 'Valor No valido'
-					},
-					subFolio: {
-						required: 'Obligatorio',
-						number: 'Solo acepta numeros',
-						min: 'Valor No valido'
-					},
-					numDocumento: {
-						required: 'Obligatorio',
-						maxlength: 'Maximo 20 Caracteres'
-					}, anexos: {
-						required: 'Obligatorio',
-						number: 'Solo acepta numeros',
-						min: 'Valor No valido'
-					},
-					fDocumento: {
-						required: 'Obligatorio',
-						date: 'Formato Incorrecto'
-					},
-					fRecepcion: {
-						required: 'Obligatorio',
-						date: 'Fomrato Incorrecto'
-					},
-					nombreRemitente: {
-						required: 'Seleccione un Remitente'
-					},
-					puestoRemitente: {
-						required: 'Seleccione un Remitente'
-					}
-
-				},
-				submitHandler: function submitHandler(form) {
-					var formData = new FormData(document.getElementById('form-diversos'));
-					b.new_insert_with_file(formData, 'VolantesDiversos');
-				},
-				errorClass: "is-invalid"
-			});
-		}
-	}, {
-		key: 'form_update',
-		value: function form_update() {
-
-			$('form#diversos-udpate').validate({
-				rules: {
-					hRecepcion: { required: true },
-					idCaracter: { required: true },
-					idTurnado: { required: true },
-					idAccion: { required: true },
-					numDocumento: {
-						required: true,
-						maxlength: 20
-					},
-					anexos: {
-						required: true,
-						number: true,
-						min: 0
-					},
-					fDocumento: {
-						required: true,
-						date: true
-					},
-					fRecepcion: {
-						required: true,
-						date: true
-					}
-
-				},
-				messages: {
-					hRecepcion: 'Obligatorio',
-					idTurnado: 'Obligatorio',
-					idAccion: 'Obligatorio',
-					idCaracter: 'Obligatorio',
-					folio: {
-						required: 'Obligatorio',
-						number: 'Solo acepta numeros',
-						min: 'Valor No valido'
-					},
-					subFolio: {
-						required: 'Obligatorio',
-						number: 'Solo acepta numeros',
-						min: 'Valor No valido'
-					},
-					numDocumento: {
-						required: 'Obligatorio',
-						maxlength: 'Maximo 20 Caracteres'
-					}, anexos: {
-						required: 'Obligatorio',
-						number: 'Solo acepta numeros',
-						min: 'Valor No valido'
-					},
-					fDocumento: {
-						required: 'Obligatorio',
-						date: 'Formato Incorrecto'
-					},
-					fRecepcion: {
-						required: 'Obligatorio',
-						date: 'Fomrato Incorrecto'
-					}
-
-				},
-				submitHandler: function submitHandler(form) {
-					var formData = $('form#diversos-udpate').serializeArray();
-					b.new_update(formData, 'VolantesDiversos');
-				},
-				errorClass: "is-invalid"
-			});
-		}
-	}]);
-
-	return _class;
+    return _class;
 }();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42)))
 
 /***/ }),
-/* 365 */
+/* 383 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12112,7 +12821,7 @@ module.exports = function () {
 
 	_createClass(_class, [{
 		key: 'remitentes',
-		value: function remitentes(tipoRemintente) {
+		value: function remitentes(tipoRemintente, idInput) {
 			var html = __webpack_require__(342);
 			var self = this;
 			$.confirm({
@@ -12128,25 +12837,20 @@ module.exports = function () {
 						btnClass: 'btn-primary',
 						action: function action() {
 
-							var input = $('input:radio[name=remitente]:checked');
+							var areas = [];
+							var input = $('input:checkbox[name=remitente]:checked').each(function () {
+								areas.push($(this).val());
+							});
 
-							var idPuesto = input.val();
-							var siglasArea = input.data('siglas');
-							var nombre = input.parent().next().text();
-							var puesto = input.parent().next().next().text();
-
-							$('input#idRemitenteJuridico').val(idPuesto);
-							$('input#idRemitente').val(siglasArea);
-							$('input#nombreRemitente').val(nombre);
-							$('input#puestoRemitente').val(puesto);
+							$('input#' + idInput).val(areas);
 						}
 					}
 				},
 				onOpenBefore: function onOpenBefore() {
-					$('input#remitente').keyup(function (event) {
-						var siglas = $(this).val();
-						self.construct_tabla_remitentes(tipoRemintente, siglas);
-					});
+
+					$('div.input').remove();
+					self.construct_tabla_remitentes(tipoRemintente, '');
+					$('div.table-remitentes').addClass('vh-remitentes');
 				}
 			});
 		}
@@ -12187,7 +12891,7 @@ module.exports = function () {
 		value: function table_remitentes(data) {
 			var table = '';
 			$.each(data, function (index, el) {
-				table += '<tr><td><input type="radio" name="remitente" value="' + el.idRemitenteJuridico + '" data-siglas="' + el.siglasArea + '"></td>\n\t\t\t\t\t\t<td>' + el.saludo + ' ' + el.nombre + ' </td>\n\t\t\t\t\t\t<td>' + el.puesto + '</td>\n\t\t\t\t\t</tr>';
+				table += '<tr><td><input type="checkbox" name="remitente" value="' + el.idRemitenteJuridico + '" data-siglas="' + el.siglasArea + '"></td>\n\t\t\t\t\t\t<td>' + el.saludo + ' ' + el.nombre + ' </td>\n\t\t\t\t\t\t<td>' + el.puesto + '</td>\n\t\t\t\t\t</tr>';
 			});
 
 			return table;
@@ -12209,37 +12913,17 @@ module.exports = function () {
 			});
 			return datos;
 		}
-	}, {
-		key: 'turnar',
-		value: function turnar(html) {
-			$.confirm({
-				title: 'Seleccione Areas a Turnar',
-				content: html,
-				icon: 'fa fa-address-book',
-				type: 'blue',
-				columnClass: 'col-md-11 col-md-offset-1',
-				draggable: false,
-				buttons: {
-					confirm: {
-						text: 'Aceptar',
-						btnClass: 'btn-primary',
-						action: function action() {
-							var areas = [];
-							$("input:checkbox:checked").each(function () {
-								areas.push($(this).val());
-							});
-							$('input#idTurnado').val(areas);
-						}
-					}
-				}
-
-			});
-		}
 	}]);
 
 	return _class;
 }();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42)))
+
+/***/ }),
+/* 384 */
+/***/ (function(module, exports) {
+
+module.exports = "<table class=\"table table-hover\">\r\n    <thead>\r\n        <th>Tipo</th>\r\n        <th>Enviado Por:</th>\r\n        <th>Fecha</th>\r\n        <th>Hora</th>\r\n        <th>Comentario</th>\r\n        <th>Archivo</th>\r\n    </thead>\r\n    <tbody>\r\n        :tbody:\r\n    </tbody>\r\n</table>";
 
 /***/ })
 /******/ ]);

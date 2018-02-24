@@ -22,6 +22,7 @@ include_once '/../routes/oficios/diversos.php';
 /*----------Documentos---------------------*/
 
 include_once '/../routes/documentos/direccion.php';
+include_once '/../routes/documentos/directores.php';
 
 
 

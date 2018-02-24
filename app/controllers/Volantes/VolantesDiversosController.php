@@ -78,6 +78,9 @@ class volantesDiversosController extends Template {
 
     public function save(array $data,$file,$app){
         
+
+        $base = new BaseController();
+
         $data['estatus'] =  'ACTIVO';
         $valida = $this->validate($data);
         $duplicate = $this->duplicate($data);
@@ -129,7 +132,7 @@ class volantesDiversosController extends Template {
 
                 foreach ($areas as $key => $value) {
                     
-                    $datos_director_area = BaseController::get_data_area($value);
+                    $datos_director_area = $base->get_data_area($value);
 
                     $idUsuario = $datos_director_area[0]['idUsuario'];
                 
@@ -152,7 +155,7 @@ class volantesDiversosController extends Template {
 
                 if(!empty($nombre_file)){
     
-                $nombre_final = BaseController::upload_file_areas($file,$max);
+                $nombre_final = $base->upload_file_areas($file,$max);
 
                     Volantes::find($max)->update([
                         'anexoDoc' => $nombre_final,
@@ -165,7 +168,7 @@ class volantesDiversosController extends Template {
 
                 $this->notificaciones($areas,$data);
                 $this->notificaciones_varios($areas,$data);
-                $success = BaseController::success();
+                $success = $base->success();
                 echo json_encode($success);
 
 
@@ -206,6 +209,9 @@ class volantesDiversosController extends Template {
     }
 
     public function update(array $data, $app) {
+
+        $base = new BaseController();
+
         $id = $data['idVolante'];
         
         $valida = $this->validate_update($data);
@@ -262,7 +268,7 @@ class volantesDiversosController extends Template {
 
             $this->notificaciones($res,$data);
             $this->notificaciones_varios($res,$data);
-            $success = BaseController::success();
+            $success = $base->success();
             echo json_encode($success);
         
 
@@ -313,7 +319,7 @@ class volantesDiversosController extends Template {
         $res = [];
         $final = [];
 
-        $res[1] = ValidateController::alphaNumeric($data['numDocumento'],'numDocumento',20);
+        $res[1] = ValidateController::alphaNumeric($data['numDocumento'],'numDocumento',30);
         $res[2] = ValidateController::alphaNumeric($data['fDocumento'],'fDocumento',10);
         $res[3] = ValidateController::alphaNumeric($data['fRecepcion'],'fRecepcion',10);
         $res[4] = ValidateController::alphaNumeric($data['hRecepcion'],'hRecepcion',5);
@@ -386,8 +392,10 @@ class volantesDiversosController extends Template {
 
 
     public function notificaciones($areas, $data) {
+
+        $base = new BaseController();
         
-        $nombre = BaseController::get_nombre_subDocumento($data['idSubTipoDocumento']);
+        $nombre = $base->get_nombre_subDocumento($data['idSubTipoDocumento']);
 
         foreach ($areas as $key => $value) {
         
@@ -395,35 +403,37 @@ class volantesDiversosController extends Template {
 
             if(!empty($rpe)){
 
-                $datos_boss = BaseController::get_usrId($rpe);
+                $datos_boss = $base->get_usrId($rpe);
             
                 $mensaje = 'Mensaje enviado a: '.$datos_boss['nombre'].
                     "\nHas recibido un ".$nombre.
                     "\nCon el folio: ".$data['folio'];
                     
-                BaseController::notificaciones($datos_boss['idUsuario'],$mensaje);
+                $base->notificaciones($datos_boss['idUsuario'],$mensaje);
             }
         }
     }
 
     public function notificaciones_varios($areas,$data){
 
-            $nombre = BaseController::get_nombre_subDocumento($data['idSubTipoDocumento']);
+        $base = new BaseController();
+
+        $nombre = $base->get_nombre_subDocumento($data['idSubTipoDocumento']);
             
         foreach ($areas as $key => $value) {
             
             $rpe = $this->get_usrid_boss_area($areas[$key]);
 
-            $datos_boss = BaseController::get_usrId($rpe);
+            $datos_boss = $base->get_usrId($rpe);
 
-            $users = BaseController::get_users_notifica($rpe);
+            $users = $base->get_users_notifica($rpe);
             
             $mensaje = 'Mensaje enviado a: '.$datos_boss['nombre'].
                     "\nHas recibido un un ".$nombre.
                     "\nCon el folio: ".$data['folio'];
 
             foreach ($users as $index => $el) {
-                BaseController::notificaciones($users[$index]['idUsuario'],$mensaje);
+                $base->notificaciones($users[$index]['idUsuario'],$mensaje);
             }
         }
          

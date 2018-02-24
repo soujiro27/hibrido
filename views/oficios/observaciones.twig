@@ -21,7 +21,7 @@
         </li>
         {% if cedula %}
           <li>
-            <a href="/SIA/juridico/{{ ruta }}/Cedula/{{ id }}">Cedula</a>
+            <a href="/SIA/juridico/{{ ruta }}/cedula/create/{{ id }}">Cedula</a>
           </li>
         {% endif %}
       </ul>
@@ -42,12 +42,14 @@
     </thead>
     <tbody>
         {% for observacion in observaciones %}
+          {% autoescape 'html' %} 
             <tr data-id="{{observacion.idObservacionDoctoJuridico}}">
                 <td>{{ observacion.pagina }}</td>
                 <td>{{ observacion.parrafo }}</td>
-                <td>{{ observacion.observacion }}</td>
+                <td>{{ observacion.observacion|raw }}</td>
                 <td>{{ observacion.estatus }}</td>
             </tr>
+          {% endautoescape %}
         {% endfor %}
     </tbody>
 </table>

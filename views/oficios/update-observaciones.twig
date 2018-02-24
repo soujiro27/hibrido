@@ -1,7 +1,7 @@
 {% extends 'layoutForm.twig' %}
 
 {% block btnHeader %}
-    <a  href ="/SIA/juridico/{{ruta}}/Observaciones/{{ obsv.idVolante }}" class="btn btn-info btn-color" role="button" id="add-btn-observaciones" data-volante="{{ obsv.idVolante }}">
+    <a  href ="/SIA/juridico/{{ruta}}/observaciones/{{ obsv.idVolante }}" class="btn btn-info btn-color" role="button" id="add-btn-observaciones" data-volante="{{ obsv.idVolante }}">
         Mostrar Observaciones
     </a>
 {% endblock %}
@@ -33,7 +33,7 @@
 
 {% block form %}
 
-<form class="form update-observaciones" id="Observaciones-update" method="POST" data-ruta="Irac">
+<form class="form update-observaciones" id="Observaciones-update" method="POST" data-ruta="{{ ruta }}">
     <div>
         <div class="form-group pagina row">
             <label for="text" class="col-lg-2">Pagina</label>
@@ -84,7 +84,7 @@
         <div class="envio">
             <div class="form-group send">
                 <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
-                <button class="btn btn-danger" id="cancelar" data-ruta="Irac">Cancelar</button>
+                <button class="btn btn-danger" id="cancelar" data-ruta="{{ ruta }}">Cancelar</button>
             </div>
         </div>
     </form>

@@ -26,7 +26,7 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 	})->conditions(array('id' => '[0-9]{1,4}'));
 
 	
-	$app->get('/Ifa/Observaciones/:id',function($id) use ($controller,$app){
+	$app->get('/Ifa/observaciones/:id',function($id) use ($controller,$app){
 		$controller->observaciones($id);
 	});
 
@@ -50,7 +50,7 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 	});
 
 
-	$app->post('/Ifa/Observaciones/create',function() use ($controller,$app){
+	$app->post('/Ifa/observaciones/create',function() use ($controller,$app){
 		$controller->save_observaciones($app->request->post(),$app);
 	});
 

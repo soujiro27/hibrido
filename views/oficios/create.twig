@@ -9,17 +9,24 @@
           <a href="/SIA/juridico/{{ ruta }}/historial/{{ id }}">Respuestas</a>      
         </li>
         {% if cedula %}
+          {% if ruta != 'confrontasJuridico' and ruta != 'turnos' %}
+            <li>
+              <a href="/SIA/juridico/{{ ruta }}/observaciones/{{ id }}">Observaciones</a>
+            </li>
           <li>
-            <a href="/SIA/juridico/{{ ruta }}/Observaciones/{{ id }}">Observaciones</a>
+            <a href="/SIA/juridico/{{ ruta }}/cedula/create/{{ id }}">Cedula</a>
           </li>
-          <li>
-            <a href="/SIA/juridico/{{ ruta }}/Cedula/{{ id }}">Cedula</a>
-          </li>
-        {% endif %}
-        {% if ruta=='confrontasJuridico' %}
+          {% endif %}
+
+          {% if ruta == 'confrontasJuridico' %}
+
             <li>
             <a href="/SIA/juridico/{{ ruta }}/cedula/create/{{ id }}">Cedula</a>
           </li>
+
+          {% endif %}
+          
+
         {% endif %}
       </ul>
     </div>

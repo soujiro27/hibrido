@@ -1,0 +1,119 @@
+
+{% extends 'layoutForm.twig' %}
+
+{% block title %}
+  <div class="header-menu-oficios">
+    <button class="btn btn-info" id="menu-oficios"><i class="fa fa-th-list"></i></button>
+    <span>Respuestas</span>
+    <div class="menu-oficios">
+      <ul>
+        <li>
+          <a href="/SIA/juridico/{{ ruta }}/{{ id }}">Asignacion</a>      
+        </li>
+        {% if cedula %}
+          <li>
+            <a href="/SIA/juridico/{{ ruta }}/observaciones/{{ id }}">Observaciones</a>
+          </li>
+          <li>
+            <a href="/SIA/juridico/{{ ruta }}/cedula/create/{{ id }}">Cedula</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+    
+    
+  </div>
+{% endblock %}
+
+{% block form %}
+
+<form class="form" method="post" data-ruta="DocumentosDiversos" id="insert-cedula-plantilla">
+    <input type="hidden" name="idVolante" value="{{ id }}">
+    
+    <div class="form-group numFolio row">
+        <label for="numFolio" class="col-lg-2">Numero de Folio</label>
+        <input  
+            class="form-control col-lg-2" 
+            type="text" 
+            name="numFolio" 
+            placeholder="Numero de Folio" 
+            maxlength="20"
+        />
+    </div>
+
+    {% if tipo != 'NOTA' %}
+    <div class="form-group asunto row">
+        <label for="asunto" class="col-lg-2">Asunto</label>
+        <input 
+            class="form-control col-lg-2" 
+            type="text" 
+            name="asunto" 
+            placeholder="Asunto" 
+            maxlength="50"
+        />
+    </div>
+    {% endif %}
+    
+    <div class="form-group fOficio row">
+        <label for="fOficio" class="col-lg-2">Fecha Documento</label>
+        <input  
+            type="text" 
+            name="fOficio" 
+            class=" form-control fechaInput col-lg-2"
+            maxlength="10" 
+        />
+    </div>
+
+    <div class="form-group siglas row">
+        <label for="siglas" class="col-lg-2">Siglas</label>
+        <input type="text" name="siglas" placeholder="siglas" id="siglas" class="form-control col-lg-2">
+        <input type="hidden" name="internos" id="internos">
+        <input type="hidden" name="externos" id="externos">
+        <input type="hidden" name="idPuestoJuridico" id="puesto">
+    </div>
+
+    {% if tipo == 'NOTA' %}
+        <div class="form-group puesto row">
+            <label for="puesto" class="col-lg-2">De:</label>
+            <button class="btn btn-info col-lg-2" id="modalPuestoJuridico">Añadir</button>
+        </div>
+    {% endif %}
+    <div class="form-group row">
+        <label for="siglas" class="col-lg-2">Copia Internos</label>
+        <button class="btn btn-info col-lg-2" id="modalInternos">Añadir</button>
+    </div>
+    <div class="form-group row">
+        <label for="siglas" class="col-lg-2">Copia Externos</label>
+        <button class="btn btn-info col-lg-2" id="modalExternos">Añadir</button>
+    </div>
+    <div class="form-group row">
+        <label for="siglas" class="col-lg-2">Espacios en Blanco</label>
+        <input type="number" class="col-lg-2 form-control" required value="0" name="espacios">
+    </div>
+    <div class="form-group row">
+        <label for="numFolio" class="col-lg-2">Texto</label>
+        <textarea name="texto" id="ckeditor" placeholder="Texto" class="col-lg-10" rows="3"></textarea>
+
+    </div>
+    <div class="form-group send">
+        <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
+        <button class="btn btn-danger btn-sm" id="cancelar">Cancelar</button>
+    </div>
+</form>
+
+  
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

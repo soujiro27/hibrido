@@ -1,72 +1,148 @@
+
 {% extends 'layoutForm.twig' %}
-{% block title %}Añadir Registro{% endblock %}
-{% block btnHeader %}
-    <a id="addRegister" href=" /SIA/juridico/public/Confronta.php?param1={{ confrontas.idVolante }}" class="btn btn-warning btn-add" role="button" target="_blank">
-        Imprimir Cedula
-    </a>
-{% endblock %}
-{% block form %}
+{% block title %}
+  <div class="header-menu-oficios">
+    <button class="btn btn-info" id="menu-oficios"><i class="fa fa-th-list"></i></button>
+    <span>Actualizar Cedula</span>
+    <div class="menu-oficios">
+      <ul>
+        <li>
+          <a href="/SIA/juridico/{{ ruta }}/historial/{{ id }}">Respuestas</a>      
+        </li>
+        {% if cedula %}
+          {% if ruta != 'confrontasJuridico' and ruta != 'turnos' %}
+            <li>
+              <a href="/SIA/juridico/{{ ruta }}/observaciones/{{ id }}">Observaciones</a>
+            </li>
+          <li>
+            <a href="/SIA/juridico/{{ ruta }}/cedula/create/{{ id }}">Cedula</a>
+          </li>
+          {% endif %}
 
-    {% if err %}
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>AVISO!</strong> {{ err }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    {% endif %}
+          {% if ruta == 'confrontasJuridico' %}
 
-    <form class="form" id="confrontasJuridico" method="POST" action="/SIA/juridico/confrontasJuridico/update" data-ruta="confrontasJuridico">
-        {% if nota=='SI' %}
-            <div class="group-nota ">
-                <div class="form-group notaInformativa row">
-                    <label for="notaInformativa" class="col-lg-2">nota Informativa</label>
+            <li>
+            <a href="/SIA/juridico/{{ ruta }}/cedula/create/{{ id }}">Cedula</a>
+          </li>
 
-                    <input class="form-control col-lg-2" id="notaInformativa" type="text" placeholder="nota Informativa" name="notaInformativa" value="{{ confrontas.notaInformativa }}"/>
-                </div>
-            </div>
+          {% endif %}
+          
+
         {% endif %}
-        <div class="group-datos">
-            <div class="form-group nombre row">
-                <label for="nombre" class="col-lg-2">Nombre</label>
-                <input class="form-control col-lg-2" id="nombre" type="text" placeholder="Nombre" required="" pattern="[A-Za-z].{1,49}" name="nombreResponsable" title="Formato Incorrecto" value="{{ confrontas.nombreResponsable }}"/>
+      </ul>
+    </div>
+    
+    
+  </div>
+{% endblock %}
+
+
+{% block form %}
+<div class="row">
+    <div class="col-lg-5">
+        <form class="form" id="confrontasJuridico-update" data-ruta="confrontasJuridico">
+            <input id="idVolante" type="hidden" name="idVolante" value="{{ idVolante }}" />
+            {% if nota[0].notaConfronta == 'SI' %}       
+                <div class="form-group row">
+                    <label for="notaInformativa" class="col-lg-3">nota Informativa</label>
+                    <input class="form-control col-lg-9" 
+                        type="text" 
+                        name="notaInformativa" 
+                        value="{{ documentos[0].notaInformativa }}"
+                        maxlength="50" 
+                    />
+                </div>
+            {% endif %}
+                
+            <div class="form-group row">
+                <label for="nombre" class="col-lg-3">Nombre</label>
+                <input class="form-control col-lg-9" 
+                    type="text" 
+                    placeholder="Nombre"
+                    name="nombreResponsable"  
+                    maxlength="50" 
+                    value="{{ documentos[0].nombreResponsable }}"/>
             </div>
-            <div class="form-group cargo row">
-                <label for="cargo" class="col-lg-2">Cargo</label>
-                <input class="form-control col-lg-2" id="cargo" type="text" placeholder="cargo" required="" pattern="[A-Za-z].{1,49}" name="cargoResponsable" title="Formato Incorrecto" value="{{ confrontas.cargoResponsable }}"/>
-            </div>
-            <div class="form-group fConfronta row">
-                <label for="fConfronta" class="col-lg-2">Fecha Confronta</label>
-                <input class="form-control fechaInput col-lg-2" id="fConfronta" type="text" name="fConfronta" required="" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" value="{{ confrontas.fConfronta }}" />
-            </div>
-            <div class="form-group hConfronta row">
-                <label for="hConfronta" class="col-lg-2">Hora de Confronta</label>
-                <input class="form-control col-lg-2" id="hConfronta" type="time" required="" pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}" placeholder="00:00" name="hConfronta" title="Formato Incorrecto" value="{{ confrontas.hConfronta | hora }}" />
-            </div>
-            <div class="form-group fecha row">
-                <label for="fecha" class="col-lg-2">Fecha Documento</label>
-                <input class="form-control fechaInput col-lg-2" id="fOficio" type="text" name="fOficio" required="" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" value="{{ confrontas.fOficio }}"/>
-            </div>
-        </div>
-        <div class="group-firmas">
-            <div class="form-group siglas row">
-                <label for="siglas" class="col-lg-2">Siglas</label>
-                <input class="form-control col-lg-2" id="siglas" type="text" placeholder="siglas" required="" name="siglas" title="Nombre Incorrecto o Caracteres maximos" value="{{ confrontas.siglas }}"/>
-            </div>
-            <div class="form-group numFolio row">
-                <label for="numFolio" class="col-lg-2">Numero Documento</label>
-                <input class="form-control col-lg-2" id="numFolio" type="text" name="numFolio" required="" value="{{ confrontas.numFolio }}"/>
-                <input id="idVolante" type="hidden" name="idVolante" value="{{ confrontas.idVolante }}" />
-                <input type="hidden" name="idConfrontaJuridico" value="{{ confrontas.idConfrontaJuridico }}">
+                
+            <div class="form-group row">
+                <label for="cargo" class="col-lg-3">Cargo</label>
+                <input 
+                    class="form-control col-lg-9" 
+                    type="text" 
+                    name="cargoResponsable" 
+                    maxlength="50" 
+                    value="{{ documentos[0].cargoResponsable }}"
+                />
             </div>
 
-        </div>
-        <div class="form-group send">
-            {% if close %}
+            <div class="form-group row">
+                <label for="fConfronta" class="col-lg-3">Fecha Confronta</label>
+                <input 
+                    class="form-control fechaInput col-lg-9" 
+                    type="text" 
+                    name="fConfronta" 
+                    pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" 
+                    value="{{ documentos[0].fConfronta }}" 
+                    maxlength="10" 
+                />
+            </div>
+
+            <div class="form-group row">
+                <label for="hConfronta" class="col-lg-3">Hora de Confronta</label>
+                <input 
+                    class="form-control col-lg-9" 
+                    type="time" 
+                    pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}" 
+                    name="hConfronta" 
+                    value="{{ documentos[0].hConfronta | hora }}" />
+            </div>
+
+            <div class="form-group fecha row">
+                <label for="fecha" class="col-lg-3">Fecha Documento</label>
+                <input 
+                    class="form-control fechaInput col-lg-9" 
+                    type="text" name="fOficio" 
+                    pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" 
+                    value="{{ documentos[0].fOficio }}"
+                    maxlength="10" 
+                />
+            </div>
+            <div class="form-group row">
+                <label for="siglas" class="col-lg-3">Siglas</label>
+                <input 
+                    class="form-control col-lg-9" 
+                    type="text" 
+                    name="siglas"  
+                    maxlength="50" 
+                    value="{{ documentos[0].siglas }}"
+                />
+            </div>
+
+            <div class="form-group row">
+                <label for="numFolio" class="col-lg-3">Numero Documento</label>
+                <input 
+                    class="form-control col-lg-9" 
+                    type="text" name="numFolio" 
+                    value="{{ documentos[0].numFolio }}"
+                    maxlength="50" 
+                />
+                <input 
+                    type="hidden" 
+                    name="idConfrontaJuridico" 
+                    value="{{ documentos[0].idConfrontaJuridico }}" 
+                />
+            </div>
+                
+            <div class="form-group send">
                 <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
-            {% endif %}
-            <button class="btn btn-danger" id="cancelar">Cancelar</button>
-        </div>
-    </form>
+                <button class="btn btn-danger" id="cancelar" data-ruta="confrontasJuridico">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-lg-7">
+        <iframe src="/SIA/hibrido/cedulas/Confronta.php?param1={{ idVolante }}"></iframe>
+    </div>    
+</div>
 
 {% endblock %}

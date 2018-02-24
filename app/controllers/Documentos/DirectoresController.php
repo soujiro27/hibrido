@@ -12,13 +12,18 @@ use App\Models\Documentos\TurnadosJuridico;
 use App\Models\Documentos\AnexosJuridico;
 
 
-class DireccionController extends Template {
+class DirectoresController extends Template {
 
     private $modulo = 'Documentos';
     private $filejs = 'Documentos';
-    private $ruta = 'DocumentosGral';
+    private $ruta = 'Documentos';
  
     public function index(array $data) {
+
+        $id = $_SESSION['idEmpleado'];
+        $areas = PuestosJuridico::where('rpe','=',"$id")->get();
+        $area = $areas[0]['idArea'];
+
 
         $now = Carbon::now('America/Mexico_City')->format('Y');
         $campo = 'Folio';
@@ -34,6 +39,7 @@ class DireccionController extends Template {
             ->join('sia_VolantesDocumentos as vd','vd.idVolante','=','sia_volantes.idVolante')
             ->join('sia_catSubTiposDocumentos as sub','sub.idSubTipoDocumento','=','vd.idSubTipoDocumento')
             ->join('sia_TurnadosJuridico as t','t.idVolante','=','sia_volantes.idVolante')
+            ->where('t.idAreaRecepcion','=',"$area")
             ->where('t.idTipoTurnado','E')
             ->whereYear('sia_Volantes.fRecepcion','=',"$now")
             ->orderBy("$campo","$tipo")
@@ -106,7 +112,7 @@ class DireccionController extends Template {
     public function notificaciones($areas, $data) {
         
         $base = new BaseController();
-
+        
         $nombre = $base->get_nombre_subDocumento($data['idSubTipoDocumento']);
 
         foreach ($areas as $key => $value) {
@@ -149,7 +155,7 @@ class DireccionController extends Template {
 
         $base = new BaseController();
 
-        $nombre = BaseController::get_nombre_subDocumento($data['idSubTipoDocumento']);
+        $nombre = $base->get_nombre_subDocumento($data['idSubTipoDocumento']);
             
         foreach ($areas as $key => $value) {
             

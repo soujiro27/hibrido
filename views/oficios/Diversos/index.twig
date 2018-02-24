@@ -1,6 +1,11 @@
 {% extends 'layoutTable.twig' %}
+
 {% block order %}
-    Lista de Registro Iracs
+    <div class="row">
+        <button class="btn btn-info col-lg-12" id="btn-order" data-ruta="{{ ruta }}">
+            <i class="fa fa-signal"></i> Ordernar
+        </button>
+    </div>
 {% endblock %}
 
 
@@ -15,7 +20,6 @@
         <th>Asunto</th>
         <th>Caracter</th>
         <th>Accion</th>
-        <th>Auditoria</th>
         <th>Desfazado</th>
         <th>Estado</th>
 
@@ -31,7 +35,6 @@
                 <td>{{ irac.asunto }}</td>
                 <td>{{ irac.caracter }}</td>
                 <td>{{ irac.accion }}</td>
-                <td>{{ irac.clave }}</td>
                 <td>{{ irac.extemporaneo }}</td>
                 {% if irac.idEstadoTurnado == 'CERRADO' %}
                     <td class="cerrado">{{ irac.idEstadoTurnado }}</td>

@@ -71,7 +71,9 @@ class IracController extends Template {
         $base = new BaseController();
         $cedula = $base->rol_cedulas('IRAC');
 
-        $personas = $this->load_personal($id);
+        $baseOficios = new BaseOficiosController();
+
+        $personas = $baseOficios->load_personal($id);
         echo $this->render('Oficios/create.twig',[
 			'sesiones' => $_SESSION,
 			'modulo' => $this->modulo,
@@ -96,8 +98,9 @@ class IracController extends Template {
     public function createDocumentos($id){
 
         $base = new BaseController();
+        $baseOficios = new BaseOficiosController();
 
-        $personas = $this->load_personal($id);
+        $personas = $baseOficios->load_personal($id);
         $cedula = $base->rol_cedulas('IRAC');
 
          echo $this->render('Oficios/documentos.twig',[
@@ -111,23 +114,6 @@ class IracController extends Template {
         ]);
     }
 
-
-
-
-    public function load_personal($id){
-
-        $turnado_volantes = TurnadosJuridico::select('idAreaRecepcion')->where('idVolante',"$id")->get();
-        $idTurnado = $turnado_volantes[0]['idAreaRecepcion'];
-
-        $rpe = $_SESSION['idEmpleado'];
-
-        $puestos = PuestosJuridico::where('idArea',"$idTurnado")
-                                    ->where('rpe','<>',"$rpe")
-                                    ->get();
-        return $puestos;
-
-    }
-
     public function observaciones($id){
 
         
@@ -135,7 +121,7 @@ class IracController extends Template {
         $cedula = $base->rol_cedulas('IRAC');
         $observaciones = Observaciones::where('idVolante',"$id")->orderBy('idObservacionDoctoJuridico','DESC')->get();
 
-         echo $this->render('Oficios/Irac/Observaciones.twig',[
+         echo $this->render('Oficios/Observaciones.twig',[
             'sesiones' => $_SESSION,
             'modulo' => $this->modulo,
             'id' => $id,
@@ -152,7 +138,7 @@ class IracController extends Template {
         $base = new BaseController();
         $cedula = $base->rol_cedulas('IRAC');
 
-         echo $this->render('Oficios/Irac/create-observaciones.twig',[
+         echo $this->render('Oficios/create-observaciones.twig',[
             'sesiones' => $_SESSION,
             'modulo' => $this->modulo,
             'id' => $id,
@@ -165,39 +151,8 @@ class IracController extends Template {
 
     public function save_observaciones(array $data, $app){
 
-        $data['estatus'] = 'ACTIVO';
-        $id = $data['idVolante'];
-
-        $base = new BaseController();
-        $validate = $this->validate_observaciones($data,true);
-
-        $vd = VolantesDocumentos::where('idVolante',"$id")->get();
-        $subTipo = $vd[0]['idSubTipoDocumento'];
-        $cveAuditoria = $vd[0]['cveAuditoria'];
-
-        if(empty($validate)){
-
-            $observacion = new Observaciones([
-                'idVolante' => $id,
-                'idSubTipoDocumento' => $subTipo,
-                'cveAuditoria' => $cveAuditoria,
-                'pagina' => $data['pagina'],
-                'parrafo' => $data['parrafo'],
-                'observacion' => $data['observacion'],
-                'usrAlta' => $_SESSION['idUsuario'],
-                'estatus' => $data['estatus'],
-                'fAlta' => Carbon::now('America/Mexico_City')->format('Y-m-d H:i:s')
-            ]);
-
-            $observacion->save();
-            $success = $base->success();
-            echo json_encode($success);
-
-
-        } else {
-
-            echo json_encode($validate);
-        }
+        $baseOficios = new BaseOficiosController();
+        $baseOficios->save_observaciones($data,$app);
 
     }
 
@@ -207,7 +162,7 @@ class IracController extends Template {
         $cedula = $base->rol_cedulas('IRAC');
         $observacion = Observaciones::find("$id");
         
-        echo $this->render('Oficios/Irac/update-observaciones.twig',[
+        echo $this->render('Oficios/update-observaciones.twig',[
             'sesiones' => $_SESSION,
             'modulo' => $this->modulo,
             'filejs' => $this->filejs,
@@ -221,68 +176,12 @@ class IracController extends Template {
 
     public function update_observaciones(array $data, $app) {
 
-        $validate = $this->validate_observaciones($data,false);
-        $id = $data['idObservacionDoctoJuridico'];
-        $base = new BaseController();
-
-        if(empty($validate)){
-
-            Observaciones::find($id)->update([
-                'pagina' => $data['pagina'],
-                'parrafo' => $data['parrafo'],
-                'observacion' => $data['observacion'],
-                'usrModificacion' => $_SESSION['idUsuario'],
-                'estatus' => $data['estatus'],
-                'fModificacion' => Carbon::now('America/Mexico_City')->format('Y-m-d H:i:s')
-
-            ]);
-
-            $success = $base->success();
-            echo json_encode($success);
-
-
-        } else {
-
-            echo json_encode($validate);
-        }
+      
+        $baseOficios = new BaseOficiosController();
+        $baseOficios->update_observaciones($data,$app);
 
     }
-
-
-    public function validate_observaciones(array $data, $tipo){
-
-        $validate = new ValidateController();
-
-        $res = [];
-        $final = [];
-
-
-
-        
-        $res[0] = $validate->alphaNumeric($data['pagina'],'pagina',50);
-        $res[1] = $validate->alphaNumeric($data['parrafo'],'parrafo',50);
-        $res[2] = $validate->alphaNumeric($data['observacion'],'observacion',350);
-        $res[3] = $validate->string($data['estatus'],'estatus',10);
-
-        if($tipo){
-            
-            $res[4] = $validate->number($data['idVolante'],'idVolante',true);
-        
-        } else {
-
-            $res[4] = $validate->number($data['idObservacionDoctoJuridico'],'idObservacionDoctoJuridico',true);    
-        }
-
-
-        foreach ($res as $key => $value) {
-            if(!empty($value)){
-                array_push($final,$value);
-            }
-        }
-
-
-        return $final;
-    }
+   
 
     public function createCedula($id){
 
@@ -383,7 +282,7 @@ class IracController extends Template {
                 'siglas' => $data['siglas'],
                 'numFolio' => $data['numFolio'],
                 'usrModificacion' => $_SESSION['idUsuario'],
-                'fModificacion' => Carbon::now('America/Mexico_City')->format('Y-m-d H:i:s')
+                'fModificacion' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s')
             ]);
 
             Espacios::where('idVolante',"$idVolante")->update([

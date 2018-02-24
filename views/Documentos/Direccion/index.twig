@@ -3,14 +3,14 @@
 
 {% block order %}
      <div class="row">
-        <button class="btn btn-info col-lg-12" id="btn-order" data-ruta="DocumentosGral">
+        <button class="btn btn-info col-lg-12" id="btn-order" data-ruta="{{ ruta }}">
             <i class="fa fa-signal"></i> Ordernar
         </button>
     </div>
 {% endblock %}
 
 {% block table %}
-    <table class="table table-hover" id="main-table-files" data-ruta="DocumentosGral">
+    <table class="table table-hover" id="main-table-files" data-ruta="{{ ruta }}">
         <tr>
             <th class="hidden">id</th>
             <th scope="col">Folio</th>
@@ -23,7 +23,7 @@
 
         </tr>
         {% for documento in documentos %}
-            <tr data-ruta="DocumentosGral">
+            <tr data-ruta="{{ ruta }}">
 
                 <td class="hidden">{{ documento.idVolante }}</td>
                 <td>{{ documento.folio }} - {{ documento.subFolio }}</td>
@@ -31,9 +31,33 @@
                 <td>{{ documento.nombre }}</td>
                 <td>{{ documento.idAreaRecepcion }}</td>
                 {% if documento.anexoDoc | length < 1 %}
-                    <td class="sa">Sin Asignar</td>
+                    <td class="sa">-----</td>
                 {% else %}
-                    <td>{{ documento.anexoDoc }}</td>
+            
+                    {% if documento.anexoDoc | extension == 'xlsx' or documento.anexoDoc | extension == 'xls'  %}
+
+                        <td class="file-excel"><img src="/SIA/hibrido/public/img/005-excel.png"></td>
+                    
+                    {% elseif documento.anexoDoc | extension == 'docx' or documento.anexoDoc | extension == 'doc'  %}
+                        
+                        <td class="file-excel"><img src="/SIA/hibrido/public/img/004-word.png"></td>
+
+                    {% elseif documento.anexoDoc | extension == 'pdf' %}
+                        
+                        <td class="file-excel"><img src="/SIA/hibrido/public/img/003-pdf.png"></td>
+
+                    {% elseif documento.anexoDoc | extension == 'png' %}
+                        
+                        <td class="file-excel"><img src="/SIA/hibrido/public/img/002-png.png"></td>
+
+                    {% elseif documento.anexoDoc | extension == 'jpg' %}
+                        
+                        <td class="file-excel"><img src="/SIA/hibrido/public/img/001-jpg.png"></td>
+
+
+
+                    {% endif %}
+
                 {% endif %}
                 <td>{{ documento.fRecepcion}}</td>
                 {% if documento.idEstadoTurnado == 'CERRADO' %}

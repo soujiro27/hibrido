@@ -21,6 +21,14 @@ class template {
             return substr($cadena,0,-11);
 
         }));
+
+
+        $this->templateEngine->addFilter(new \Twig_SimpleFilter('extension',function($cadena){
+            
+            $extension = explode('.',$cadena);
+            return $extension[1];
+
+        }));
     }
 
     public function render($fileName, $data = []) {

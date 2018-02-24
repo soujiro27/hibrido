@@ -1,0 +1,121 @@
+
+{% extends 'layoutForm.twig' %}
+
+{% block form %}
+<div class="row">
+<div class="col-lg-6">
+    
+
+<form class="form" method="post" data-ruta="DocumentosDiversos" id="update-cedula-plantilla">
+    <input type="hidden" name="idVolante" value="{{ plantillas[0].idVolante }}">
+    
+    <div class="row row-form">    
+        
+        <div class="col-lg-4" >
+            <label for="numFolio" class="form-control-label">Numero de Folio</label>
+            <input 
+                type="text" 
+                class="form-control" 
+                name="numFolio" 
+                value="{{ plantillas[0].numFolio }}" 
+                maxlength="20" 
+            />
+        </div>
+
+        <div class="col-lg-4">
+            <label for="fOficio" class="form-control-label">Fecha Documento</label>
+            <input type="text" class="form-control fechaInput" name="fOficio" placeholder="Fecha Oficio" id="fOficio" value="{{ plantillas[0].fOficio }}">
+        </div>
+        
+        <div class="col-lg-4">
+            <label for="siglas" class="form-control-label">Siglas</label>
+            <input type="text" class="form-control" name="siglas" placeholder="siglas" id="siglas" value="{{ plantillas[0].siglas }}">
+            <input type="hidden" name="idRemitente" value="{{ plantillas[0].idRemitente }}">
+            <input type="hidden" name="idPlantillaJuridico" value="{{ plantillas[0].idPlantillaJuridico }}">
+            <input type="hidden" name="internos" id="internos" value="{{ internos }}">
+            <input type="hidden" name="externos" id="externos" value="{{ externos }}">
+            <input type="hidden" name="idPuestoJuridico" id="puesto" value="{{ plantillas[0].idPuestoJuridico }}">
+        </div>
+
+
+    </div>
+    <div class="row row-form">
+
+        <div class="col-lg-4">
+            <label for="siglas" class="form-control-label">Copia Internos</label>
+            <button class="btn btn-info form-control" id="modalInternos">Añadir</button>
+        </div>
+            
+        <div class="col-lg-4">
+                <label for="siglas" class="form-control-label">Copia Externos</label>
+                <button class="btn btn-info form-control" id="modalExternos">Añadir</button>
+        </div>
+            
+        <div class="col-lg-4">
+                <label for="siglas" class="form-control-label">Espacios en Blanco</label>
+                <input type="number" class="form-control" required placeholder="0" name="espacios" value="{{ plantillas[0].espacios }}">
+        </div>
+
+
+    </div>
+    
+
+
+{% if tipo != 'NOTA' %}
+    <div class="form-group">
+        <label for="asunto" class="form-control-label">Asunto</label>
+        <input 
+            type="text" 
+            class="form-control" name="asunto" placeholder="Asunto" id="asunto" value="{{ plantillas[0].asunto }}">
+    </div>
+{% endif %}
+            
+            {% if tipo == 'NOTA' %}
+                <div class="form-group puesto row">
+                    <label for="puesto" class="col-lg-2">De:</label>
+                    <button class="btn btn-info col-lg-2" id="modalPuestoJuridico">Añadir</button>
+                </div>
+            {% endif %}
+            
+            <div class="form-group texto">
+                <label for="numFolio">Texto</label>
+                <textarea name="texto" id="ckeditor" placeholder="Texto">{{ plantillas[0].texto }}</textarea>
+
+            </div>
+            <div class="form-group send">
+              
+                    <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
+              
+                <button class="btn btn-danger btn-sm" id="cancelar" data-ruta="DocumentosDiversos">Cancelar</button>
+            </div>
+        </form>
+</div>
+
+<div class="col-lg-6">
+    {% if tipo == 'OFICIO'  or tipo == 'CIRCULAR' %}
+        <iframe src="/SIA/hibrido/cedulas/Oficiogenerico.php?param={{ plantillas[0].idVolante }}"></iframe>
+    {% else %}
+        <iframe src="/SIA/hibrido/cedulas/Notagenerico.php?param={{ plantillas[0].idVolante }}"></iframe>
+    {% endif %}
+</div>
+
+</div>
+
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

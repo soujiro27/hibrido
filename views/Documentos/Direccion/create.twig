@@ -1,7 +1,7 @@
 {% extends 'layoutForm.twig' %}
 {% block title %}Subir Archivo{% endblock %}
 {% block form %}
-    <form id="documentosJur" class="form" enctype="multipart/form-data" method="POST" data-ruta="DocumentosGral">
+    <form id="documentosJur" class="form" enctype="multipart/form-data" method="POST" data-ruta="{{ ruta }}">
 
         <div class="form-group row">
             <label class="form-control-label col-lg-2" for="documento">Arhivos Asignados</label>
@@ -20,7 +20,7 @@
 
         <div class="form-group send">
             <input class="btn btn-primary" type="submit" value="Guardar"/>
-            <button class="btn btn-danger btn-sm" id="cancelar" data-ruta="DocumentosGral">Cancelar</button>
+            <button class="btn btn-danger btn-sm" id="cancelar" data-ruta="{{ ruta }}">Cancelar</button>
         </div>
     </form>
 {% endblock %}

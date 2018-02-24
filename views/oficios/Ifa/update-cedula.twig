@@ -1,13 +1,5 @@
 
 {% extends 'layoutForm.twig' %}
-
-{% block btnHeader %}
-    <a  href ="/SIA/juridico/{{ruta}}/Observaciones/{{idVolante }}" class="btn btn-info btn-color" role="button" id="add-btn-observaciones" data-volante="{{ idVolante }}">
-        Mostrar Observaciones
-    </a>
-{% endblock %}
-
-
 {% block title %}
   <div class="header-menu-oficios">
     <button class="btn btn-info" id="menu-oficios"><i class="fa fa-th-list"></i></button>
@@ -22,7 +14,7 @@
         </li>
         {% if cedula %}
           <li>
-            <a href="/SIA/juridico/{{ ruta }}/cedula/create/{{ idVolante }}">Cedula</a>
+            <a href="/SIA/juridico/{{ ruta }}/observaciones/{{ idVolante }}">Observaciones</a>
           </li>
         {% endif %}
       </ul>
@@ -78,16 +70,6 @@
                 />
             </div>
 
-            <div class="form-group numFolio row">
-                <label class="form-control-label col-lg-4" for="numFolio">Numero Folio</label>
-                <input 
-                    class="form-control col-lg-6"   
-                    type="text" 
-                    name="numFolio" 
-                    maxlength="20" 
-                    value="{{ documentos[0].numFolio }}"
-                />
-            </div>
 
          <div class="form-group row">
                 <label class="form-control-label col-lg-4">Espacio Observaciones</label>

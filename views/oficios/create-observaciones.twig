@@ -1,7 +1,7 @@
 {% extends 'layoutForm.twig' %}
 
 {% block btnHeader %}
-    <a  href ="/SIA/juridico/{{ruta}}/Observaciones/{{ id }}" class="btn btn-info btn-color" role="button" id="add-btn-observaciones">
+    <a  href ="/SIA/juridico/{{ruta}}/observaciones/{{ id }}" class="btn btn-info btn-color" role="button" id="add-btn-observaciones">
         Mostrar Observaciones
     </a>
 {% endblock %}
@@ -21,7 +21,7 @@
         </li>
         {% if cedula %}
           <li>
-            <a href="/SIA/juridico/{{ ruta }}/Cedula/{{ id }}">Cedula</a>
+            <a href="/SIA/juridico/{{ ruta }}/cedula/create/{{ id }}">Cedula</a>
           </li>
         {% endif %}
       </ul>
@@ -33,7 +33,7 @@
 
 {% block form %}
 
-<form class="form insert-observaciones" id="Observaciones-insert" method="POST" data-ruta="Ifa">
+<form class="form insert-observaciones" id="Observaciones-insert" method="POST" data-ruta="{{ ruta }}">
     <div>
         <div class="form-group pagina row">
             <label for="text" class="col-lg-2">Hoja</label>
@@ -65,7 +65,7 @@
         <div class="envio">
             <div class="form-group send">
                 <input class="btn btn-primary btn-sm" type="submit" value="Guardar"/>
-                <button class="btn btn-danger" id="cancelar" data-ruta="Ifa">Cancelar</button>
+                <button class="btn btn-danger" id="cancelar" data-ruta="{{ ruta }}">Cancelar</button>
             </div>
         </div>
     </form>

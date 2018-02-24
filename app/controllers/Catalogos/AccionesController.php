@@ -46,9 +46,7 @@ class AccionesController extends Template{
 			if(empty($duplicado[0])){
 				$acciones = new Acciones([
 					'nombre' => $data['nombre'],
-					'usrAlta' => $_SESSION['idUsuario'],
-					'estatus' => 'ACTIVO',
-	            	'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s')
+					'usrAlta' => $_SESSION['idUsuario']
 				]);
 
 				$acciones->save();

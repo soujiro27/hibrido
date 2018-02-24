@@ -15,6 +15,7 @@ use App\Models\Documentos\TurnadosJuridico;
 use App\Models\Oficios\Observaciones;
 use App\Models\Oficios\DocumentosSiglas;
 use App\Models\Oficios\Espacios;
+use App\Models\Oficios\Confrontas;
 
 use App\Controllers\ApiController;
 
@@ -23,7 +24,7 @@ class ConfrontasController extends Template {
 	private $modulo = 'confrontasJuridico';
     private $filejs = 'Confronta';
 
-	public function index() {
+	public function index($data) {
 
 		$id = $_SESSION['idEmpleado'];
         $areas = PuestosJuridico::where('rpe','=',"$id")->get();
@@ -68,9 +69,10 @@ class ConfrontasController extends Template {
 	public function create($id) {
         
         $base = new BaseController();
-        $cedula = $base->rol_cedulas('CONFRONTA');
+        $baseOficios = new BaseOficiosController();
+        $cedula = $base->rol_cedulas('NOTA');
 
-        $personas = $this->load_personal($id);
+        $personas = $baseOficios->load_personal($id);
         echo $this->render('Oficios/create.twig',[
             'sesiones' => $_SESSION,
             'modulo' => $this->modulo,
@@ -94,10 +96,12 @@ class ConfrontasController extends Template {
 
     public function createDocumentos($id){
 
-        $base = new BaseController();
 
-        $personas = $this->load_personal($id);
-        $cedula = $base->rol_cedulas('CONFRONTAS');
+        $base = new BaseController();
+        $baseOficios = new BaseOficiosController();
+
+        $personas = $baseOficios->load_personal($id);
+        $cedula = $base->rol_cedulas('NOTA');
 
          echo $this->render('Oficios/documentos.twig',[
             'sesiones' => $_SESSION,
@@ -111,28 +115,13 @@ class ConfrontasController extends Template {
     }
 
 
-
-
-    public function load_personal($id){
-
-        $turnado_volantes = TurnadosJuridico::select('idAreaRecepcion')->where('idVolante',"$id")->get();
-        $idTurnado = $turnado_volantes[0]['idAreaRecepcion'];
-
-        $rpe = $_SESSION['idEmpleado'];
-
-        $puestos = PuestosJuridico::where('idArea',"$idTurnado")
-                                    ->where('rpe','<>',"$rpe")
-                                    ->get();
-        return $puestos;
-
-    }
-
     public function createCedula($id){
 
         $base = new BaseController();
-        $cedula = $base->rol_cedulas('CONFRONTAS');
-        $documentos = DocumentosSiglas::where('idVolante',"$id")->get();
+        $cedula = $base->rol_cedulas('NOTA');
+        $documentos = Confrontas::where('idVolante',"$id")->get();
         $espacios = Espacios::where('idVolante',"$id")->get();
+        $nota = VolantesDocumentos::where('idVolante',"$id")->get();
         
         if($documentos->isEmpty()){
 
@@ -142,7 +131,8 @@ class ConfrontasController extends Template {
                 'filejs' => $this->filejs,
                 'ruta' => $this->modulo,
                 'cedula' => $cedula,        
-                'idVolante' => $id 
+                'idVolante' => $id,
+                'nota' => $nota
             ]);
 
         } else {
@@ -155,10 +145,139 @@ class ConfrontasController extends Template {
                 'cedula' => $cedula,        
                 'documentos' => $documentos,
                 'idVolante' => $id,
-                'espacios' => $espacios
+                'espacios' => $espacios,
+                'nota' => $nota
             ]);
 
         }
+
+    }
+
+    public function save_cedula(array $data){
+
+        $data['estatus'] = 'ACTIVO';
+        $validate = $this->validate_cedula($data,true);
+        $base = new BaseController();
+        
+
+        if(empty($validate)){
+
+            $datos = $this->ceate_array_cedula_confronta($data);
+
+            $datos['usrAlta'] = $_SESSION['idUsuario'];
+            $datos['fAlta'] = Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s');
+            
+            $confronta = new Confrontas($datos);
+            $confronta->save();
+
+            echo json_encode($base->success());            
+
+        } else {
+
+            echo json_encode($validate);
+        }
+
+    }
+
+    public function update_cedula($data,$app){
+
+        $data['estatus'] = 'ACTIVO';
+        $validate = $this->validate_cedula($data,false);
+        $id = $data['idConfrontaJuridico']; 
+
+
+        if(empty($validate)){
+
+
+            $datos = $this->ceate_array_cedula_confronta($data);
+            $datos['usrModificacion'] = $_SESSION['idUsuario'];
+            $datos['fModificacion'] = Carbon::now('America/Mexico_City')->format('Y-m-d H:i:s');
+            
+            Confrontas::find($id)->update($datos);
+
+            $base = new BaseController();
+            echo json_encode($base->success());
+
+        } else {
+
+            echo json_encode($validate);
+        }
+    }
+
+    public function ceate_array_cedula_confronta(array $data){
+
+        $idVolante = $data['idVolante'];
+        $volantes = VolantesDocumentos::where('idVolante',"$idVolante")->get();
+        $nota = $volantes[0]['notaConfronta'];
+
+        $insert = array(
+            'idVolante' => $data['idVolante'],
+            'nombreResponsable' => $data['nombreResponsable'],
+            'cargoResponsable' => $data['cargoResponsable'],
+            'siglas' => $data['siglas'],
+            'hConfronta' => $data['hConfronta'],
+            'fConfronta' => $data['fConfronta'],
+            'fOficio' => $data['fOficio'],
+            'numFolio' => $data['numFolio'],
+        );
+
+        if($nota == 'SI'){
+
+            $insert['notaInformativa'] = $data['notaInformativa'];
+        }
+
+        return $insert;
+
+    }
+
+    public function validate_cedula(array $data,$tipo){
+
+        $idVolante = $data['idVolante'];
+        $volantes = VolantesDocumentos::where('idVolante',"$idVolante")->get();
+        $nota = $volantes[0]['notaConfronta'];
+
+        $validate = new ValidateController();
+
+
+        $res = [];
+        $final = [];
+
+        $res[0] = $validate->string($data['nombreResponsable'],'nombreResponsable',30);
+        $res[1] = $validate->string($data['cargoResponsable'],'cargoResponsable',30);
+        $res[2] = $validate->alphaNumeric($data['fConfronta'],'fConfronta',10);
+        $res[3] = $validate->alphaNumeric($data['hConfronta'],'hConfronta',5);
+        $res[4] = $validate->alphaNumeric($data['fOficio'],'fOficio',10);
+        $res[5] = $validate->alphaNumeric($data['siglas'],'siglas',50);
+        $res[6] = $validate->alphaNumeric($data['numFolio'],'numFolio',50);
+        $res[7] = $validate->string($data['estatus'],'estatus',8);
+
+
+
+
+        if($tipo){
+            
+            $res[8] = $validate->number($data['idVolante'],'idVolante',true);
+        
+        } else {
+
+            $res[8] = $validate->number($data['idConfrontaJuridico'],'idConfrontaJuridico',true);    
+        }
+
+        if($nota == 'SI'){
+
+            $res[9] = $validate->alphaNumeric($data['notaInformativa'],'notaInformativa',20);
+        }
+
+
+        foreach ($res as $key => $value) {
+            if(!empty($value)){
+                array_push($final,$value);
+            }
+        }
+
+
+        return $final;
+
 
     }
 

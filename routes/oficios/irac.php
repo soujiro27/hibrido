@@ -26,7 +26,7 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 	})->conditions(array('id' => '[0-9]{1,4}'));
 
 	
-	$app->get('/Irac/Observaciones/:id',function($id) use ($controller,$app){
+	$app->get('/Irac/observaciones/:id',function($id) use ($controller,$app){
 		$controller->observaciones($id);
 	});
 
@@ -50,12 +50,12 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 	});
 
 
-	$app->post('/Irac/Observaciones/create',function() use ($controller,$app){
+	$app->post('/Irac/observaciones/create',function() use ($controller,$app){
 		$controller->save_observaciones($app->request->post(),$app);
 	});
 
 
-	$app->post('/Irac/Observaciones/update',function() use ($controller,$app){
+	$app->post('/Irac/observaciones/update',function() use ($controller,$app){
 		$controller->update_observaciones($app->request->post(),$app);
 	});
 

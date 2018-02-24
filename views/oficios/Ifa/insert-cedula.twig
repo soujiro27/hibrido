@@ -1,12 +1,6 @@
 
 {% extends 'layoutForm.twig' %}
 
-{% block btnHeader %}
-    <a  href ="/SIA/juridico/{{ruta}}/Observaciones/{{ obsv.idVolante }}" class="btn btn-info btn-color" role="button" id="add-btn-observaciones" data-volante="{{ idVolante }}">
-        Mostrar Observaciones
-    </a>
-{% endblock %}
-
 
 {% block title %}
   <div class="header-menu-oficios">
@@ -22,7 +16,7 @@
         </li>
         {% if cedula %}
           <li>
-            <a href="/SIA/juridico/{{ ruta }}/cedula/create/{{ idVolante }}">Cedula</a>
+            <a href="/SIA/juridico/{{ ruta }}/observaciones/{{ idVolante }}">Observaciones</a>
           </li>
         {% endif %}
       </ul>
@@ -54,18 +48,13 @@
                 />
             </div>
             <div class="form-group firmas row">
-                <label class="form-control-label col-lg-2" for="numFolio">Añadir Firmas</label>
+                <label class="form-control-label col-lg-2" for="modalFirmas">Añadir Firmas</label>
                 <button class="btn btn-info col-lg-2" id="modalFirmas">Firmas</button>
-                <input 
-                    type="hidden" 
-                    name="idPuestosJuridico"        
-                    id="idPuestosJuridico" 
-                    value="{{ datos.idPuestosJuridico }}"
-                />
+               
             </div>
 
             <div class="form-group firmas row">
-                <label class="form-control-label col-lg-2" for="numFolio">Promocion de Acciones</label>
+                <label class="form-control-label col-lg-2" for="modalTextos">Promocion de Acciones</label>
                 <button class="btn btn-info col-lg-2" id="modalTextos">Texto</button>
                 <input 
                     type="hidden" 
@@ -73,16 +62,12 @@
                     id="idDocumentoTexto" 
                     value="{{ datos.idDocumentoTexto }}"
                 />
-            </div>
 
-            <div class="form-group numFolio row">
-                <label class="form-control-label col-lg-2" for="numFolio">Numero Folio</label>
-                <input 
-                    class="form-control col-lg-2"   
-                    type="text" 
-                    name="numFolio" 
-                    maxlength="20" 
-                    value="{{ datos.numFolio }}"
+                 <input 
+                    type="hidden" 
+                    name="idPuestosJuridico"        
+                    id="idPuestosJuridico" 
+                    value="{{ datos.idPuestosJuridico }}"
                 />
             </div>
 

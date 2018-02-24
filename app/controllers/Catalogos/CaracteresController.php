@@ -48,8 +48,7 @@ class CaracteresController extends Template {
 				$caracter = new Caracteres([
 		            'siglas' =>$data['siglas'],
 		            'nombre' => $data['nombre'],
-		            'usrAlta' => $_SESSION['idUsuario'],
-		            'fAlta' => Carbon::now('America/Mexico_City')->format('Y-d-m H:i:s')
+		            'usrAlta' => $_SESSION['idUsuario']
 	            ]);
 	            $caracter->save();
 

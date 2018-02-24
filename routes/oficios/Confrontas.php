@@ -36,18 +36,8 @@ $app->group('/juridico',$auth,function() use($app,$controller){
 		$controller->save_turnado($app->request->post(),$_FILES,$app);
 	});
 
-
-	$app->post('/confrontasJuridico/Observaciones/create',function() use ($controller,$app){
-		$controller->save_observaciones($app->request->post(),$app);
-	});
-
-
-	$app->post('/confrontasJuridico/Observaciones/update',function() use ($controller,$app){
-		$controller->update_observaciones($app->request->post(),$app);
-	});
-
 	$app->post('/confrontasJuridico/cedula/create',function() use ($controller,$app){
-		$controller->save_cedula($app->request->post(),$app);
+		$controller->save_cedula($app->request->post());
 	});	
 
 	$app->post('/confrontasJuridico/cedula/update',function() use ($controller,$app){

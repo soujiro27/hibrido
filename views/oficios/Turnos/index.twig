@@ -10,9 +10,7 @@
         <th class="hidden">id</th>
         <th>Folio</th>
         <th>Documento</th>
-        
-        <th>Asunto</th>
-      
+        <th>Tipo</th>
         <th>Auditoria</th>
         <th>Desfazado</th>
         <th>Estado</th>
@@ -24,16 +22,14 @@
                 <td class="hidden">{{ irac.idVolante }}</td>
                 <td>{{ irac.folio }}</td>
                 <td>{{ irac.numDocumento }}</td>
-               
-               
-                <td>{{ irac.asunto }}</td>
+                <td>{{ irac.nombre }}</td>
                
                 <td>{{ irac.clave }}</td>
                 <td>{{ irac.extemporaneo }}</td>
-                {% if irac.estadoProceso == 'CERRADO' %}
-                    <td class="cerrado">{{ irac.estadoProceso }}</td>
+                {% if irac.idEstadoTurnado == 'CERRADO' %}
+                    <td class="cerrado">{{ irac.idEstadoTurnado }}</td>
                 {% else %}
-                    <td>{{ irac.estadoProceso }}</td>
+                    <td>{{ irac.idEstadoTurnado }}</td>
                 {% endif %}
 
 
